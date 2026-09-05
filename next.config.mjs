@@ -1,60 +1,14 @@
 ﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    domains: [
-      'firebasestorage.googleapis.com',
-      'i.ytimg.com',
-      'img.youtube.com'
-    ],
-  },
-  compress: true,
-  poweredByHeader: false,
+  // Baqi aapki purani settings agar koi hain toh wohi rahne dein, bas yeh headers() function add kar dein:
   async headers() {
     return [
       {
         source: '/(.*)',
         headers: [
           {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), payment=()',
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=31536000; includeSubDomains',
-          },
-        ],
-      },
-      {
-        source: '/sitemap.xml',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=3600, s-maxage=3600',
-          },
-        ],
-      },
-      {
-        source: '/feed.xml',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=3600, s-maxage=3600',
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://identitytoolkit.googleapis.com https://www.youtube.com; frame-src 'self' https://www.youtube.com;",
           },
         ],
       },
