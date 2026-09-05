@@ -1,6 +1,5 @@
 ﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Baqi aapki purani settings agar koi hain toh wohi rahne dein, bas yeh headers() function add kar dein:
   async headers() {
     return [
       {
@@ -8,7 +7,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://identitytoolkit.googleapis.com https://www.youtube.com; frame-src 'self' https://www.youtube.com;",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://www.googletagservices.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://identitytoolkit.googleapis.com https://www.googletagmanager.com https://www.google-analytics.com https://www.youtube.com; frame-src 'self' https://www.youtube.com; img-src 'self' data: https:;",
           },
         ],
       },
