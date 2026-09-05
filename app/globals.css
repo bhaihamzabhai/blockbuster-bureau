@@ -1,0 +1,371 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== CSS Custom Properties (Design Tokens) ===== */
+:root {
+  --color-void: #080B14;
+  --color-nebula: #1A2540;
+  --color-gold: #F0C040;
+  --color-stardust: #8892A4;
+  --color-nova: #3D6BFF;
+
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 500ms ease;
+
+  --shadow-glow: 0 0 20px rgba(240, 192, 64, 0.1);
+  --shadow-glow-lg: 0 0 40px rgba(240, 192, 64, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+/* ===== Starfield Animation ===== */
+@keyframes drift {
+  0% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+}
+
+.starfield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.starfield::before,
+.starfield::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 200%;
+  background-image: radial-gradient(1px 1px at 20px 30px, white, transparent),
+    radial-gradient(1px 1px at 40px 70px, white, transparent),
+    radial-gradient(1px 1px at 50px 160px, white, transparent),
+    radial-gradient(1px 1px at 90px 40px, white, transparent),
+    radial-gradient(1px 1px at 130px 80px, white, transparent),
+    radial-gradient(1px 1px at 160px 120px, white, transparent),
+    radial-gradient(1.5px 1.5px at 200px 50px, white, transparent),
+    radial-gradient(1px 1px at 250px 90px, white, transparent),
+    radial-gradient(1px 1px at 300px 30px, white, transparent),
+    radial-gradient(1px 1px at 350px 150px, white, transparent);
+  background-repeat: repeat;
+  background-size: 400px 200px;
+  animation: drift 120s linear infinite;
+}
+
+.starfield::after {
+  animation-delay: -60s;
+  opacity: 0.5;
+}
+
+/* ===== Film Grain Effect ===== */
+.film-grain {
+  position: relative;
+}
+
+.film-grain::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+
+/* ===== Prose Editor Styles ===== */
+.prose-editor h1 {
+  font-family: var(--font-display);
+  color: var(--color-gold);
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.prose-editor h2 {
+  font-family: var(--font-display);
+  color: var(--color-gold);
+  font-size: 2.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-editor h3 {
+  font-family: var(--font-display);
+  color: var(--color-gold);
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-editor h4 {
+  font-family: var(--font-display);
+  color: var(--color-gold);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-editor p {
+  font-family: var(--font-body);
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+
+.prose-editor a {
+  color: var(--color-nova);
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+
+.prose-editor a:hover {
+  color: var(--color-gold);
+}
+
+.prose-editor blockquote {
+  border-left: 4px solid var(--color-gold);
+  padding-left: 1rem;
+  color: var(--color-stardust);
+  font-style: italic;
+  margin: 1.5rem 0;
+}
+
+.prose-editor ul,
+.prose-editor ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.prose-editor li {
+  margin-bottom: 0.5rem;
+}
+
+.prose-editor code {
+  background-color: var(--color-nebula);
+  color: var(--color-gold);
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--radius-sm);
+  font-family: 'Courier New', monospace;
+  font-size: 0.875em;
+}
+
+.prose-editor pre {
+  background-color: var(--color-void);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+}
+
+.prose-editor pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+
+/* ===== Scrollbar Styling ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-void);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-nebula);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold);
+}
+
+/* ===== Selection Styling ===== */
+::selection {
+  background-color: rgba(240, 192, 64, 0.3);
+  color: white;
+}
+.prose-editor table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.prose-editor th {
+  background-color: var(--color-nebula);
+  color: var(--color-gold);
+  padding: 0.75rem;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.prose-editor td {
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.prose-editor img {
+  max-width: 100%;
+  border-radius: var(--radius-lg);
+  margin: 1rem auto;
+  display: block;
+}
+
+.prose-editor iframe {
+  border-radius: var(--radius-lg);
+  margin: 1.5rem 0;
+}
+
+.prose-editor hr {
+  border-color: rgba(255, 255, 255, 0.1);
+  margin: 1.5rem 0;
+}
+
+/* ===== Tiptap Editor Specific Styles ===== */
+.prose-editor .ProseMirror {
+  outline: none;
+  min-height: 400px;
+}
+
+.prose-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: rgba(136, 146, 164, 0.5);
+  pointer-events: none;
+  height: 0;
+}
+
+.prose-editor .ProseMirror-selectednode {
+  outline: 2px solid var(--color-gold);
+}
+
+/* YouTube Embed in Editor */
+.prose-editor .youtube-embed {
+  margin: 1.5rem 0;
+}
+
+.prose-editor .youtube-embed--selected .youtube-embed__wrapper {
+  border-color: var(--color-gold) !important;
+}
+
+/* Table styles in editor */
+.prose-editor .ProseMirror table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.prose-editor .ProseMirror th {
+  background-color: var(--color-nebula);
+  color: var(--color-gold);
+  padding: 0.75rem;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+}
+
+.prose-editor .ProseMirror td {
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.prose-editor .ProseMirror .selectedCell:after {
+  background: rgba(240, 192, 64, 0.2);
+  content: "";
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
+}
+
+/* Code block syntax highlighting */
+.prose-editor .ProseMirror pre {
+  background-color: var(--color-void);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  position: relative;
+}
+
+.prose-editor .ProseMirror pre::before {
+  content: attr(data-language);
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.25rem 0.5rem;
+  background-color: var(--color-nebula);
+  color: var(--color-gold);
+  font-size: 0.75rem;
+  border-bottom-left-radius: var(--radius-sm);
+}
+
+/* Highlight mark */
+.prose-editor .ProseMirror mark {
+  background-color: rgba(240, 192, 64, 0.3);
+  color: inherit;
+  padding: 0.125rem 0.25rem;
+  border-radius: var(--radius-sm);
+}
+
+/* Text alignment */
+.prose-editor .ProseMirror .is-editor-empty:first-child::before {
+  color: rgba(136, 146, 164, 0.5);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-void);
+  color: white;
+  font-family: var(--font-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
