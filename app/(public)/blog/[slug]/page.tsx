@@ -13,6 +13,7 @@ import ChannelBanner from '@/components/youtube/ChannelBanner';
 import ReadingProgress from '@/components/article/ReadingProgress';
 import ShareButtons from '@/components/article/ShareButtons';
 import { List } from 'lucide-react';
+import { toPostMillis } from '@/lib/dates';
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || 'https://www.blockbusterbureau.com';
@@ -73,10 +74,10 @@ function getReadTime(html: string): string {
   return `${minutes} min read`;
 }
 
-function formatDate(timestamp: { toDate: () => Date } | null): string {
-  if (!timestamp) return '';
-  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp as unknown as string);
-  return date.toLocaleDateString('en-US', {
+function formatDate(timestamp: unknown): string {
+  const ms = toPostMillis(timestamp);
+  if (!ms) return '';
+  return new Date(ms).toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',

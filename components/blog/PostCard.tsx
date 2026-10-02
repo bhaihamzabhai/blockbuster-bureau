@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Post, CATEGORY_LABELS } from '@/types';
 import Badge from '@/components/ui/Badge';
+import { formatPostDate } from '@/lib/dates';
 
 interface PostCardProps {
   post: Post;
@@ -18,14 +19,8 @@ function getReadTime(html: string): string {
   return `${minutes} min read`;
 }
 
-function formatDate(timestamp: { toDate: () => Date } | null): string {
-  if (!timestamp) return '';
-  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp as unknown as string);
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
+function formatDate(timestamp: unknown): string {
+  return formatPostDate(timestamp);
 }
 
 export default function PostCard({ post, variant = 'default' }: PostCardProps) {

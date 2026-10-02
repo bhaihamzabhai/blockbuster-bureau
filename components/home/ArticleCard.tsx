@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Star } from 'lucide-react';
 import type { Post } from '@/types';
+import { formatPostDate } from '@/lib/dates';
 
 function isNew(post: Post) {
   try {
@@ -15,14 +16,7 @@ function isNew(post: Post) {
 }
 
 function formatDate(post: Post) {
-  try {
-    const d = (post.publishedAt as any)?.toDate
-      ? (post.publishedAt as any).toDate()
-      : new Date(post.publishedAt as any);
-    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-  } catch {
-    return '';
-  }
+  return formatPostDate(post.publishedAt);
 }
 
 export function Stars({ rating, className = 'w-3.5 h-3.5' }: { rating: number; className?: string }) {

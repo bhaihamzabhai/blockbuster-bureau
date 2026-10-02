@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 import type { Post } from '@/types';
 import type { HeroSlide, SiteSettings } from '@/lib/siteSettings';
 import SocialIcons from '../layout/SocialIcons';
+import { formatPostDate } from '@/lib/dates';
 
 interface HeroSliderProps {
   slides: HeroSlide[];
@@ -15,12 +16,7 @@ interface HeroSliderProps {
 }
 
 function formatDate(ts: Post['publishedAt'] | Post['createdAt']) {
-  try {
-    const d = (ts as any)?.toDate ? (ts as any).toDate() : new Date(ts as any);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  } catch {
-    return '';
-  }
+  return formatPostDate(ts || '');
 }
 
 /**

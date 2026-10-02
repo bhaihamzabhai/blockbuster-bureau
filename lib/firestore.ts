@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore';
 import { db, isFirebaseConfigured } from './firebase';
 import { Post, Category } from '@/types';
+import { toPostMillis } from './dates';
 
 /** Rejects after `ms` so a dead Firestore backend can't hang static generation. */
 function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
@@ -25,20 +26,9 @@ function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise
   ]);
 }
 
-/** createdAt can arrive as a Firestore Timestamp, Date, or millis number. */
-function toMillis(value: unknown): number {
-  if (value == null) return 0;
-  if (typeof value === 'number') return value;
-  if (value instanceof Date) return value.getTime();
-  const v = value as { toMillis?: unknown; seconds?: unknown };
-  if (typeof v.toMillis === 'function') return (v.toMillis as () => number)();
-  if (typeof v.seconds === 'number') return v.seconds * 1000;
-  return 0;
-}
-
 /** Newest-first sort by createdAt (in memory — see getPosts note below). */
 function sortNewestFirst(posts: Post[]): Post[] {
-  return posts.sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt));
+  return posts.sort((a, b) => toPostMillis(b.createdAt) - toPostMillis(a.createdAt));
 }
 
 const POSTS_COLLECTION = 'posts';
