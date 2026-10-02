@@ -33,6 +33,7 @@ import {
   Settings,
   Eye,
   Loader2,
+  RefreshCw,
 } from 'lucide-react';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { Timestamp } from 'firebase/firestore';
@@ -116,6 +117,8 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [isDirty, setIsDirty] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  // Site-cache (ISR) refresh status after publish / manual refresh.
+  const [cacheStatus, setCacheStatus] = useState<'idle' | 'refreshing' | 'ok' | 'failed'>('idle');
   const [tagInput, setTagInput] = useState('');
   const [coverImageUploading, setCoverImageUploading] = useState(false);
   const [coverImageProgress, setCoverImageProgress] = useState(0);
@@ -287,6 +290,42 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
     }
   };
 
+  /**
+   * Ask the server to purge the ISR cache for the public pages so changes
+   * appear instantly (otherwise ISR would take up to an hour).
+   * Returns true on success. Never throws — surfaces status in the UI instead.
+   */
+  const refreshSiteCache = async (): Promise<boolean> => {
+    setCacheStatus('refreshing');
+    try {
+      const user = getCurrentUser();
+      if (!user) throw new Error('Not signed in');
+      const token = await user.getIdToken();
+      const res = await fetch('/api/revalidate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          paths: [
+            '/',
+            '/blog',
+            `/blog/${formState.slug}`,
+            `/category/${formState.category}`,
+          ],
+        }),
+      });
+      if (!res.ok) throw new Error(`Server responded ${res.status}`);
+      setCacheStatus('ok');
+      return true;
+    } catch (error) {
+      console.error('Cache refresh failed:', error);
+      setCacheStatus('failed');
+      return false;
+    }
+  };
+
   const handlePublish = async () => {
     if (!editor) return;
     setIsSaving(true);
@@ -313,30 +352,15 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
       setLastSaved(new Date());
       setIsDirty(false);
 
-      // Instantly refresh the public pages so the article appears right away
-      // (otherwise ISR would take up to an hour). Non-fatal if it fails.
-      try {
-        const user = getCurrentUser();
-        if (user) {
-          const token = await user.getIdToken();
-          await fetch('/api/revalidate', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              paths: [
-                '/',
-                '/blog',
-                `/blog/${formState.slug}`,
-                `/category/${formState.category}`,
-              ],
-            }),
-          });
-        }
-      } catch {
-        /* ISR hourly refresh remains as backup */
+      // Instantly refresh the public pages so the article appears right away.
+      // The result is shown in the UI — if it fails the user can retry with
+      // the "Refresh site cache" button below.
+      const cacheOk = await refreshSiteCache();
+      if (!cacheOk) {
+        setSaveError(
+          'Published, but the live site cache could not be refreshed automatically. ' +
+          'Click "Refresh site cache" below, then reload the article page.'
+        );
       }
     } catch (error) {
       console.error('Publish error:', error);
@@ -604,6 +628,18 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                   {saveError}
                 </p>
               )}
+              {cacheStatus === 'failed' && (
+                <p className="mb-4 text-sm text-amber-700 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2">
+                  Published, but the live site cache could not be refreshed
+                  automatically. Click &ldquo;Refresh site cache&rdquo; below,
+                  then reload the article page.
+                </p>
+              )}
+              {cacheStatus === 'ok' && (
+                <p className="mb-4 text-sm text-emerald-700 bg-emerald-500/10 border border-emerald-500/30 rounded-lg px-3 py-2">
+                  Live site cache refreshed — changes are visible on the site.
+                </p>
+              )}
               <div className="flex gap-2">
                 <button
                   onClick={handleSaveDraft}
@@ -622,6 +658,15 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                   Publish
                 </button>
               </div>
+              <button
+                onClick={() => refreshSiteCache()}
+                disabled={cacheStatus === 'refreshing' || !currentPostId}
+                title="Purge the site's cached pages so the latest changes appear instantly"
+                className="mt-2 w-full flex items-center justify-center gap-2 px-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-50"
+              >
+                <RefreshCw className={`w-4 h-4 ${cacheStatus === 'refreshing' ? 'animate-spin' : ''}`} />
+                {cacheStatus === 'refreshing' ? 'Refreshing cache…' : 'Refresh site cache'}
+              </button>
             </div>
 
             {/* Cover Image */}
