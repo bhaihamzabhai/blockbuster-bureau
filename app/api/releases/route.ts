@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { getSiteSettings } from '@/lib/siteSettings';
 import { getUpcomingMovies } from '@/lib/tmdb';
 
+// Always read live settings — never serve a stale cached response.
+export const dynamic = 'force-dynamic';
+
 /** Returns upcoming movies for the admin dashboard widget and the public /releases fallback. Data is public (same as /releases). */
 export async function GET() {
   try {

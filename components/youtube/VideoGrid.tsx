@@ -24,8 +24,9 @@ interface VideoGridProps {
 
 /**
  * Video grid with click-to-play modal.
- * Self-healing: if the statically generated page was built before the
- * channel ID was saved, it fetches fresh data client-side.
+ * Self-healing: always re-checks /api/videos on load, so a statically
+ * generated page built before the channel ID / API key was saved gets
+ * replaced with fresh data (and Shorts stay filtered out).
  */
 export default function VideoGrid({ initialVideos, initialConfigured }: VideoGridProps) {
   const [videos, setVideos] = useState<YTVideo[]>(initialVideos);
@@ -34,7 +35,6 @@ export default function VideoGrid({ initialVideos, initialConfigured }: VideoGri
   const [active, setActive] = useState<YTVideo | null>(null);
 
   useEffect(() => {
-    if (initialVideos.length > 0) return;
     fetch('/api/videos')
       .then((r) => r.json())
       .then((d) => {
@@ -43,7 +43,7 @@ export default function VideoGrid({ initialVideos, initialConfigured }: VideoGri
       })
       .catch(() => {})
       .finally(() => setChecking(false));
-  }, [initialVideos.length]);
+  }, []);
 
   if (checking) {
     return (

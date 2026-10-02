@@ -21,13 +21,23 @@ export async function getChannelVideos(
   limit = 12,
   apiKey?: string
 ): Promise<YTVideo[]> {
-  if (!channelId) return [];
+  const { videos } = await getChannelVideosDetailed(channelId, limit, apiKey);
+  return videos;
+}
+
+/** Same as getChannelVideos, plus whether Shorts filtering was actually applied. */
+export async function getChannelVideosDetailed(
+  channelId: string,
+  limit = 12,
+  apiKey?: string
+): Promise<{ videos: YTVideo[]; shortsFiltered: boolean }> {
+  if (!channelId) return { videos: [], shortsFiltered: false };
   try {
     const res = await fetch(
       `https://www.youtube.com/feeds/videos.xml?channel_id=${encodeURIComponent(channelId)}`,
       { next: { revalidate: 21600 } } // refresh every 6 hours
     );
-    if (!res.ok) return [];
+    if (!res.ok) return { videos: [], shortsFiltered: false };
     const xml = await res.text();
 
     const entries = xml.split('<entry>').slice(1);
@@ -55,19 +65,20 @@ export async function getChannelVideos(
         videos.map((v) => v.id),
         apiKey
       );
-      return videos
+      const filtered = videos
         .filter((v) => {
           const d = durations.get(v.id);
           // Fail-open: if duration unknown, keep the video.
           return d === undefined || d > SHORTS_MAX_SECONDS;
         })
         .slice(0, limit);
+      return { videos: filtered, shortsFiltered: durations.size > 0 };
     }
 
-    return videos.slice(0, limit);
+    return { videos: videos.slice(0, limit), shortsFiltered: false };
   } catch (error) {
     console.error('getChannelVideos failed:', error);
-    return [];
+    return { videos: [], shortsFiltered: false };
   }
 }
 
