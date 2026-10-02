@@ -13,23 +13,12 @@ import type { NextRequest } from 'next/server';
  *
  * Set REVALIDATE_SECRET in environment variables for method 1.
  *
- * NOTE: firebase-admin is imported dynamically inside the handler (not at
- * module top level) so that a load failure surfaces as a JSON error with
- * the real message instead of an opaque HTML 500 page.
+ * Admin check (method 2) is done via the Identity Toolkit REST API
+ * (accounts:lookup) — the same Google backend that enforces the Firestore
+ * security rules. This keeps firebase-admin out of the serverless bundle
+ * entirely (it caused opaque 500s on Vercel) and guarantees the check is
+ * consistent with what Firestore itself accepts.
  */
-
-async function getAdminAuth() {
-  const { getApps, initializeApp } = await import('firebase-admin/app');
-  const { getAuth } = await import('firebase-admin/auth');
-  if (getApps().length === 0) {
-    // Project ID alone is enough to verify ID tokens
-    // (verification uses Google's public certificates).
-    initializeApp({
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    });
-  }
-  return getAuth();
-}
 
 async function isAuthorized(request: NextRequest): Promise<boolean> {
   // Method 1: shared secret (automations / manual curl)
@@ -39,12 +28,23 @@ async function isAuthorized(request: NextRequest): Promise<boolean> {
 
   // Method 2: Firebase admin ID token (dashboard publish flow)
   const authHeader = request.headers.get('authorization');
-  if (authHeader?.startsWith('Bearer ')) {
+  const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+  if (authHeader?.startsWith('Bearer ') && apiKey) {
     try {
-      const decoded = await (await getAdminAuth()).verifyIdToken(authHeader.slice(7));
-      if (decoded.admin === true) return true;
+      const res = await fetch(
+        `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ idToken: authHeader.slice(7) }),
+        }
+      );
+      if (!res.ok) return false;
+      const data = await res.json();
+      const customAttributes = JSON.parse(data?.users?.[0]?.customAttributes || '{}');
+      if (customAttributes.admin === true) return true;
     } catch {
-      // Invalid / expired token — fall through to unauthorized.
+      // Invalid / expired token or network issue — fall through to unauthorized.
     }
   }
   return false;
@@ -89,21 +89,13 @@ export async function POST(request: NextRequest) {
 
 /**
  * Diagnostic endpoint (no secrets leaked): reports the Node runtime version
- * and whether firebase-admin loads in this environment. Used to debug
- * opaque 500s on serverless deployments.
+ * and whether the Firebase API key is configured. Used to debug auth
+ * failures on serverless deployments.
  */
 export async function GET() {
-  const info: Record<string, unknown> = {
+  return NextResponse.json({
     node: process.version,
+    apiKeySet: Boolean(process.env.NEXT_PUBLIC_FIREBASE_API_KEY),
     projectIdSet: Boolean(process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID),
-  };
-  try {
-    const { getApps } = await import('firebase-admin/app');
-    info.firebaseAdminLoads = true;
-    info.appsInitialized = getApps().length;
-  } catch (error) {
-    info.firebaseAdminLoads = false;
-    info.firebaseAdminError = String(error).slice(0, 500);
-  }
-  return NextResponse.json(info);
+  });
 }
