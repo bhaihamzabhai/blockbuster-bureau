@@ -20,13 +20,14 @@
  *   node scripts/setAdminClaim.js abc123def456
  */
 
-const admin = require('firebase-admin');
+const { initializeApp, getApps, applicationDefault } = require('firebase-admin/app');
+const { getAuth } = require('firebase-admin/auth');
 
 // Initialize Firebase Admin SDK
 // Uses GOOGLE_APPLICATION_CREDENTIALS environment variable
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.applicationDefault(),
+if (!getApps().length) {
+  initializeApp({
+    credential: applicationDefault(),
   });
 }
 
@@ -43,15 +44,15 @@ async function setAdminClaim(uid) {
 
   try {
     // Verify the user exists
-    const user = await admin.auth().getUser(uid);
+    const user = await getAuth().getUser(uid);
     console.log(`Found user: ${user.email || user.uid}`);
     console.log(`Current custom claims: ${JSON.stringify(user.customClaims) || 'none'}`);
 
     // Set the admin custom claim
-    await admin.auth().setCustomUserClaims(uid, { admin: true });
+    await getAuth().setCustomUserClaims(uid, { admin: true });
 
     // Verify the claim was set
-    const updatedUser = await admin.auth().getUser(uid);
+    const updatedUser = await getAuth().getUser(uid);
     console.log(`\nAdmin claim set successfully!`);
     console.log(`Updated custom claims: ${JSON.stringify(updatedUser.customClaims)}`);
     console.log(`\nUser ${uid} now has admin access to the dashboard.`);
