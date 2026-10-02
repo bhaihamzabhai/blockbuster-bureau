@@ -116,7 +116,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
   const [tagInput, setTagInput] = useState('');
   const [coverImageUploading, setCoverImageUploading] = useState(false);
   const [coverImageProgress, setCoverImageProgress] = useState(0);
-  const [seoOpen, setSeoOpen] = useState(false);
+  const [coverImageError, setCoverImageError] = useState<string | null>(null);  const [seoOpen, setSeoOpen] = useState(false);
 
   // Modal states
   const [linkModalOpen, setLinkModalOpen] = useState(false);
@@ -310,6 +310,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
 
     setCoverImageUploading(true);
     setCoverImageProgress(0);
+    setCoverImageError(null);
 
     const fileName = `posts/covers/${currentPostId || 'temp'}-${Date.now()}-${file.name}`;
     const storageRef = ref(storage, fileName);
@@ -324,6 +325,9 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
       (error) => {
         console.error('Upload error:', error);
         setCoverImageUploading(false);
+        setCoverImageError(
+          'Upload failed. Firebase Storage needs a billing (Blaze) plan — you can paste an image URL below instead.'
+        );
       },
       async () => {
         try {
@@ -584,6 +588,28 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                 }}
                 className="hidden"
               />
+              {!formState.coverImage && (
+                <div className="mt-3">
+                  {coverImageError && (
+                    <p className="text-amber-400/90 text-xs mb-2 text-center">{coverImageError}</p>
+                  )}
+                  <p className="text-stardust text-xs mb-1.5 text-center">— or paste an image URL —</p>
+                  <input
+                    type="url"
+                    placeholder="https://example.com/image.jpg"
+                    className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-stardust/50 focus:border-gold/50 focus:outline-none"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        const url = (e.target as HTMLInputElement).value.trim();
+                        if (url) {
+                          updateFormState({ coverImage: url });
+                          setCoverImageError(null);
+                        }
+                      }
+                    }}
+                  />
+                </div>
+              )}
             </div>
 
             {/* Post Settings */}
