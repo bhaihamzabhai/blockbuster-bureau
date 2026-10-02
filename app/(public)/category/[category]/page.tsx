@@ -44,7 +44,7 @@ export async function generateMetadata({
   };
 }
 
-export const revalidate = 3600;
+export const revalidate = 300; // Safety net: auto-refresh every 5 min (dashboard also triggers instant refresh on publish)
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const category = params.category as Category;

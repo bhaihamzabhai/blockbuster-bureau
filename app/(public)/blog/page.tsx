@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     'Latest Hollywood news, movie reviews, upcoming releases, and entertainment updates from Blockbuster Bureau.',
 };
 
-export const revalidate = 3600;
+export const revalidate = 300; // Safety net: auto-refresh every 5 min (dashboard also triggers instant refresh on publish)
 
 interface BlogPageProps {
   searchParams: { category?: string; q?: string };

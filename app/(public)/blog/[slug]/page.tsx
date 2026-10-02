@@ -65,7 +65,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export const revalidate = 3600;
+export const revalidate = 600; // Safety net: auto-refresh every 10 min (dashboard also triggers instant refresh on publish)
 
 function getReadTime(html: string): string {
   const text = html.replace(/<[^>]*>/g, '');

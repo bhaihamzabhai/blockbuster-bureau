@@ -261,8 +261,11 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
     setSaveError(null);
 
     try {
+      // Never lose tags the user typed but didn't confirm with Enter.
+      const tags = flushTagInput(formState.tags);
       const data = {
         ...formState,
+        tags,
         body: htmlView ? rawHtml : editor.getHTML(),
         status: 'draft' as const,
       };
@@ -339,8 +342,11 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
     setSaveError(null);
 
     try {
+      // Never lose tags the user typed but didn't confirm with Enter.
+      const tags = flushTagInput(formState.tags);
       const data = {
         ...formState,
+        tags,
         // If the HTML source view is open, save its content directly.
         body: htmlView ? rawHtml : editor.getHTML(),
         status: 'published' as const,
@@ -420,10 +426,31 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
     );
   };
 
+  /** Split raw tag input on commas → clean, lowercase, non-empty tags. */
+  const parsePendingTags = (input: string): string[] =>
+    input
+      .split(',')
+      .map((t) => t.trim().toLowerCase())
+      .filter((t) => t.length > 0);
+
+  /**
+   * Merge any tags still sitting in the input box into the tag list.
+   * Called before every save/publish so typed-but-unconfirmed tags
+   * (user never pressed Enter) are never silently lost.
+   */
+  const flushTagInput = (currentTags: string[]): string[] => {
+    const pending = parsePendingTags(tagInput).filter((t) => !currentTags.includes(t));
+    if (pending.length === 0) return currentTags;
+    const merged = [...currentTags, ...pending];
+    setFormState((prev) => ({ ...prev, tags: merged }));
+    setTagInput('');
+    return merged;
+  };
+
   const handleAddTag = () => {
-    const tag = tagInput.trim().toLowerCase();
-    if (tag && !formState.tags.includes(tag)) {
-      updateFormState({ tags: [...formState.tags, tag] });
+    const newTags = parsePendingTags(tagInput).filter((t) => !formState.tags.includes(t));
+    if (newTags.length > 0) {
+      updateFormState({ tags: [...formState.tags, ...newTags] });
     }
     setTagInput('');
   };
@@ -433,7 +460,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
   };
 
   const handleTagKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' || e.key === ',') {
       e.preventDefault();
       handleAddTag();
     }
@@ -813,7 +840,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                     value={tagInput}
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={handleTagKeyDown}
-                    placeholder="Type tag and press Enter"
+                    placeholder="Type tags separated by commas, then Enter"
                     className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand"
                   />
                 </div>

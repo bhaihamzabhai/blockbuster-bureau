@@ -360,6 +360,9 @@
 .prose-editor .ProseMirror {
   outline: none;
   min-height: 400px;
+  /* The global body color is white (legacy dark theme) — the editor must
+     always use dark readable text on its light background. */
+  color: #111827;
 }
 
 .prose-editor .ProseMirror p.is-editor-empty:first-child::before {

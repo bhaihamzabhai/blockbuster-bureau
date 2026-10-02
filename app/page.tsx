@@ -10,7 +10,7 @@ import { getPosts } from '@/lib/firestore';
 import { getSiteSettings, type HeroSlide } from '@/lib/siteSettings';
 import { CATEGORIES, CATEGORY_LABELS, type Category } from '@/types';
 
-export const revalidate = 3600; // Revalidate every hour
+export const revalidate = 300; // Revalidate every 5 minutes (safety net; dashboard also triggers instant refresh on publish)
 
 const CATEGORY_GRADIENTS: Record<string, string> = {
   'upcoming-movies': 'from-orange-500 to-red-600',
