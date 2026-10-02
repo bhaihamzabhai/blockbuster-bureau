@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/releases' },
 };
 
-export const revalidate = 86400; // refresh daily
+export const revalidate = 3600; // refresh hourly (movie data itself is cached 24h at the fetch level)
 
 function formatDate(iso: string) {
   return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', {
