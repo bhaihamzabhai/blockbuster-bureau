@@ -6,11 +6,21 @@ export interface YTVideo {
   url: string;
 }
 
+/** YouTube Shorts can be up to 3 minutes long — anything longer is a "long" video. */
+const SHORTS_MAX_SECONDS = 180;
+
 /**
- * Fetches a channel's latest videos via its public RSS feed.
- * No API key needed. Fails soft -> returns [].
+ * Fetches a channel's latest LONG videos (Shorts filtered out).
+ *
+ * Source: the channel's public RSS feed (no key needed). When a YouTube
+ * Data API key is provided, durations are fetched and Shorts (<=3 min)
+ * are removed. Without a key, all videos are returned (fail-open).
  */
-export async function getChannelVideos(channelId: string, limit = 12): Promise<YTVideo[]> {
+export async function getChannelVideos(
+  channelId: string,
+  limit = 12,
+  apiKey?: string
+): Promise<YTVideo[]> {
   if (!channelId) return [];
   try {
     const res = await fetch(
@@ -23,6 +33,7 @@ export async function getChannelVideos(channelId: string, limit = 12): Promise<Y
     const entries = xml.split('<entry>').slice(1);
     const videos: YTVideo[] = [];
 
+    // Parse extra entries so we still reach `limit` after Shorts are removed.
     for (const entry of entries) {
       const idMatch = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
       const titleMatch = entry.match(/<title>([^<]*)<\/title>/);
@@ -36,13 +47,66 @@ export async function getChannelVideos(channelId: string, limit = 12): Promise<Y
         thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
         url: `https://www.youtube.com/watch?v=${id}`,
       });
-      if (videos.length >= limit) break;
+      if (videos.length >= limit * 2 + 6) break;
     }
-    return videos;
+
+    if (apiKey) {
+      const durations = await getVideoDurations(
+        videos.map((v) => v.id),
+        apiKey
+      );
+      return videos
+        .filter((v) => {
+          const d = durations.get(v.id);
+          // Fail-open: if duration unknown, keep the video.
+          return d === undefined || d > SHORTS_MAX_SECONDS;
+        })
+        .slice(0, limit);
+    }
+
+    return videos.slice(0, limit);
   } catch (error) {
     console.error('getChannelVideos failed:', error);
     return [];
   }
+}
+
+/** Batch-fetches video durations via YouTube Data API v3 (1 quota unit per 50 videos). */
+async function getVideoDurations(
+  ids: string[],
+  apiKey: string
+): Promise<Map<string, number>> {
+  const map = new Map<string, number>();
+  if (ids.length === 0) return map;
+  try {
+    const res = await fetch(
+      `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids.join(',')}&key=${encodeURIComponent(apiKey)}`,
+      { next: { revalidate: 21600 } }
+    );
+    if (!res.ok) {
+      console.error('YouTube videos.list failed:', res.status);
+      return map;
+    }
+    const data = await res.json();
+    for (const item of data.items || []) {
+      const secs = parseISO8601Duration(item.contentDetails?.duration);
+      if (secs !== null && item.id) map.set(item.id, secs);
+    }
+  } catch (error) {
+    console.error('getVideoDurations failed:', error);
+  }
+  return map;
+}
+
+/** "PT4M13S" -> 253 */
+function parseISO8601Duration(iso: string | undefined): number | null {
+  if (!iso) return null;
+  const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!m) return null;
+  const h = parseInt(m[1] || '0', 10);
+  const min = parseInt(m[2] || '0', 10);
+  const s = parseInt(m[3] || '0', 10);
+  return h * 3600 + min * 60 + s;
 }
 
 function decodeXml(s: string): string {

@@ -15,7 +15,7 @@ export const revalidate = 21600; // refresh every 6 hours
 
 export default async function VideosPage() {
   const settings = await getSiteSettings();
-  const videos = await getChannelVideos(settings.youtubeChannelId);
+  const videos = await getChannelVideos(settings.youtubeChannelId, 12, settings.youtubeApiKey);
   const configured = !!settings.youtubeChannelId;
 
   return (

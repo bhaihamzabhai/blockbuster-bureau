@@ -9,7 +9,7 @@ export async function GET() {
     if (!settings.youtubeChannelId) {
       return NextResponse.json({ videos: [], configured: false });
     }
-    const videos = await getChannelVideos(settings.youtubeChannelId, 12);
+    const videos = await getChannelVideos(settings.youtubeChannelId, 12, settings.youtubeApiKey);
     return NextResponse.json({ videos, configured: true });
   } catch (error) {
     console.error('API /videos failed:', error);

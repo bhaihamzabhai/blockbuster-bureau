@@ -28,6 +28,7 @@ export default function SettingsPage() {
   const [tiktokUrl, setTiktokUrl] = useState('');
   const [facebookUrl, setFacebookUrl] = useState('');
   const [tmdbApiKey, setTmdbApiKey] = useState('');
+  const [youtubeApiKey, setYoutubeApiKey] = useState('');
 
   // Hero slider slides (max 5)
   const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([]);
@@ -54,6 +55,7 @@ export default function SettingsPage() {
           if (data.tiktokUrl) setTiktokUrl(data.tiktokUrl);
           if (data.facebookUrl) setFacebookUrl(data.facebookUrl);
           if (data.tmdbApiKey) setTmdbApiKey(data.tmdbApiKey);
+          if (data.youtubeApiKey) setYoutubeApiKey(data.youtubeApiKey);
           if (Array.isArray(data.heroSlides)) setHeroSlides(data.heroSlides);
         }
       } catch (error) {
@@ -111,6 +113,7 @@ export default function SettingsPage() {
         tiktokUrl,
         facebookUrl,
         tmdbApiKey,
+        youtubeApiKey,
         heroSlides,
         updatedAt: new Date().toISOString(),
       }, { merge: true });
@@ -270,6 +273,21 @@ export default function SettingsPage() {
             Powers the auto-updating /releases page (upcoming movies + countdowns).
           </p>
           <div className="space-y-4">
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
+                <Youtube className="w-4 h-4 text-red-500" /> YouTube Data API Key
+              </label>
+              <input
+                type="text"
+                value={youtubeApiKey}
+                onChange={(e) => setYoutubeApiKey(e.target.value.trim())}
+                placeholder="Paste your YouTube Data API v3 key"
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:border-brand"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Needed to hide Shorts from the /videos page (only long videos show). Free from Google Cloud Console → enable "YouTube Data API v3" → create API key. Tip: restrict the key to YouTube Data API v3.
+              </p>
+            </div>
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
                 <Film className="w-4 h-4 text-sky-700" /> TMDB API Key

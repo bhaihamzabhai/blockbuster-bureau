@@ -15,6 +15,7 @@ export interface SiteSettings {
   tiktokUrl: string;
   facebookUrl: string;
   youtubeChannelId: string;
+  youtubeApiKey: string;
   tmdbApiKey: string;
   heroSlides: HeroSlide[];
   siteTitle: string;
@@ -29,6 +30,7 @@ const DEFAULTS: SiteSettings = {
   tiktokUrl: '',
   facebookUrl: '',
   youtubeChannelId: '',
+  youtubeApiKey: '',
   tmdbApiKey: '',
   heroSlides: [],
   siteTitle: '',
@@ -67,6 +69,7 @@ async function fetchSiteSettings(): Promise<SiteSettings> {
       tiktokUrl: str(d.tiktokUrl),
       facebookUrl: str(d.facebookUrl),
       youtubeChannelId: str(d.youtubeChannelId),
+      youtubeApiKey: str(d.youtubeApiKey),
       tmdbApiKey: str(d.tmdbApiKey),
       heroSlides: Array.isArray(d.heroSlides) ? (d.heroSlides as HeroSlide[]) : [],
       siteTitle: str(d.siteTitle),
