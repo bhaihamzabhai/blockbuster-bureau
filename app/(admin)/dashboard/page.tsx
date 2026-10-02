@@ -18,10 +18,12 @@ interface DashboardStats {
 export default function DashboardHome() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchStats = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
       const postsRef = collection(db, 'posts');
       const allPostsSnapshot = await getDocs(postsRef);
       const allPosts = allPostsSnapshot.docs.map((doc) => ({
@@ -45,6 +47,9 @@ export default function DashboardHome() {
       setStats({ totalPosts, publishedPosts, draftPosts, totalViews, recentPosts });
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
+      setError(
+        'Could not load posts from the database. Please make sure your Firestore security rules are deployed (see firestore.rules in the repo).'
+      );
     } finally {
       setLoading(false);
     }
@@ -54,7 +59,30 @@ export default function DashboardHome() {
     fetchStats();
   }, [fetchStats]);
 
-  if (loading || !stats) {
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-xl mx-auto mt-16 p-8 rounded-2xl bg-white/5 border border-white/10 text-center">
+        <h2 className="text-xl text-white font-semibold mb-2">Couldn&apos;t load dashboard</h2>
+        <p className="text-stardust text-sm mb-6">{error}</p>
+        <button
+          onClick={fetchStats}
+          className="px-6 py-2.5 rounded-xl bg-gold text-black font-semibold hover:brightness-110 transition"
+        >
+          Try again
+        </button>
+      </div>
+    );
+  }
+
+  if (!stats) {
     return (
       <div className="flex items-center justify-center py-24">
         <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" />
