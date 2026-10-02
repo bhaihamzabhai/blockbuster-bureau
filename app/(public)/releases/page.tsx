@@ -98,6 +98,11 @@ export default async function ReleasesPage() {
             })}
           </div>
         )}
+
+        <p className="text-gray-400 text-xs text-center mt-10">
+          Movie data and posters provided by TMDB. This product uses the TMDB API
+          but is not endorsed or certified by TMDB.
+        </p>
       </div>
     </div>
   );
