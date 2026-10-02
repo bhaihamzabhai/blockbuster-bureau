@@ -16,6 +16,7 @@ export const revalidate = 21600; // refresh every 6 hours
 export default async function VideosPage() {
   const settings = await getSiteSettings();
   const videos = await getChannelVideos(settings.youtubeChannelId);
+  const configured = !!settings.youtubeChannelId;
 
   return (
     <div className="bg-white text-gray-900 min-h-screen py-10 px-4">
@@ -42,19 +43,7 @@ export default async function VideosPage() {
           )}
         </div>
 
-        {videos.length === 0 ? (
-          <div className="text-center py-20 bg-gray-50 rounded-xl border border-gray-200">
-            <Youtube className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500 font-medium">No videos found yet.</p>
-            <p className="text-gray-400 text-sm mt-1">
-              {settings.youtubeChannelId
-                ? 'The channel feed could not be loaded right now — please try again later.'
-                : 'The admin needs to add the YouTube Channel ID in dashboard Settings → Social Links.'}
-            </p>
-          </div>
-        ) : (
-          <VideoGrid videos={videos} />
-        )}
+        <VideoGrid initialVideos={videos} initialConfigured={configured} />
       </div>
     </div>
   );

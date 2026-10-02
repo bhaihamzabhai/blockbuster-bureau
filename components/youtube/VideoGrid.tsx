@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Play, X, ExternalLink } from 'lucide-react';
+import { Play, X, ExternalLink, Youtube, Loader2 } from 'lucide-react';
 import type { YTVideo } from '@/lib/youtube';
 
 function formatDate(iso: string) {
@@ -17,9 +17,55 @@ function formatDate(iso: string) {
   }
 }
 
-/** Video grid with click-to-play modal. */
-export default function VideoGrid({ videos }: { videos: YTVideo[] }) {
+interface VideoGridProps {
+  initialVideos: YTVideo[];
+  initialConfigured: boolean;
+}
+
+/**
+ * Video grid with click-to-play modal.
+ * Self-healing: if the statically generated page was built before the
+ * channel ID was saved, it fetches fresh data client-side.
+ */
+export default function VideoGrid({ initialVideos, initialConfigured }: VideoGridProps) {
+  const [videos, setVideos] = useState<YTVideo[]>(initialVideos);
+  const [configured, setConfigured] = useState(initialConfigured);
+  const [checking, setChecking] = useState(initialVideos.length === 0);
   const [active, setActive] = useState<YTVideo | null>(null);
+
+  useEffect(() => {
+    if (initialVideos.length > 0) return;
+    fetch('/api/videos')
+      .then((r) => r.json())
+      .then((d) => {
+        setVideos(d.videos || []);
+        setConfigured(d.configured !== false);
+      })
+      .catch(() => {})
+      .finally(() => setChecking(false));
+  }, [initialVideos.length]);
+
+  if (checking) {
+    return (
+      <div className="flex justify-center py-20">
+        <Loader2 className="w-10 h-10 text-brand animate-spin" />
+      </div>
+    );
+  }
+
+  if (videos.length === 0) {
+    return (
+      <div className="text-center py-20 bg-gray-50 rounded-xl border border-gray-200">
+        <Youtube className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+        <p className="text-gray-500 font-medium">No videos found yet.</p>
+        <p className="text-gray-400 text-sm mt-1">
+          {configured
+            ? 'The channel feed could not be loaded right now — please try again later.'
+            : 'The admin needs to add the YouTube Channel ID in dashboard Settings → Social Links.'}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>
