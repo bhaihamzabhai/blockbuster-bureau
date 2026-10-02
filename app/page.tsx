@@ -4,6 +4,7 @@ import AdUnit from '@/components/ads/AdUnit';
 import HeroSlider from '@/components/home/HeroSlider';
 import FeaturedSection from '@/components/home/FeaturedSection';
 import Newsletter from '@/components/home/Newsletter';
+import HomeReleases from '@/components/home/HomeReleases';
 import { getPosts } from '@/lib/firestore';
 import { getSiteSettings, type HeroSlide } from '@/lib/siteSettings';
 import { CATEGORIES, CATEGORY_LABELS, type Category } from '@/types';
@@ -77,6 +78,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Coming Soon — upcoming releases strip */}
+      <HomeReleases />
 
       {/* YouTube CTA */}
       {settings.youtubeUrl && (

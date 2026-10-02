@@ -6,7 +6,6 @@ import { db } from '@/lib/firebase';
 import { Post } from '@/types';
 import Link from 'next/link';
 import { FileText, Eye, Clock, TrendingUp } from 'lucide-react';
-import UpcomingReleasesWidget from '@/components/admin/UpcomingReleasesWidget';
 
 interface DashboardStats {
   totalPosts: number;
@@ -166,9 +165,6 @@ export default function DashboardHome() {
           </div>
         )}
       </div>
-
-      {/* Upcoming movie releases (same data as the public /releases page) */}
-      <UpcomingReleasesWidget />
     </div>
   );
 }
