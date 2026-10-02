@@ -14,6 +14,7 @@ export interface SiteSettings {
   youtubeUrl: string;
   tiktokUrl: string;
   facebookUrl: string;
+  pinterestUrl: string;
   youtubeChannelId: string;
   youtubeApiKey: string;
   tmdbApiKey: string;
@@ -29,6 +30,7 @@ const DEFAULTS: SiteSettings = {
   youtubeUrl: '',
   tiktokUrl: '',
   facebookUrl: '',
+  pinterestUrl: '',
   youtubeChannelId: '',
   youtubeApiKey: '',
   tmdbApiKey: '',
@@ -68,6 +70,7 @@ async function fetchSiteSettings(): Promise<SiteSettings> {
       youtubeUrl: str(d.youtubeUrl),
       tiktokUrl: str(d.tiktokUrl),
       facebookUrl: str(d.facebookUrl),
+      pinterestUrl: str(d.pinterestUrl),
       youtubeChannelId: str(d.youtubeChannelId),
       youtubeApiKey: str(d.youtubeApiKey),
       tmdbApiKey: str(d.tmdbApiKey),

@@ -27,6 +27,7 @@ export default function SettingsPage() {
   const [youtubeChannelId, setYoutubeChannelId] = useState('');
   const [tiktokUrl, setTiktokUrl] = useState('');
   const [facebookUrl, setFacebookUrl] = useState('');
+  const [pinterestUrl, setPinterestUrl] = useState('');
   const [tmdbApiKey, setTmdbApiKey] = useState('');
   const [youtubeApiKey, setYoutubeApiKey] = useState('');
 
@@ -54,6 +55,7 @@ export default function SettingsPage() {
           if (data.youtubeChannelId) setYoutubeChannelId(data.youtubeChannelId);
           if (data.tiktokUrl) setTiktokUrl(data.tiktokUrl);
           if (data.facebookUrl) setFacebookUrl(data.facebookUrl);
+          if (data.pinterestUrl) setPinterestUrl(data.pinterestUrl);
           if (data.tmdbApiKey) setTmdbApiKey(data.tmdbApiKey);
           if (data.youtubeApiKey) setYoutubeApiKey(data.youtubeApiKey);
           if (Array.isArray(data.heroSlides)) setHeroSlides(data.heroSlides);
@@ -112,6 +114,7 @@ export default function SettingsPage() {
         youtubeChannelId,
         tiktokUrl,
         facebookUrl,
+        pinterestUrl,
         tmdbApiKey,
         youtubeApiKey,
         heroSlides,
@@ -260,6 +263,18 @@ export default function SettingsPage() {
                 value={facebookUrl}
                 onChange={(e) => setFacebookUrl(e.target.value)}
                 placeholder="https://facebook.com/yourpage"
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:border-red-500"
+              />
+            </div>
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
+                <span className="w-4 h-4 rounded-full bg-[#E60023] text-white text-[10px] font-bold flex items-center justify-center">P</span> Pinterest Profile URL
+              </label>
+              <input
+                type="url"
+                value={pinterestUrl}
+                onChange={(e) => setPinterestUrl(e.target.value)}
+                placeholder="https://pinterest.com/yourhandle"
                 className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:border-red-500"
               />
             </div>
