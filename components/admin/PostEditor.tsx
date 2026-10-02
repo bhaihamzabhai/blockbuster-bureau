@@ -691,6 +691,13 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                         }
                       }
                     }}
+                    onBlur={(e) => {
+                      const url = e.target.value.trim();
+                      if (url && url !== formState.coverImage) {
+                        updateFormState({ coverImage: url });
+                        setCoverImageError(null);
+                      }
+                    }}
                   />
                 </div>
               )}
