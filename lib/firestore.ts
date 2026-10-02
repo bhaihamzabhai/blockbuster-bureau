@@ -8,9 +8,6 @@ import {
   deleteDoc,
   query,
   where,
-  orderBy,
-  limit,
-  startAfter,
   Timestamp,
   DocumentSnapshot,
   QueryConstraint,
@@ -28,6 +25,22 @@ function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise
   ]);
 }
 
+/** createdAt can arrive as a Firestore Timestamp, Date, or millis number. */
+function toMillis(value: unknown): number {
+  if (value == null) return 0;
+  if (typeof value === 'number') return value;
+  if (value instanceof Date) return value.getTime();
+  const v = value as { toMillis?: unknown; seconds?: unknown };
+  if (typeof v.toMillis === 'function') return (v.toMillis as () => number)();
+  if (typeof v.seconds === 'number') return v.seconds * 1000;
+  return 0;
+}
+
+/** Newest-first sort by createdAt (in memory — see getPosts note below). */
+function sortNewestFirst(posts: Post[]): Post[] {
+  return posts.sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt));
+}
+
 const POSTS_COLLECTION = 'posts';
 
 interface GetPostsOptions {
@@ -38,7 +51,14 @@ interface GetPostsOptions {
 }
 
 /**
- * Get posts from Firestore with optional filtering
+ * Get posts from Firestore with optional filtering.
+ *
+ * NOTE: we intentionally query with equality filters only and sort/limit in
+ * memory. A `where(...) + orderBy(createdAt)` combo needs a manually
+ * provisioned Firestore composite index; without it the query throws and
+ * every listing page (home, blog, category) renders empty. Equality-only
+ * filters are served by Firestore's automatic single-field indexes, so this
+ * works with zero console setup and is cheap at blog scale.
  */
 export async function getPosts(
   options: GetPostsOptions = {}
@@ -55,27 +75,30 @@ export async function getPosts(
       constraints.push(where('category', '==', options.category));
     }
 
-    constraints.push(orderBy('createdAt', 'desc'));
-
-    if (options.startAfter) {
-      constraints.push(startAfter(options.startAfter));
-    }
-
-    if (options.limit) {
-      constraints.push(limit(options.limit));
-    }
-
     const q = query(collection(db, POSTS_COLLECTION), ...constraints);
     const snapshot = await withTimeout(getDocs(q), 10000, 'getPosts');
 
-    return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Post[];
+    let posts = sortNewestFirst(
+      snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Post[]
+    );
+
+    // Cursor pagination (kept for API compatibility).
+    if (options.startAfter) {
+      const idx = posts.findIndex((p) => p.id === options.startAfter!.id);
+      if (idx >= 0) posts = posts.slice(idx + 1);
+    }
+
+    if (options.limit) {
+      posts = posts.slice(0, options.limit);
+    }
+
+    return posts;
   } catch (error) {
     // Fail soft: build-time prerendering and ISR must not crash when
     // Firebase is unreachable (e.g. no network during `next build`).
-    // Pages render empty and revalidate successfully at runtime.
     console.error('getPosts failed:', error);
     return [];
   }
@@ -107,7 +130,8 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 }
 
 /**
- * Get featured posts for the trending section
+ * Get featured posts for the trending section.
+ * (Equality-only query + in-memory sort — see getPosts note.)
  */
 export async function getFeaturedPosts(): Promise<Post[]> {
   if (!isFirebaseConfigured) return [];
@@ -115,16 +139,16 @@ export async function getFeaturedPosts(): Promise<Post[]> {
     const q = query(
       collection(db, POSTS_COLLECTION),
       where('status', '==', 'published'),
-      where('featured', '==', true),
-      orderBy('createdAt', 'desc'),
-      limit(5)
+      where('featured', '==', true)
     );
     const snapshot = await withTimeout(getDocs(q), 10000, 'getFeaturedPosts');
 
-    return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Post[];
+    return sortNewestFirst(
+      snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Post[]
+    ).slice(0, 5);
   } catch (error) {
     console.error('getFeaturedPosts failed:', error);
     return [];
