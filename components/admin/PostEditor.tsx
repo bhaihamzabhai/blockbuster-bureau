@@ -119,6 +119,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   // Site-cache (ISR) refresh status after publish / manual refresh.
   const [cacheStatus, setCacheStatus] = useState<'idle' | 'refreshing' | 'ok' | 'failed'>('idle');
+  const [cacheErrorDetail, setCacheErrorDetail] = useState<string | null>(null);
   const [tagInput, setTagInput] = useState('');
   const [coverImageUploading, setCoverImageUploading] = useState(false);
   const [coverImageProgress, setCoverImageProgress] = useState(0);
@@ -297,9 +298,10 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
    */
   const refreshSiteCache = async (): Promise<boolean> => {
     setCacheStatus('refreshing');
+    setCacheErrorDetail(null);
     try {
       const user = getCurrentUser();
-      if (!user) throw new Error('Not signed in');
+      if (!user) throw new Error('Not signed in (no user)');
       const token = await user.getIdToken();
       const res = await fetch('/api/revalidate', {
         method: 'POST',
@@ -316,11 +318,15 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
           ],
         }),
       });
-      if (!res.ok) throw new Error(`Server responded ${res.status}`);
+      if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        throw new Error(`Server responded ${res.status} ${body.slice(0, 120)}`);
+      }
       setCacheStatus('ok');
       return true;
     } catch (error) {
       console.error('Cache refresh failed:', error);
+      setCacheErrorDetail(error instanceof Error ? error.message : String(error));
       setCacheStatus('failed');
       return false;
     }
@@ -633,6 +639,11 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                   Published, but the live site cache could not be refreshed
                   automatically. Click &ldquo;Refresh site cache&rdquo; below,
                   then reload the article page.
+                  {cacheErrorDetail && (
+                    <span className="block mt-1 text-xs opacity-80 font-mono">
+                      Detail: {cacheErrorDetail}
+                    </span>
+                  )}
                 </p>
               )}
               {cacheStatus === 'ok' && (
