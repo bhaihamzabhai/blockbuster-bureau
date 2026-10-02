@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Youtube, Mail, ArrowRight } from 'lucide-react';
 import { CATEGORIES, CATEGORY_LABELS, type Category } from '@/types';
 import { getSiteSettings } from '@/lib/siteSettings';
+import VideoSpotlight from '@/components/youtube/VideoSpotlight';
 
 export const metadata: Metadata = {
   title: 'About Us',
@@ -70,12 +71,7 @@ export default async function AboutPage() {
                 </a>
               )}
             </div>
-            <div className="aspect-video bg-gray-900 rounded-xl overflow-hidden flex items-center justify-center">
-              <div className="text-center">
-                <Youtube className="w-16 h-16 text-brand mx-auto mb-4" />
-                <p className="text-gray-400 text-sm">Blockbuster Bureau on YouTube</p>
-              </div>
-            </div>
+            <VideoSpotlight />
           </div>
         </div>
       </section>
