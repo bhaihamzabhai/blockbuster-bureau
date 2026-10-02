@@ -14,6 +14,11 @@ export interface SiteSettings {
   tiktokUrl: string;
   facebookUrl: string;
   heroSlides: HeroSlide[];
+  siteTitle: string;
+  siteDescription: string;
+  metaTitle: string;
+  metaKeywords: string;
+  googleAnalyticsId: string;
 }
 
 const DEFAULTS: SiteSettings = {
@@ -21,6 +26,11 @@ const DEFAULTS: SiteSettings = {
   tiktokUrl: '',
   facebookUrl: '',
   heroSlides: [],
+  siteTitle: '',
+  siteDescription: '',
+  metaTitle: '',
+  metaKeywords: '',
+  googleAnalyticsId: '',
 };
 
 /**
@@ -33,11 +43,17 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     const snap = await getDoc(doc(db, 'settings', 'general'));
     if (!snap.exists()) return DEFAULTS;
     const d = snap.data();
+    const str = (v: unknown) => (typeof v === 'string' ? v : '');
     return {
-      youtubeUrl: typeof d.youtubeUrl === 'string' ? d.youtubeUrl : '',
-      tiktokUrl: typeof d.tiktokUrl === 'string' ? d.tiktokUrl : '',
-      facebookUrl: typeof d.facebookUrl === 'string' ? d.facebookUrl : '',
+      youtubeUrl: str(d.youtubeUrl),
+      tiktokUrl: str(d.tiktokUrl),
+      facebookUrl: str(d.facebookUrl),
       heroSlides: Array.isArray(d.heroSlides) ? (d.heroSlides as HeroSlide[]) : [],
+      siteTitle: str(d.siteTitle),
+      siteDescription: str(d.siteDescription),
+      metaTitle: str(d.metaTitle),
+      metaKeywords: str(d.metaKeywords),
+      googleAnalyticsId: str(d.googleAnalyticsId),
     };
   } catch (error) {
     console.error('getSiteSettings failed:', error);

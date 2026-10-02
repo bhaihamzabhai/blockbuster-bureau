@@ -4,6 +4,7 @@ import { Bebas_Neue, Inter } from 'next/font/google';
 import './globals.css';
 import SiteHeader from '@/components/layout/SiteHeader';
 import Footer from '@/components/layout/Footer';
+import { getSiteSettings } from '@/lib/siteSettings';
 
 const bebasNeue = Bebas_Neue({
   subsets: ['latin'],
@@ -24,77 +25,97 @@ const SITE_URL =
 const DEFAULT_DESCRIPTION =
   "Your daily source for Hollywood news, upcoming movie releases, actor interviews, and exclusive entertainment updates. The Bureau Never Closes.";
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: {
-    template: '%s | Blockbuster Bureau',
-    default: 'Blockbuster Bureau — The Bureau Never Closes',
-  },
-  description: DEFAULT_DESCRIPTION,
-  keywords: [
-    'Hollywood news',
-    'movie news',
-    'upcoming movies',
-    'movie releases',
-    'actor interviews',
-    'film reviews',
-    'entertainment news',
-    'trailers',
-    'Blockbuster Bureau',
-  ],
-  authors: [{ name: 'Blockbuster Bureau' }],
-  creator: 'Blockbuster Bureau',
-  publisher: 'Blockbuster Bureau',
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+const FALLBACK_TITLE = 'Blockbuster Bureau — The Bureau Never Closes';
+
+const DEFAULT_KEYWORDS = [
+  'Hollywood news',
+  'movie news',
+  'upcoming movies',
+  'movie releases',
+  'actor interviews',
+  'film reviews',
+  'entertainment news',
+  'trailers',
+  'Blockbuster Bureau',
+];
+
+/**
+ * Site-wide metadata. Values from the dashboard SEO panel
+ * (settings/general) override these defaults when set.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+
+  const title = settings.metaTitle || FALLBACK_TITLE;
+  const description = settings.siteDescription || DEFAULT_DESCRIPTION;
+  const keywords = settings.metaKeywords
+    ? [...settings.metaKeywords.split(',').map((k) => k.trim()).filter(Boolean), ...DEFAULT_KEYWORDS]
+    : DEFAULT_KEYWORDS;
+
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: {
+      template: '%s | Blockbuster Bureau',
+      default: title,
+    },
+    description,
+    keywords,
+    authors: [{ name: 'Blockbuster Bureau' }],
+    creator: 'Blockbuster Bureau',
+    publisher: 'Blockbuster Bureau',
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    siteName: 'Blockbuster Bureau',
-    url: SITE_URL,
-    title: 'Blockbuster Bureau — The Bureau Never Closes',
-    description: DEFAULT_DESCRIPTION,
-    images: [
-      {
-        url: '/og-cover.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Blockbuster Bureau — Hollywood Movie & Entertainment News',
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
       },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Blockbuster Bureau — The Bureau Never Closes',
-    description: DEFAULT_DESCRIPTION,
-    images: ['/og-cover.jpg'],
-  },
-  alternates: {
-    canonical: SITE_URL,
-    types: {
-      'application/rss+xml': '/feed.xml',
     },
-  },
-  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
-    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
-    : undefined,
-};
+    openGraph: {
+      type: 'website',
+      locale: 'en_US',
+      siteName: 'Blockbuster Bureau',
+      url: SITE_URL,
+      title,
+      description,
+      images: [
+        {
+          url: '/og-cover.jpg',
+          width: 1200,
+          height: 630,
+          alt: 'Blockbuster Bureau — Hollywood Movie & Entertainment News',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ['/og-cover.jpg'],
+    },
+    alternates: {
+      canonical: SITE_URL,
+      types: {
+        'application/rss+xml': '/feed.xml',
+      },
+    },
+    verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+      ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+      : undefined,
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const adsenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  const settings = await getSiteSettings();
+  const gaId = settings.googleAnalyticsId || 'G-EPZPH44NVR';
 
   return (
     <html lang="en" className="dark">
@@ -110,17 +131,17 @@ export default function RootLayout({
             strategy="afterInteractive"
           />
         )}
-        {/* Google Analytics */}
+        {/* Google Analytics (ID configurable from dashboard SEO panel) */}
 <Script
   strategy="afterInteractive"
-  src="https://www.googletagmanager.com/gtag/js?id=G-EPZPH44NVR"
+  src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
 />
 <Script id="google-analytics" strategy="afterInteractive">
   {`
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-EPZPH44NVR');
+    gtag('config', '${gaId}');
   `}
 </Script>
 
