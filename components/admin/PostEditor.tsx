@@ -141,7 +141,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-nova underline hover:text-gold',
+          class: 'text-nova underline hover:text-brand-dark',
         },
       }),
       Image.configure({
@@ -175,7 +175,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
       CodeBlockLowlight.configure({
         lowlight,
         HTMLAttributes: {
-          class: 'bg-void border border-white/10 rounded-lg p-4 font-mono text-sm',
+          class: 'bg-gray-50 border border-gray-200 rounded-lg p-4 font-mono text-sm',
         },
       }),
       YouTubeEmbed,
@@ -433,7 +433,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
   };
 
   return (
-    <div className="min-h-screen bg-void p-6">
+    <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
           {/* Left Column - Editor */}
@@ -445,15 +445,15 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                 value={formState.title}
                 onChange={(e) => handleTitleChange(e.target.value)}
                 placeholder="Post title..."
-                className="w-full bg-transparent text-white text-display text-4xl placeholder-stardust/50 focus:outline-none border-b border-white/10 pb-2"
+                className="w-full bg-transparent text-gray-900 text-display text-4xl placeholder-gray-400 focus:outline-none border-b border-gray-200 pb-2"
               />
               <div className="flex items-center gap-2 mt-2">
-                <span className="text-stardust/50 text-sm">/blog/</span>
+                <span className="text-gray-500/50 text-sm">/blog/</span>
                 <input
                   type="text"
                   value={formState.slug}
                   onChange={(e) => updateFormState({ slug: e.target.value })}
-                  className="bg-transparent text-white text-sm focus:outline-none border-b border-transparent focus:border-gold/50"
+                  className="bg-transparent text-gray-900 text-sm focus:outline-none border-b border-transparent focus:border-brand"
                 />
               </div>
             </div>
@@ -465,12 +465,12 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                 onChange={(e) => updateFormState({ excerpt: e.target.value })}
                 placeholder="Short excerpt shown in post cards and SEO description (max 160 chars)..."
                 rows={2}
-                className="w-full bg-nebula/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-stardust/50 focus:outline-none focus:border-gold/50 resize-none"
+                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand resize-none"
               />
               <div className="flex justify-end mt-1">
                 <span
                   className={`text-xs ${
-                    formState.excerpt.length > 160 ? 'text-red-400' : 'text-stardust/50'
+                    formState.excerpt.length > 160 ? 'text-red-400' : 'text-gray-500/50'
                   }`}
                 >
                   {formState.excerpt.length}/160
@@ -488,16 +488,16 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
             />
 
             {/* Editor Canvas */}
-            <div className="bg-nebula/30 border border-white/10 rounded-b-lg border-t-0">
+            <div className="bg-white/30 border border-gray-200 rounded-b-lg border-t-0">
               <EditorContent
                 editor={editor}
                 className="prose-editor min-h-[500px] p-6 focus:outline-none"
               />
-              <div className="flex items-center justify-between px-6 py-3 border-t border-white/10">
-                <span className="text-stardust/50 text-sm">
+              <div className="flex items-center justify-between px-6 py-3 border-t border-gray-200">
+                <span className="text-gray-500/50 text-sm">
                   {getWordCount()} words | {getReadTime()} min read
                 </span>
-                <span className="text-stardust/50 text-sm">
+                <span className="text-gray-500/50 text-sm">
                   {editor?.storage.characterCount.characters?.() || 0} characters
                 </span>
               </div>
@@ -507,9 +507,9 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
           {/* Right Column - Settings */}
           <div className="space-y-4">
             {/* Save Status */}
-            <div className="bg-nebula rounded-xl border border-white/10 p-4">
+            <div className="bg-white rounded-xl border border-gray-200 p-4">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-stardust text-sm">
+                <span className="text-gray-500 text-sm">
                   {saveStatus === 'saving' && 'Saving...'}
                   {saveStatus === 'saved' && 'All changes saved'}
                   {saveStatus === 'error' && 'Error saving'}
@@ -526,7 +526,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                 <button
                   onClick={handleSaveDraft}
                   disabled={isSaving}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-void border border-white/10 rounded-lg text-white hover:bg-white/5 transition-colors disabled:opacity-50"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors disabled:opacity-50"
                 >
                   <Save className="w-4 h-4" />
                   Save Draft
@@ -543,9 +543,9 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
             </div>
 
             {/* Cover Image */}
-            <div className="bg-nebula rounded-xl border border-white/10 p-4">
-              <h3 className="text-white font-medium mb-3 flex items-center gap-2">
-                <ImageIcon className="w-4 h-4 text-gold" />
+            <div className="bg-white rounded-xl border border-gray-200 p-4">
+              <h3 className="text-gray-900 font-medium mb-3 flex items-center gap-2">
+                <ImageIcon className="w-4 h-4 text-brand-dark" />
                 Cover Image
               </h3>
               {formState.coverImage ? (
@@ -557,7 +557,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                   />
                   <button
                     onClick={() => updateFormState({ coverImage: '' })}
-                    className="absolute top-2 right-2 p-1 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors"
+                    className="absolute top-2 right-2 p-1 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors" 
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -569,13 +569,13 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                 >
                   {coverImageUploading ? (
                     <div className="space-y-2">
-                      <Loader2 className="w-6 h-6 text-gold mx-auto animate-spin" />
-                      <p className="text-stardust text-sm">{coverImageProgress}%</p>
+                      <Loader2 className="w-6 h-6 text-brand-dark mx-auto animate-spin" />
+                      <p className="text-gray-500 text-sm">{coverImageProgress}%</p>
                     </div>
                   ) : (
                     <>
-                      <Upload className="w-6 h-6 text-stardust mx-auto mb-2" />
-                      <p className="text-stardust text-sm">Click to upload cover image</p>
+                      <Upload className="w-6 h-6 text-gray-500 mx-auto mb-2" />
+                      <p className="text-gray-500 text-sm">Click to upload cover image</p>
                     </>
                   )}
                 </div>
@@ -595,11 +595,11 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                   {coverImageError && (
                     <p className="text-amber-400/90 text-xs mb-2 text-center">{coverImageError}</p>
                   )}
-                  <p className="text-stardust text-xs mb-1.5 text-center">— or paste an image URL —</p>
+                  <p className="text-gray-500 text-xs mb-1.5 text-center">— or paste an image URL —</p>
                   <input
                     type="url"
                     placeholder="https://example.com/image.jpg"
-                    className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-stardust/50 focus:border-gold/50 focus:outline-none"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand focus:outline-none"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         const url = (e.target as HTMLInputElement).value.trim();
@@ -615,18 +615,18 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
             </div>
 
             {/* Post Settings */}
-            <div className="bg-nebula rounded-xl border border-white/10 p-4">
-              <h3 className="text-white font-medium mb-3 flex items-center gap-2">
-                <Settings className="w-4 h-4 text-gold" />
+            <div className="bg-white rounded-xl border border-gray-200 p-4">
+              <h3 className="text-gray-900 font-medium mb-3 flex items-center gap-2">
+                <Settings className="w-4 h-4 text-brand-dark" />
                 Post Settings
               </h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-stardust text-sm mb-1">Category</label>
+                  <label className="block text-gray-500 text-sm mb-1">Category</label>
                   <select
                     value={formState.category}
                     onChange={(e) => updateFormState({ category: e.target.value as Category })}
-                    className="w-full px-3 py-2 bg-void border border-white/10 rounded-lg text-white focus:outline-none focus:border-gold/50"
+                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:border-brand"
                   >
                     {CATEGORIES.map((cat) => (
                       <option key={cat} value={cat}>
@@ -636,27 +636,27 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-stardust text-sm mb-1">Author</label>
+                  <label className="block text-gray-500 text-sm mb-1">Author</label>
                   <input
                     type="text"
                     value={formState.author}
                     onChange={(e) => updateFormState({ author: e.target.value })}
                     placeholder="Author name"
-                    className="w-full px-3 py-2 bg-void border border-white/10 rounded-lg text-white placeholder-stardust/50 focus:outline-none focus:border-gold/50"
+                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand"
                   />
                 </div>
                 <div>
-                  <label className="block text-stardust text-sm mb-1">Tags</label>
+                  <label className="block text-gray-500 text-sm mb-1">Tags</label>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {formState.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="inline-flex items-center gap-1 px-2 py-1 bg-gold/20 text-gold rounded text-sm"
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-brand/10 text-brand-dark rounded text-sm"
                       >
                         {tag}
                         <button
                           onClick={() => handleRemoveTag(tag)}
-                          className="hover:text-white transition-colors"
+                          className="hover:text-gray-900 transition-colors"
                         >
                           <X className="w-3 h-3" />
                         </button>
@@ -669,7 +669,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={handleTagKeyDown}
                     placeholder="Type tag and press Enter"
-                    className="w-full px-3 py-2 bg-void border border-white/10 rounded-lg text-white placeholder-stardust/50 focus:outline-none focus:border-gold/50"
+                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand"
                   />
                 </div>
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -677,13 +677,13 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                     type="checkbox"
                     checked={formState.featured}
                     onChange={(e) => updateFormState({ featured: e.target.checked })}
-                    className="w-4 h-4 rounded border-white/20 bg-void text-gold focus:ring-gold/50"
+                    className="w-4 h-4 rounded border-white/20 bg-gray-50 text-brand-dark focus:ring-gold/50"
                   />
-                  <Star className="w-4 h-4 text-gold" />
-                  <span className="text-stardust text-sm">Featured post</span>
+                  <Star className="w-4 h-4 text-brand-dark" />
+                  <span className="text-gray-500 text-sm">Featured post</span>
                 </label>
                 <div>
-                  <label className="block text-stardust text-sm mb-1">Star rating (for “Top Rated”)</label>
+                  <label className="block text-gray-500 text-sm mb-1">Star rating (for “Top Rated”)</label>
                   <div className="flex items-center gap-1">
                     {[1, 2, 3, 4, 5].map((s) => (
                       <button
@@ -695,13 +695,13 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                       >
                         <Star
                           className={`w-6 h-6 transition-colors ${
-                            s <= formState.rating ? 'text-gold fill-gold' : 'text-white/20 hover:text-white/40'
+                            s <= formState.rating ? 'text-brand-dark fill-brand' : 'text-gray-300 hover:text-gray-400'
                           }`}
                         />
                       </button>
                     ))}
                     {formState.rating > 0 && (
-                      <span className="text-stardust text-xs ml-2">{formState.rating}/5</span>
+                      <span className="text-gray-500 text-xs ml-2">{formState.rating}/5</span>
                     )}
                   </div>
                 </div>
@@ -709,12 +709,12 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
             </div>
 
             {/* YouTube Hero Video */}
-            <div className="bg-nebula rounded-xl border border-white/10 p-4">
-              <h3 className="text-white font-medium mb-3 flex items-center gap-2">
-                <Youtube className="w-4 h-4 text-gold" />
+            <div className="bg-white rounded-xl border border-gray-200 p-4">
+              <h3 className="text-gray-900 font-medium mb-3 flex items-center gap-2">
+                <Youtube className="w-4 h-4 text-brand-dark" />
                 Hero Video (Optional)
               </h3>
-              <p className="text-stardust/50 text-xs mb-3">
+              <p className="text-gray-500/50 text-xs mb-3">
                 Featured video displayed at the top of the post
               </p>
               {formState.youtubeVideoId ? (
@@ -726,7 +726,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                   />
                   <button
                     onClick={() => updateFormState({ youtubeVideoId: '' })}
-                    className="absolute top-2 right-2 p-1 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors"
+                    className="absolute top-2 right-2 p-1 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors" 
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -737,22 +737,22 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                   value={formState.youtubeVideoId}
                   onChange={(e) => updateFormState({ youtubeVideoId: e.target.value })}
                   placeholder="YouTube video ID"
-                  className="w-full px-3 py-2 bg-void border border-white/10 rounded-lg text-white placeholder-stardust/50 focus:outline-none focus:border-gold/50"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand"
                 />
               )}
             </div>
 
             {/* SEO Settings */}
-            <div className="bg-nebula rounded-xl border border-white/10 p-4">
+            <div className="bg-white rounded-xl border border-gray-200 p-4">
               <button
                 onClick={() => setSeoOpen(!seoOpen)}
-                className="w-full flex items-center justify-between text-white font-medium"
+                className="w-full flex items-center justify-between text-gray-900 font-medium"
               >
                 <span className="flex items-center gap-2">
-                  <Eye className="w-4 h-4 text-gold" />
+                  <Eye className="w-4 h-4 text-brand-dark" />
                   SEO & Sharing
                 </span>
-                <span className="text-stardust text-sm">{seoOpen ? '−' : '+'}</span>
+                <span className="text-gray-500 text-sm">{seoOpen ? '−' : '+'}</span>
               </button>
               <AnimatePresence>
                 {seoOpen && (
@@ -764,7 +764,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                   >
                     <div className="pt-4 space-y-4">
                       <div>
-                        <label className="block text-stardust text-sm mb-1">Meta Title</label>
+                        <label className="block text-gray-500 text-sm mb-1">Meta Title</label>
                         <input
                           type="text"
                           value={formState.seo.metaTitle}
@@ -774,12 +774,12 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                             })
                           }
                           placeholder={formState.title || 'Meta title'}
-                          className="w-full px-3 py-2 bg-void border border-white/10 rounded-lg text-white placeholder-stardust/50 focus:outline-none focus:border-gold/50"
+                          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand"
                         />
                         <div className="flex justify-end mt-1">
                           <span
                             className={`text-xs ${
-                              formState.seo.metaTitle.length > 60 ? 'text-red-400' : 'text-stardust/50'
+                              formState.seo.metaTitle.length > 60 ? 'text-red-400' : 'text-gray-500/50'
                             }`}
                           >
                             {formState.seo.metaTitle.length}/60
@@ -787,7 +787,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-stardust text-sm mb-1">Meta Description</label>
+                        <label className="block text-gray-500 text-sm mb-1">Meta Description</label>
                         <textarea
                           value={formState.seo.metaDescription}
                           onChange={(e) =>
@@ -797,12 +797,12 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                           }
                           placeholder={formState.excerpt || 'Meta description'}
                           rows={3}
-                          className="w-full px-3 py-2 bg-void border border-white/10 rounded-lg text-white placeholder-stardust/50 focus:outline-none focus:border-gold/50 resize-none"
+                          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand resize-none"
                         />
                         <div className="flex justify-end mt-1">
                           <span
                             className={`text-xs ${
-                              formState.seo.metaDescription.length > 160 ? 'text-red-400' : 'text-stardust/50'
+                              formState.seo.metaDescription.length > 160 ? 'text-red-400' : 'text-gray-500/50'
                             }`}
                           >
                             {formState.seo.metaDescription.length}/160
@@ -811,7 +811,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                       </div>
                       {/* Google Preview */}
                       <div>
-                        <p className="text-stardust text-sm mb-2">Google Preview</p>
+                        <p className="text-gray-500 text-sm mb-2">Google Preview</p>
                         <div className="bg-white rounded-lg p-3">
                           <p className="text-blue-700 text-lg truncate">
                             {formState.seo.metaTitle || formState.title || 'Page Title'}

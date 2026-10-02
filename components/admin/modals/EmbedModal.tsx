@@ -137,22 +137,22 @@ export default function EmbedModal({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="relative bg-nebula rounded-xl border border-white/10 p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto"
+            className="relative bg-white rounded-xl border border-gray-200 p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-display text-xl text-white flex items-center gap-2">
-                <Code className="w-5 h-5 text-gold" />
+              <h3 className="text-display text-xl text-gray-900 flex items-center gap-2">
+                <Code className="w-5 h-5 text-brand-dark" />
                 Embed External Content
               </h3>
               <button
                 onClick={handleClose}
-                className="p-1 rounded hover:bg-white/10 text-stardust hover:text-white transition-colors"
+                className="p-1 rounded hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="bg-void/50 border border-yellow-500/30 rounded-lg p-3 mb-4">
+            <div className="bg-amber-50 border border-yellow-500/30 rounded-lg p-3 mb-4">
               <div className="flex items-start gap-2">
                 <AlertTriangle className="w-4 h-4 text-yellow-500 mt-0.5 shrink-0" />
                 <p className="text-yellow-500/80 text-xs">
@@ -163,7 +163,7 @@ export default function EmbedModal({
             </div>
 
             <div className="mb-4">
-              <label className="block text-stardust text-sm mb-1">Paste Embed Code</label>
+              <label className="block text-gray-500 text-sm mb-1">Paste Embed Code</label>
               <textarea
                 value={embedCode}
                 onChange={(e) => {
@@ -172,7 +172,7 @@ export default function EmbedModal({
                   setError('');
                 }}
                 placeholder={`<iframe src="https://platform.twitter.com/embed/..." width="550" height="300" frameborder="0" allowfullscreen></iframe>`}
-                className="w-full px-4 py-3 bg-void border border-white/10 rounded-lg text-white placeholder-stardust focus:outline-none focus:border-gold/50 font-mono text-sm resize-none"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand font-mono text-sm resize-none"
                 rows={6}
                 autoFocus
               />
@@ -186,19 +186,19 @@ export default function EmbedModal({
 
             {previewHtml && (
               <div className="mb-4">
-                <p className="text-stardust text-sm mb-2">Preview</p>
+                <p className="text-gray-500 text-sm mb-2">Preview</p>
                 <div
-                  className="rounded-lg overflow-hidden bg-void p-4"
+                  className="rounded-lg overflow-hidden bg-gray-50 p-4"
                   dangerouslySetInnerHTML={{ __html: previewHtml }}
                 />
               </div>
             )}
 
-            <div className="flex gap-3 pt-2 border-t border-white/10">
+            <div className="flex gap-3 pt-2 border-t border-gray-200">
               <button
                 type="button"
                 onClick={handlePreview}
-                className="px-4 py-2 rounded-lg border border-white/10 text-white hover:bg-white/5 transition-colors"
+                className="px-4 py-2 rounded-lg border border-gray-200 text-gray-900 hover:bg-white/5 transition-colors"
               >
                 Preview
               </button>
@@ -206,7 +206,7 @@ export default function EmbedModal({
               <button
                 type="button"
                 onClick={handleClose}
-                className="px-4 py-2 rounded-lg border border-white/10 text-white hover:bg-white/5 transition-colors"
+                className="px-4 py-2 rounded-lg border border-gray-200 text-gray-900 hover:bg-white/5 transition-colors"
               >
                 Cancel
               </button>

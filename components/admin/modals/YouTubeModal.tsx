@@ -124,38 +124,38 @@ export default function YouTubeModal({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="relative bg-nebula rounded-xl border border-white/10 p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto"
+            className="relative bg-white rounded-xl border border-gray-200 p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-display text-xl text-white flex items-center gap-2">
-                <Youtube className="w-5 h-5 text-gold" />
+              <h3 className="text-display text-xl text-gray-900 flex items-center gap-2">
+                <Youtube className="w-5 h-5 text-brand-dark" />
                 Insert YouTube Video
               </h3>
               <button
                 onClick={onClose}
-                className="p-1 rounded hover:bg-white/10 text-stardust hover:text-white transition-colors"
+                className="p-1 rounded hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
             <div className="mb-6">
-              <label className="block text-stardust text-sm mb-2">
+              <label className="block text-gray-500 text-sm mb-2">
                 Paste YouTube URL or Video ID
               </label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stardust" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                 <input
                   type="text"
                   value={urlInput}
                   onChange={(e) => handleUrlChange(e.target.value)}
                   placeholder="https://www.youtube.com/watch?v=..."
-                  className="w-full pl-10 pr-4 py-3 bg-void border border-white/10 rounded-lg text-white placeholder-stardust focus:outline-none focus:border-gold/50"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand"
                   autoFocus
                 />
               </div>
               {videoId && (
                 <div className="mt-4 rounded-lg overflow-hidden border border-gold/30">
-                  <div className="relative aspect-video bg-void">
+                  <div className="relative aspect-video bg-gray-50">
                     <img
                       src={getYouTubeThumbnail(videoId, "mqdefault")}
                       alt={videoTitle || "Video thumbnail"}
@@ -168,15 +168,15 @@ export default function YouTubeModal({
                     </div>
                   </div>
                   {videoTitle && (
-                    <div className="p-3 bg-void/50">
-                      <p className="text-white text-sm font-medium truncate">{videoTitle}</p>
+                    <div className="p-3 bg-amber-50">
+                      <p className="text-gray-900 text-sm font-medium truncate">{videoTitle}</p>
                     </div>
                   )}
                 </div>
               )}
             </div>
             <div className="mb-6">
-              <p className="text-stardust text-sm mb-3">Or pick from your channel</p>
+              <p className="text-gray-500 text-sm mb-3">Or pick from your channel</p>
               <div className="grid grid-cols-3 gap-2">
                 {CHANNEL_VIDEOS.map((video) => (
                   <button
@@ -185,7 +185,7 @@ export default function YouTubeModal({
                     className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-colors ${
                       videoId === video.id
                         ? "border-gold"
-                        : "border-white/10 hover:border-white/30"
+                        : "border-gray-200 hover:border-white/30"
                     }`}
                   >
                     <img
@@ -194,67 +194,67 @@ export default function YouTubeModal({
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 hover:opacity-100 transition-opacity">
-                      <Play className="w-6 h-6 text-white" />
+                      <Play className="w-6 h-6 text-gray-900" />
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 p-1 bg-gradient-to-t from-black/80 to-transparent">
-                      <p className="text-white text-xs truncate">{video.title}</p>
+                      <p className="text-gray-900 text-xs truncate">{video.title}</p>
                     </div>
                   </button>
                 ))}
               </div>
-              <p className="text-stardust/50 text-xs mt-2">
+              <p className="text-gray-500/50 text-xs mt-2">
                 {'// TODO: Replace hardcoded array with YouTube Data API v3 call using NEXT_PUBLIC_YOUTUBE_API_KEY'}
               </p>
             </div>
             <div className="space-y-4 mb-6">
-              <p className="text-stardust text-sm font-medium">Embed Options</p>
+              <p className="text-gray-500 text-sm font-medium">Embed Options</p>
               <div className="grid grid-cols-2 gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={nocookie}
                     onChange={(e) => setNocookie(e.target.checked)}
-                    className="w-4 h-4 rounded border-white/20 bg-void text-gold focus:ring-gold/50"
+                    className="w-4 h-4 rounded border-white/20 bg-gray-50 text-brand-dark focus:ring-gold/50"
                   />
-                  <span className="text-stardust text-sm">Privacy-enhanced mode</span>
+                  <span className="text-gray-500 text-sm">Privacy-enhanced mode</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={rel}
                     onChange={(e) => setRel(e.target.checked)}
-                    className="w-4 h-4 rounded border-white/20 bg-void text-gold focus:ring-gold/50"
+                    className="w-4 h-4 rounded border-white/20 bg-gray-50 text-brand-dark focus:ring-gold/50"
                   />
-                  <span className="text-stardust text-sm">Show related videos</span>
+                  <span className="text-gray-500 text-sm">Show related videos</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={autoplay}
                     onChange={(e) => setAutoplay(e.target.checked)}
-                    className="w-4 h-4 rounded border-white/20 bg-void text-gold focus:ring-gold/50"
+                    className="w-4 h-4 rounded border-white/20 bg-gray-50 text-brand-dark focus:ring-gold/50"
                   />
-                  <span className="text-stardust text-sm">Autoplay</span>
+                  <span className="text-gray-500 text-sm">Autoplay</span>
                 </label>
                 <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-stardust" />
+                  <Clock className="w-4 h-4 text-gray-500" />
                   <input
                     type="text"
                     value={startTime}
                     onChange={(e) => setStartTime(e.target.value)}
                     placeholder="Start time (e.g. 1:30)"
-                    className="flex-1 px-2 py-1 bg-void border border-white/10 rounded text-white text-sm placeholder-stardust focus:outline-none focus:border-gold/50"
+                    className="flex-1 px-2 py-1 bg-gray-50 border border-gray-200 rounded text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-brand"
                   />
                 </div>
               </div>
               <div>
-                <p className="text-stardust text-sm mb-2">Alignment</p>
+                <p className="text-gray-500 text-sm mb-2">Alignment</p>
                 <div className="flex gap-2">
                   <button
                     type="button"
                     onClick={() => setAlign("left")}
                     className={`p-2 rounded transition-colors ${
-                      align === "left" ? "bg-gold/20 text-gold" : "bg-void text-stardust hover:text-white"
+                      align === "left" ? "bg-gold/20 text-brand-dark" : "bg-gray-50 text-gray-500 hover:text-gray-900"
                     }`}
                   >
                     <AlignLeft className="w-4 h-4" />
@@ -263,7 +263,7 @@ export default function YouTubeModal({
                     type="button"
                     onClick={() => setAlign("center")}
                     className={`p-2 rounded transition-colors ${
-                      align === "center" ? "bg-gold/20 text-gold" : "bg-void text-stardust hover:text-white"
+                      align === "center" ? "bg-gold/20 text-brand-dark" : "bg-gray-50 text-gray-500 hover:text-gray-900"
                     }`}
                   >
                     <AlignCenter className="w-4 h-4" />
@@ -272,7 +272,7 @@ export default function YouTubeModal({
                     type="button"
                     onClick={() => setAlign("right")}
                     className={`p-2 rounded transition-colors ${
-                      align === "right" ? "bg-gold/20 text-gold" : "bg-void text-stardust hover:text-white"
+                      align === "right" ? "bg-gold/20 text-brand-dark" : "bg-gray-50 text-gray-500 hover:text-gray-900"
                     }`}
                   >
                     <AlignRight className="w-4 h-4" />
@@ -280,22 +280,22 @@ export default function YouTubeModal({
                 </div>
               </div>
               <div>
-                <label className="block text-stardust text-sm mb-1">Caption (optional)</label>
+                <label className="block text-gray-500 text-sm mb-1">Caption (optional)</label>
                 <input
                   type="text"
                   value={caption}
                   onChange={(e) => setCaption(e.target.value)}
                   placeholder="Video caption..."
-                  className="w-full px-4 py-2 bg-void border border-white/10 rounded-lg text-white placeholder-stardust focus:outline-none focus:border-gold/50"
+                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand"
                 />
               </div>
             </div>
-            <div className="flex gap-3 pt-2 border-t border-white/10">
+            <div className="flex gap-3 pt-2 border-t border-gray-200">
               <div className="flex-1" />
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-lg border border-white/10 text-white hover:bg-white/5 transition-colors"
+                className="px-4 py-2 rounded-lg border border-gray-200 text-gray-900 hover:bg-gray-100 transition-colors"
               >
                 Cancel
               </button>

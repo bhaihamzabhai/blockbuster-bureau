@@ -54,8 +54,8 @@ function ToolbarButton({ onClick, isActive, disabled, children, title }: Toolbar
       title={title}
       className={`w-8 h-8 flex items-center justify-center rounded transition-colors ${
         isActive
-          ? 'bg-gold/20 text-gold'
-          : 'text-white/70 hover:bg-white/10 hover:text-white'
+          ? 'bg-gold/20 text-brand-dark'
+          : 'text-gray-900/70 hover:bg-gray-100 hover:text-gray-900'
       } disabled:opacity-30 disabled:cursor-not-allowed`}
     >
       {children}
@@ -64,7 +64,7 @@ function ToolbarButton({ onClick, isActive, disabled, children, title }: Toolbar
 }
 
 function ToolbarDivider() {
-  return <div className="w-px h-6 bg-white/10 mx-1" />;
+  return <div className="w-px h-6 bg-gray-100 mx-1" />;
 }
 
 function ToolbarGroup({ children }: { children: React.ReactNode }) {
@@ -81,7 +81,7 @@ export default function EditorToolbar({
   if (!editor) return null;
 
   return (
-    <div className="bg-nebula rounded-t-lg border border-white/10 border-b-0 p-2 flex flex-wrap items-center gap-1">
+    <div className="bg-white rounded-t-lg border border-gray-200 border-b-0 p-2 flex flex-wrap items-center gap-1">
       {/* Group 1: History */}
       <ToolbarButton
         onClick={() => editor.chain().focus().undo().run()}
@@ -122,7 +122,7 @@ export default function EditorToolbar({
             ? 'heading4'
             : 'paragraph'
         }
-        className="h-8 px-2 bg-void border border-white/10 rounded text-white text-sm focus:outline-none focus:border-gold/50"
+        className="h-8 px-2 bg-gray-100 border border-gray-200 rounded text-gray-900 text-sm focus:outline-none focus:border-brand"
       >
         <option value="paragraph">Paragraph</option>
         <option value="heading1">Heading 1</option>
@@ -144,7 +144,7 @@ export default function EditorToolbar({
           }
         }}
         value={editor.getAttributes('textStyle').fontFamily || 'default'}
-        className="h-8 px-2 bg-void border border-white/10 rounded text-white text-sm focus:outline-none focus:border-gold/50"
+        className="h-8 px-2 bg-gray-100 border border-gray-200 rounded text-gray-900 text-sm focus:outline-none focus:border-brand"
       >
         <option value="default">Inter (Default)</option>
         <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
@@ -166,7 +166,7 @@ export default function EditorToolbar({
           }
         }}
         value={editor.getAttributes('textStyle').fontSize || 'default'}
-        className="h-8 px-2 bg-void border border-white/10 rounded text-white text-sm focus:outline-none focus:border-gold/50"
+        className="h-8 px-2 bg-gray-100 border border-gray-200 rounded text-gray-900 text-sm focus:outline-none focus:border-brand"
       >
         <option value="default">Normal</option>
         <option value="14px">Small</option>

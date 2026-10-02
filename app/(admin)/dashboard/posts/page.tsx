@@ -86,8 +86,8 @@ export default function PostsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-display text-4xl text-white">All Posts</h1>
-          <p className="text-stardust mt-1">
+          <h1 className="text-display text-4xl text-gray-900">All Posts</h1>
+          <p className="text-gray-500 mt-1">
             {filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'}
           </p>
         </div>
@@ -104,13 +104,13 @@ export default function PostsPage() {
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         {/* Search */}
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stardust" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
           <input
             type="text"
             placeholder="Search posts..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-nebula border border-white/10 rounded-lg text-white placeholder-stardust focus:outline-none focus:border-gold/50"
+            className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand"
           />
         </div>
 
@@ -118,7 +118,7 @@ export default function PostsPage() {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as 'all' | 'published' | 'draft')}
-          className="px-4 py-2 bg-nebula border border-white/10 rounded-lg text-white focus:outline-none focus:border-gold/50"
+          className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:border-brand"
         >
           <option value="all">All Status</option>
           <option value="published">Published</option>
@@ -129,7 +129,7 @@ export default function PostsPage() {
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value as Category | 'all')}
-          className="px-4 py-2 bg-nebula border border-white/10 rounded-lg text-white focus:outline-none focus:border-gold/50"
+          className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:border-brand"
         >
           <option value="all">All Categories</option>
           {CATEGORIES.map((category) => (
@@ -144,7 +144,7 @@ export default function PostsPage() {
       {loading ? (
         <div className="flex items-center justify-center py-12">
           <svg
-            className="animate-spin h-8 w-8 text-gold"
+            className="animate-spin h-8 w-8 text-brand-dark"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

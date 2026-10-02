@@ -204,16 +204,16 @@ export default function ImageModal({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="relative bg-nebula rounded-xl border border-white/10 p-6 max-w-md w-full"
+            className="relative bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-display text-xl text-white flex items-center gap-2">
-                <ImageIcon className="w-5 h-5 text-gold" />
+              <h3 className="text-display text-xl text-gray-900 flex items-center gap-2">
+                <ImageIcon className="w-5 h-5 text-brand-dark" />
                 Insert Image
               </h3>
               <button
                 onClick={handleClose}
-                className="p-1 rounded hover:bg-white/10 text-stardust hover:text-white transition-colors"
+                className="p-1 rounded hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -226,8 +226,8 @@ export default function ImageModal({
                 onClick={() => setActiveTab('upload')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                   activeTab === 'upload'
-                    ? 'bg-gold/20 text-gold'
-                    : 'bg-void text-stardust hover:text-white'
+                    ? 'bg-gold/20 text-brand-dark'
+                    : 'bg-gray-50 text-gray-500 hover:text-gray-900'
                 }`}
               >
                 <Upload className="w-4 h-4" />
@@ -238,8 +238,8 @@ export default function ImageModal({
                 onClick={() => setActiveTab('url')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                   activeTab === 'url'
-                    ? 'bg-gold/20 text-gold'
-                    : 'bg-void text-stardust hover:text-white'
+                    ? 'bg-gold/20 text-brand-dark'
+                    : 'bg-gray-50 text-gray-500 hover:text-gray-900'
                 }`}
               >
                 <LinkIcon className="w-4 h-4" />
@@ -265,9 +265,9 @@ export default function ImageModal({
                 >
                   {uploading ? (
                     <div className="space-y-2">
-                      <Loader2 className="w-8 h-8 text-gold mx-auto animate-spin" />
-                      <p className="text-stardust">Uploading... {uploadProgress}%</p>
-                      <div className="w-full bg-void rounded-full h-2">
+                      <Loader2 className="w-8 h-8 text-brand-dark mx-auto animate-spin" />
+                      <p className="text-gray-500">Uploading... {uploadProgress}%</p>
+                      <div className="w-full bg-gray-50 rounded-full h-2">
                         <div
                           className="bg-gold h-2 rounded-full transition-all"
                           style={{ width: `${uploadProgress}%` }}
@@ -276,11 +276,11 @@ export default function ImageModal({
                     </div>
                   ) : (
                     <>
-                      <Upload className="w-8 h-8 text-stardust mx-auto mb-2" />
-                      <p className="text-stardust">
+                      <Upload className="w-8 h-8 text-gray-500 mx-auto mb-2" />
+                      <p className="text-gray-500">
                         Drag & drop an image here, or click to browse
                       </p>
-                      <p className="text-stardust/50 text-xs mt-1">
+                      <p className="text-gray-500/50 text-xs mt-1">
                         JPEG, PNG, WebP, GIF (max 5MB)
                       </p>
                     </>
@@ -303,13 +303,13 @@ export default function ImageModal({
             {activeTab === 'url' && (
               <div className="space-y-4">
                 <div>
-                  <label className="block text-stardust text-sm mb-1">Image URL</label>
+                  <label className="block text-gray-500 text-sm mb-1">Image URL</label>
                   <input
                     type="text"
                     value={imageUrl}
                     onChange={(e) => handleUrlChange(e.target.value)}
                     placeholder="https://example.com/image.jpg"
-                    className="w-full px-4 py-2 bg-void border border-white/10 rounded-lg text-white placeholder-stardust focus:outline-none focus:border-gold/50"
+                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand"
                     autoFocus
                   />
                 </div>
@@ -319,8 +319,8 @@ export default function ImageModal({
             {/* Preview */}
             {preview && (
               <div className="mt-4">
-                <p className="text-stardust text-sm mb-2">Preview</p>
-                <div className="rounded-lg overflow-hidden bg-void p-2">
+                <p className="text-gray-500 text-sm mb-2">Preview</p>
+                <div className="rounded-lg overflow-hidden bg-gray-50 p-2">
                   <img
                     src={preview}
                     alt="Preview"
@@ -332,19 +332,19 @@ export default function ImageModal({
 
             {/* Alt Text */}
             <div className="mt-4">
-              <label className="block text-stardust text-sm mb-1">Alt Text *</label>
+              <label className="block text-gray-500 text-sm mb-1">Alt Text *</label>
               <input
                 type="text"
                 value={altText}
                 onChange={(e) => setAltText(e.target.value)}
                 placeholder="Describe the image for accessibility"
-                className="w-full px-4 py-2 bg-void border border-white/10 rounded-lg text-white placeholder-stardust focus:outline-none focus:border-gold/50"
+                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand"
               />
             </div>
 
             {/* Width */}
             <div className="mt-4">
-              <label className="block text-stardust text-sm mb-1">Image Size</label>
+              <label className="block text-gray-500 text-sm mb-1">Image Size</label>
               <div className="flex gap-2">
                 {['full', 'medium', 'small'].map((size) => (
                   <button
@@ -353,8 +353,8 @@ export default function ImageModal({
                     onClick={() => setWidth(size)}
                     className={`flex-1 px-3 py-2 rounded-lg text-sm transition-colors ${
                       width === size
-                        ? 'bg-gold/20 text-gold'
-                        : 'bg-void text-stardust hover:text-white'
+                        ? 'bg-gold/20 text-brand-dark'
+                        : 'bg-gray-50 text-gray-500 hover:text-gray-900'
                     }`}
                   >
                     {size === 'full' ? 'Full Width' : size === 'medium' ? 'Medium (60%)' : 'Small (40%)'}
@@ -364,12 +364,12 @@ export default function ImageModal({
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3 pt-4 mt-4 border-t border-white/10">
+            <div className="flex gap-3 pt-4 mt-4 border-t border-gray-200">
               <div className="flex-1" />
               <button
                 type="button"
                 onClick={handleClose}
-                className="px-4 py-2 rounded-lg border border-white/10 text-white hover:bg-white/5 transition-colors"
+                className="px-4 py-2 rounded-lg border border-gray-200 text-gray-900 hover:bg-white/5 transition-colors"
               >
                 Cancel
               </button>

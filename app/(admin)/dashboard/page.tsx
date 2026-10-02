@@ -69,9 +69,9 @@ export default function DashboardHome() {
 
   if (error) {
     return (
-      <div className="max-w-xl mx-auto mt-16 p-8 rounded-2xl bg-white/5 border border-white/10 text-center">
-        <h2 className="text-xl text-white font-semibold mb-2">Couldn&apos;t load dashboard</h2>
-        <p className="text-stardust text-sm mb-6">{error}</p>
+      <div className="max-w-xl mx-auto mt-16 p-8 rounded-2xl bg-white border border-gray-200 text-center">
+        <h2 className="text-xl text-gray-900 font-semibold mb-2">Couldn&apos;t load dashboard</h2>
+        <p className="text-gray-500 text-sm mb-6">{error}</p>
         <button
           onClick={fetchStats}
           className="px-6 py-2.5 rounded-xl bg-gold text-black font-semibold hover:brightness-110 transition"
@@ -93,8 +93,8 @@ export default function DashboardHome() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-display text-4xl text-white">Dashboard</h1>
-        <p className="text-stardust mt-2">Welcome back! Here&apos;s your site overview.</p>
+        <h1 className="text-display text-4xl text-gray-900">Dashboard</h1>
+        <p className="text-gray-500 mt-2">Welcome back! Here&apos;s your site overview.</p>
       </div>
 
       {/* Stats Grid */}
@@ -116,16 +116,16 @@ export default function DashboardHome() {
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-nebula rounded-xl border border-white/5 p-6">
-        <h2 className="text-display text-2xl text-white mb-4">Recent Activity</h2>
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <h2 className="text-display text-2xl text-gray-900 mb-4">Recent Activity</h2>
 
         {stats.recentPosts.length === 0 ? (
-          <p className="text-stardust">No posts yet. Create your first post!</p>
+          <p className="text-gray-500">No posts yet. Create your first post!</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="text-left text-stardust text-sm border-b border-white/10">
+                <tr className="text-left text-gray-500 text-sm border-b border-gray-200">
                   <th className="pb-3 font-medium">Title</th>
                   <th className="pb-3 font-medium">Status</th>
                   <th className="pb-3 font-medium">Views</th>
@@ -134,11 +134,11 @@ export default function DashboardHome() {
               </thead>
               <tbody>
                 {stats.recentPosts.map((post) => (
-                  <tr key={post.id} className="border-b border-white/5">
+                  <tr key={post.id} className="border-b border-gray-200">
                     <td className="py-3">
                       <Link
                         href={`/dashboard/posts/${post.id}/edit`}
-                        className="text-white hover:text-gold transition-colors"
+                        className="text-gray-900 hover:text-brand-dark transition-colors"
                       >
                         {post.title}
                       </Link>
@@ -147,15 +147,15 @@ export default function DashboardHome() {
                       <span
                         className={`px-2 py-1 rounded text-xs ${
                           post.status === 'published'
-                            ? 'bg-gold/20 text-gold'
-                            : 'bg-stardust/20 text-stardust'
+                            ? 'bg-gold/20 text-brand-dark'
+                            : 'bg-stardust/20 text-gray-500'
                         }`}
                       >
                         {post.status}
                       </span>
                     </td>
-                    <td className="py-3 text-stardust">{post.views || 0}</td>
-                    <td className="py-3 text-stardust text-sm">
+                    <td className="py-3 text-gray-500">{post.views || 0}</td>
+                    <td className="py-3 text-gray-500 text-sm">
                       {post.updatedAt?.toDate?.().toLocaleDateString() || 'N/A'}
                     </td>
                   </tr>
@@ -178,19 +178,19 @@ interface StatCardProps {
 
 function StatCard({ icon: Icon, label, value, color }: StatCardProps) {
   const colorClasses = {
-    gold: 'text-gold bg-gold/10',
-    nova: 'text-nova bg-nova/10',
+    gold: 'text-brand-dark bg-gold/10',
+    nova: 'text-blue-600 bg-nova/10',
     green: 'text-green-400 bg-green-400/10',
-    stardust: 'text-stardust bg-stardust/10',
+    stardust: 'text-gray-500 bg-stardust/10',
   };
 
   return (
-    <div className="bg-nebula rounded-xl border border-white/5 p-6">
+    <div className="bg-white rounded-xl border border-gray-200 p-6">
       <div className={`w-12 h-12 rounded-lg ${colorClasses[color]} flex items-center justify-center mb-4`}>
         <Icon className="w-6 h-6" />
       </div>
-      <p className="text-stardust text-sm">{label}</p>
-      <p className="text-display text-3xl text-white mt-1">{value}</p>
+      <p className="text-gray-500 text-sm">{label}</p>
+      <p className="text-display text-3xl text-gray-900 mt-1">{value}</p>
     </div>
   );
 }

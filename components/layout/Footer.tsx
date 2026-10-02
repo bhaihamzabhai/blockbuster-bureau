@@ -10,13 +10,13 @@ export default async function Footer() {
   const settings = await getSiteSettings();
 
   return (
-    <footer className="bg-gray-900 text-gray-300 mt-0">
+    <footer className="bg-gray-100 text-gray-600 mt-0 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
-            <SiteLogo size="sm" theme="dark" />
-            <p className="text-gray-400 text-sm mt-4 leading-relaxed">
+            <SiteLogo size="sm" theme="light" />
+            <p className="text-gray-500 text-sm mt-4 leading-relaxed">
               Your daily source for Hollywood news, upcoming movies, trailers
               and entertainment updates.
             </p>
@@ -25,7 +25,7 @@ export default async function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-4">Quick Links</h4>
+            <h4 className="text-gray-900 font-bold text-sm uppercase tracking-wider mb-4">Quick Links</h4>
             <ul className="space-y-2.5">
               {[
                 { href: '/', label: 'Home' },
@@ -34,7 +34,7 @@ export default async function Footer() {
                 { href: '/privacy', label: 'Privacy Policy' },
               ].map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="text-gray-400 hover:text-brand text-sm transition-colors">
+                  <Link href={l.href} className="text-gray-500 hover:text-brand text-sm transition-colors">
                     {l.label}
                   </Link>
                 </li>
@@ -44,13 +44,13 @@ export default async function Footer() {
 
           {/* Categories */}
           <div>
-            <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-4">Categories</h4>
+            <h4 className="text-gray-900 font-bold text-sm uppercase tracking-wider mb-4">Categories</h4>
             <ul className="space-y-2.5">
               {(CATEGORIES as Category[]).map((cat) => (
                 <li key={cat}>
                   <Link
                     href={`/category/${cat}`}
-                    className="text-gray-400 hover:text-brand text-sm transition-colors"
+                    className="text-gray-500 hover:text-brand text-sm transition-colors"
                   >
                     {CATEGORY_LABELS[cat]}
                   </Link>
@@ -61,8 +61,8 @@ export default async function Footer() {
 
           {/* Watch */}
           <div>
-            <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-4">Watch</h4>
-            <p className="text-gray-400 text-sm leading-relaxed mb-4">
+            <h4 className="text-gray-900 font-bold text-sm uppercase tracking-wider mb-4">Watch</h4>
+            <p className="text-gray-500 text-sm leading-relaxed mb-4">
               Facecam videos, reviews and Hollywood updates on our YouTube channel.
             </p>
             {settings.youtubeUrl ? (
@@ -86,10 +86,10 @@ export default async function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-white/10">
+      <div className="border-t border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-gray-500 text-xs">© {currentYear} Blockbuster Bureau. All rights reserved.</p>
-          <p className="text-gray-500 text-xs">The Bureau Never Closes</p>
+          <p className="text-gray-400 text-xs">© {currentYear} Blockbuster Bureau. All rights reserved.</p>
+          <p className="text-gray-400 text-xs">The Bureau Never Closes</p>
         </div>
       </div>
     </footer>

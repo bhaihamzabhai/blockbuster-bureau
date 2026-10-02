@@ -45,18 +45,18 @@ function LoginFormContent() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-void">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-gray-100">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-display text-5xl text-gold mb-2">Blockbuster Bureau</h1>
-          <p className="text-stardust">Admin Dashboard</p>
+          <h1 className="text-display text-5xl text-brand-dark mb-2">Blockbuster Bureau</h1>
+          <p className="text-gray-500">Admin Dashboard</p>
         </div>
 
         {/* Login Form */}
-        <div className="bg-nebula rounded-xl border border-white/10 p-8">
-          <h2 className="text-display text-2xl text-white mb-6 flex items-center gap-2">
-            <LogIn className="w-6 h-6 text-gold" />
+        <div className="bg-white rounded-xl border border-white/10 p-8">
+          <h2 className="text-display text-2xl text-gray-900 mb-6 flex items-center gap-2">
+            <LogIn className="w-6 h-6 text-brand-dark" />
             Sign In
           </h2>
 
@@ -69,7 +69,7 @@ function LoginFormContent() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-stardust text-sm mb-2">
+              <label htmlFor="email" className="block text-gray-500 text-sm mb-2">
                 Email
               </label>
               <input
@@ -78,13 +78,13 @@ function LoginFormContent() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-void border border-white/10 rounded-lg text-white placeholder-stardust focus:outline-none focus:border-gold/50"
+                className="w-full px-4 py-3 bg-gray-100 border border-white/10 rounded-lg text-gray-900 placeholder-stardust focus:outline-none focus:border-gold/50"
                 placeholder="admin@example.com"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-stardust text-sm mb-2">
+              <label htmlFor="password" className="block text-gray-500 text-sm mb-2">
                 Password
               </label>
               <input
@@ -93,7 +93,7 @@ function LoginFormContent() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-void border border-white/10 rounded-lg text-white placeholder-stardust focus:outline-none focus:border-gold/50"
+                className="w-full px-4 py-3 bg-gray-100 border border-white/10 rounded-lg text-gray-900 placeholder-stardust focus:outline-none focus:border-gold/50"
                 placeholder="••••••••"
               />
             </div>
@@ -136,7 +136,7 @@ function LoginFormContent() {
 
         {/* Back to site */}
         <p className="text-center mt-6">
-          <a href="/" className="text-stardust hover:text-gold transition-colors text-sm">
+          <a href="/" className="text-gray-500 hover:text-brand-dark transition-colors text-sm">
             ← Back to site
           </a>
         </p>
@@ -149,7 +149,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-void">
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
           <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" />
         </div>
       }

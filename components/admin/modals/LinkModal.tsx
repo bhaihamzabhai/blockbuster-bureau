@@ -78,16 +78,16 @@ export default function LinkModal({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="relative bg-nebula rounded-xl border border-white/10 p-6 max-w-md w-full"
+            className="relative bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-display text-xl text-white flex items-center gap-2">
-                <LinkIcon className="w-5 h-5 text-gold" />
+              <h3 className="text-display text-xl text-gray-900 flex items-center gap-2">
+                <LinkIcon className="w-5 h-5 text-brand-dark" />
                 Insert Link
               </h3>
               <button
                 onClick={onClose}
-                className="p-1 rounded hover:bg-white/10 text-stardust hover:text-white transition-colors"
+                className="p-1 rounded hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -97,25 +97,25 @@ export default function LinkModal({
               {error && <p className="text-red-400 text-sm">{error}</p>}
 
               <div>
-                <label className="block text-stardust text-sm mb-1">URL</label>
+                <label className="block text-gray-500 text-sm mb-1">URL</label>
                 <input
                   type="text"
                   value={href}
                   onChange={(e) => setHref(e.target.value)}
                   placeholder="https://example.com"
-                  className="w-full px-4 py-2 bg-void border border-white/10 rounded-lg text-white placeholder-stardust focus:outline-none focus:border-gold/50"
+                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand"
                   autoFocus
                 />
               </div>
 
               <div>
-                <label className="block text-stardust text-sm mb-1">Link Text (optional)</label>
+                <label className="block text-gray-500 text-sm mb-1">Link Text (optional)</label>
                 <input
                   type="text"
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder="Click here"
-                  className="w-full px-4 py-2 bg-void border border-white/10 rounded-lg text-white placeholder-stardust focus:outline-none focus:border-gold/50"
+                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand"
                 />
               </div>
 
@@ -125,18 +125,18 @@ export default function LinkModal({
                     type="checkbox"
                     checked={newTab}
                     onChange={(e) => setNewTab(e.target.checked)}
-                    className="w-4 h-4 rounded border-white/20 bg-void text-gold focus:ring-gold/50"
+                    className="w-4 h-4 rounded border-white/20 bg-gray-50 text-brand-dark focus:ring-gold/50"
                   />
-                  <span className="text-stardust text-sm">Open in new tab</span>
+                  <span className="text-gray-500 text-sm">Open in new tab</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={nofollow}
                     onChange={(e) => setNofollow(e.target.checked)}
-                    className="w-4 h-4 rounded border-white/20 bg-void text-gold focus:ring-gold/50"
+                    className="w-4 h-4 rounded border-white/20 bg-gray-50 text-brand-dark focus:ring-gold/50"
                   />
-                  <span className="text-stardust text-sm">Nofollow</span>
+                  <span className="text-gray-500 text-sm">Nofollow</span>
                 </label>
               </div>
 
@@ -157,7 +157,7 @@ export default function LinkModal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 rounded-lg border border-white/10 text-white hover:bg-white/5 transition-colors"
+                  className="px-4 py-2 rounded-lg border border-gray-200 text-gray-900 hover:bg-gray-100 transition-colors"
                 >
                   Cancel
                 </button>

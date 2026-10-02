@@ -38,21 +38,21 @@ export default function DeleteConfirmModal({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="relative bg-nebula rounded-xl border border-white/10 p-6 max-w-md w-full"
+            className="relative bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full"
           >
             {/* Warning Icon */}
             <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center">
                 <AlertTriangle className="w-6 h-6 text-red-400" />
               </div>
-              <h3 className="text-display text-2xl text-white">Delete Post?</h3>
+              <h3 className="text-display text-2xl text-gray-900">Delete Post?</h3>
             </div>
 
             {/* Message */}
-            <p className="text-stardust mb-2">
+            <p className="text-gray-500 mb-2">
               Are you sure you want to delete this post? This action cannot be undone.
             </p>
-            <p className="text-white font-medium mb-6 line-clamp-2">
+            <p className="text-gray-900 font-medium mb-6 line-clamp-2">
               &ldquo;{post.title}&rdquo;
             </p>
 
@@ -61,14 +61,14 @@ export default function DeleteConfirmModal({
               <button
                 onClick={onClose}
                 disabled={isDeleting}
-                className="flex-1 px-4 py-2 rounded-lg border border-white/10 text-white hover:bg-white/5 transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 rounded-lg border border-gray-200 text-gray-900 hover:bg-white transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 onClick={onConfirm}
                 disabled={isDeleting}
-                className="flex-1 px-4 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-2 rounded-lg bg-red-600 text-gray-900 font-medium hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {isDeleting ? (
                   <>

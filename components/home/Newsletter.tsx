@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { Mail, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 
-/** Newsletter signup form — stores emails in the `newsletter_subscribers` collection. */
+/**
+ * Newsletter signup form — posts to /api/newsletter, which applies
+ * honeypot + per-IP rate limiting before writing to Firestore.
+ */
 export default function Newsletter() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
@@ -22,27 +23,23 @@ export default function Newsletter() {
     setStatus('loading');
     setMessage('');
     try {
-      // Avoid duplicates
-      const dup = await getDocs(
-        query(collection(db, 'newsletter_subscribers'), where('email', '==', value))
-      );
-      if (!dup.empty) {
-        setStatus('done');
-        setMessage('You are already subscribed!');
-        return;
-      }
-      await addDoc(collection(db, 'newsletter_subscribers'), {
-        email: value,
-        createdAt: serverTimestamp(),
-        source: 'homepage',
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // `website` is a honeypot field — always empty for real users.
+        body: JSON.stringify({ email: value, website: '' }),
       });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || 'Something went wrong. Please try again later.');
+      }
       setStatus('done');
       setMessage('Subscribed! You will get the latest Hollywood updates.');
       setEmail('');
     } catch (err) {
       console.error('Newsletter signup failed:', err);
       setStatus('error');
-      setMessage('Something went wrong. Please try again later.');
+      setMessage(err instanceof Error ? err.message : 'Something went wrong. Please try again later.');
     }
   };
 

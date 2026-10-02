@@ -13,9 +13,6 @@ export default function DashboardLayout({
   const { user, loading, isAdmin } = useAuth();
   const router = useRouter();
 
-  // DEBUG: Print current logged-in user email in browser console (F12)
-  console.log('Current Logged-in User:', user?.email);
-
   // Only real admins (verified via the Firebase custom claim) may use the dashboard.
   const isAllowed = isAdmin;
 
@@ -31,17 +28,17 @@ export default function DashboardLayout({
   // Loading state
   if (loading || !user || !isAllowed) {
     return (
-      <div className="min-h-screen bg-void flex items-center justify-center">
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-10 h-10 border-2 border-gold border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-stardust text-sm">Verifying access...</p>
+          <div className="w-10 h-10 border-2 border-brand border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-500 text-sm">Verifying access...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-void">
+    <div className="min-h-screen bg-gray-100">
       <Sidebar user={user} />
       <main className="ml-64 p-8">{children}</main>
     </div>

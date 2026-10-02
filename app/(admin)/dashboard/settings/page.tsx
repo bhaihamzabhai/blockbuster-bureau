@@ -124,7 +124,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="p-8 max-w-4xl mx-auto text-white">
+    <div className="p-8 max-w-4xl mx-auto text-gray-900">
       <h1 className="text-2xl font-bold mb-2">Settings & SEO Panel</h1>
       <p className="text-gray-400 mb-8">Manage your site preferences, SEO meta tags, and administrator profile.</p>
 
@@ -136,81 +136,81 @@ export default function SettingsPage() {
 
       <form onSubmit={handleSave} className="space-y-8">
         {/* Site Configuration Section */}
-        <div className="bg-[#111827] border border-gray-800 p-6 rounded-xl shadow-lg">
-          <h2 className="text-lg font-semibold mb-4 text-blue-400">Site Configuration</h2>
+        <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
+          <h2 className="text-lg font-semibold mb-4 text-blue-700">Site Configuration</h2>
           
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Site Title</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Site Title</label>
               <input
                 type="text"
                 value={siteTitle}
                 onChange={(e) => setSiteTitle(e.target.value)}
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:border-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Site Description</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Site Description</label>
               <textarea
                 value={siteDescription}
                 onChange={(e) => setSiteDescription(e.target.value)}
                 rows={3}
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:border-blue-500"
               />
             </div>
           </div>
         </div>
 
         {/* SEO Control Panel Section */}
-        <div className="bg-[#111827] border border-gray-800 p-6 rounded-xl shadow-lg">
-          <h2 className="text-lg font-semibold mb-4 text-green-400">SEO Control Panel</h2>
+        <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
+          <h2 className="text-lg font-semibold mb-4 text-green-700">SEO Control Panel</h2>
           
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Default Meta Title (SEO Title)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Default Meta Title (SEO Title)</label>
               <input
                 type="text"
                 value={metaTitle}
                 onChange={(e) => setMetaTitle(e.target.value)}
                 placeholder="e.g. Blockbuster Bureau - Digital Agency"
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-green-500"
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:border-green-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Meta Keywords (Comma separated)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Meta Keywords (Comma separated)</label>
               <input
                 type="text"
                 value={metaKeywords}
                 onChange={(e) => setMetaKeywords(e.target.value)}
                 placeholder="marketing agency, digital marketing, web development"
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-green-500"
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:border-green-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Google Analytics / Tag ID</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Google Analytics / Tag ID</label>
               <input
                 type="text"
                 value={googleAnalyticsId}
                 onChange={(e) => setGoogleAnalyticsId(e.target.value)}
                 placeholder="G-XXXXXXXXXX"
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-green-500"
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:border-green-500"
               />
             </div>
           </div>
         </div>
 
         {/* Social Links Section */}
-        <div className="bg-[#111827] border border-gray-800 p-6 rounded-xl shadow-lg">
-          <h2 className="text-lg font-semibold mb-1 text-red-400">Social Links</h2>
-          <p className="text-sm text-gray-400 mb-4">
+        <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
+          <h2 className="text-lg font-semibold mb-1 text-red-600">Social Links</h2>
+          <p className="text-sm text-gray-500 mb-4">
             These links appear as icons in the website header and footer. Leave empty to hide an icon.
           </p>
           <div className="space-y-4">
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-1">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
                 <Youtube className="w-4 h-4 text-red-500" /> YouTube Channel URL
               </label>
               <input
@@ -218,11 +218,11 @@ export default function SettingsPage() {
                 value={youtubeUrl}
                 onChange={(e) => setYoutubeUrl(e.target.value)}
                 placeholder="https://youtube.com/@yourchannel"
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-red-500"
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:border-red-500"
               />
             </div>
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-1">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
                 <Youtube className="w-4 h-4 text-red-500" /> YouTube Channel ID
               </label>
               <input
@@ -230,14 +230,14 @@ export default function SettingsPage() {
                 value={youtubeChannelId}
                 onChange={(e) => setYoutubeChannelId(e.target.value.trim())}
                 placeholder="UCxxxxxxxxxxxxxxxxxxxxxx"
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-red-500"
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:border-red-500"
               />
               <p className="text-xs text-gray-500 mt-1">
                 Powers the /videos page (auto-updates from your channel). Find it in YouTube Studio → Settings → Channel → Advanced settings.
               </p>
             </div>
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-1">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
                 <Music2 className="w-4 h-4 text-gray-300" /> TikTok Profile URL
               </label>
               <input
@@ -245,11 +245,11 @@ export default function SettingsPage() {
                 value={tiktokUrl}
                 onChange={(e) => setTiktokUrl(e.target.value)}
                 placeholder="https://tiktok.com/@yourhandle"
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-red-500"
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:border-red-500"
               />
             </div>
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-1">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
                 <Facebook className="w-4 h-4 text-blue-500" /> Facebook Page URL
               </label>
               <input
@@ -257,29 +257,29 @@ export default function SettingsPage() {
                 value={facebookUrl}
                 onChange={(e) => setFacebookUrl(e.target.value)}
                 placeholder="https://facebook.com/yourpage"
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-red-500"
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:border-red-500"
               />
             </div>
           </div>
         </div>
 
         {/* API Keys Section */}
-        <div className="bg-[#111827] border border-gray-800 p-6 rounded-xl shadow-lg">
-          <h2 className="text-lg font-semibold mb-1 text-sky-400">API Keys</h2>
-          <p className="text-sm text-gray-400 mb-4">
+        <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
+          <h2 className="text-lg font-semibold mb-1 text-sky-700">API Keys</h2>
+          <p className="text-sm text-gray-500 mb-4">
             Powers the auto-updating /releases page (upcoming movies + countdowns).
           </p>
           <div className="space-y-4">
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-1">
-                <Film className="w-4 h-4 text-sky-400" /> TMDB API Key
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
+                <Film className="w-4 h-4 text-sky-700" /> TMDB API Key
               </label>
               <input
                 type="text"
                 value={tmdbApiKey}
                 onChange={(e) => setTmdbApiKey(e.target.value.trim())}
                 placeholder="Paste your free TMDB API key"
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-sky-500"
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:border-sky-500"
               />
               <p className="text-xs text-gray-500 mt-1">
                 Free at themoviedb.org → Settings → API. The releases page refreshes daily on its own.
@@ -289,9 +289,9 @@ export default function SettingsPage() {
         </div>
 
         {/* Hero Slides Section */}
-        <div className="bg-[#111827] border border-gray-800 p-6 rounded-xl shadow-lg">
+        <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
           <div className="flex items-center justify-between mb-1">
-            <h2 className="text-lg font-semibold text-amber-400">Hero Slider</h2>
+            <h2 className="text-lg font-semibold text-amber-700">Hero Slider</h2>
             <button
               type="button"
               onClick={addSlide}
@@ -301,7 +301,7 @@ export default function SettingsPage() {
               <Plus className="w-4 h-4" /> Add Slide
             </button>
           </div>
-          <p className="text-sm text-gray-400 mb-4">
+          <p className="text-sm text-gray-500 mb-4">
             Up to 5 slides for the homepage banner. If empty, the latest articles are shown instead.
             Use the arrows to reorder.
           </p>
@@ -312,19 +312,19 @@ export default function SettingsPage() {
 
           <div className="space-y-4">
             {heroSlides.map((slide, idx) => (
-              <div key={slide.id} className="bg-gray-900 border border-gray-700 rounded-lg p-4">
+              <div key={slide.id} className="bg-gray-50 border border-gray-300 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-semibold text-gray-300 flex items-center gap-2">
-                    <ImageIcon className="w-4 h-4 text-amber-400" /> Slide {idx + 1}
+                    <ImageIcon className="w-4 h-4 text-amber-700" /> Slide {idx + 1}
                   </span>
                   <div className="flex items-center gap-1">
-                    <button type="button" onClick={() => moveSlide(idx, -1)} disabled={idx === 0} className="p-1.5 text-gray-400 hover:text-white disabled:opacity-30" aria-label="Move up">
+                    <button type="button" onClick={() => moveSlide(idx, -1)} disabled={idx === 0} className="p-1.5 text-gray-400 hover:text-gray-900 disabled:opacity-30" aria-label="Move up">
                       <ArrowUp className="w-4 h-4" />
                     </button>
-                    <button type="button" onClick={() => moveSlide(idx, 1)} disabled={idx === heroSlides.length - 1} className="p-1.5 text-gray-400 hover:text-white disabled:opacity-30" aria-label="Move down">
+                    <button type="button" onClick={() => moveSlide(idx, 1)} disabled={idx === heroSlides.length - 1} className="p-1.5 text-gray-400 hover:text-gray-900 disabled:opacity-30" aria-label="Move down">
                       <ArrowDown className="w-4 h-4" />
                     </button>
-                    <button type="button" onClick={() => removeSlide(slide.id)} className="p-1.5 text-red-400 hover:text-red-300" aria-label="Delete slide">
+                    <button type="button" onClick={() => removeSlide(slide.id)} className="p-1.5 text-red-600 hover:text-red-700" aria-label="Delete slide">
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
@@ -337,7 +337,7 @@ export default function SettingsPage() {
                       value={slide.image}
                       onChange={(e) => updateSlide(slide.id, 'image', e.target.value)}
                       placeholder="https://example.com/banner.jpg"
-                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
+                      className="w-full bg-gray-800 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-amber-500"
                     />
                   </div>
                   <div>
@@ -347,7 +347,7 @@ export default function SettingsPage() {
                       value={slide.title}
                       onChange={(e) => updateSlide(slide.id, 'title', e.target.value)}
                       placeholder="Big headline"
-                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
+                      className="w-full bg-gray-800 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-amber-500"
                     />
                   </div>
                   <div>
@@ -357,7 +357,7 @@ export default function SettingsPage() {
                       value={slide.link}
                       onChange={(e) => updateSlide(slide.id, 'link', e.target.value)}
                       placeholder="/blog/your-article"
-                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
+                      className="w-full bg-gray-800 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-amber-500"
                     />
                   </div>
                   <div className="md:col-span-2">
@@ -367,7 +367,7 @@ export default function SettingsPage() {
                       value={slide.subtitle}
                       onChange={(e) => updateSlide(slide.id, 'subtitle', e.target.value)}
                       placeholder="Short description under the title"
-                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
+                      className="w-full bg-gray-800 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-amber-500"
                     />
                   </div>
                 </div>
@@ -377,27 +377,27 @@ export default function SettingsPage() {
         </div>
 
         {/* Admin Profile Section */}
-        <div className="bg-[#111827] border border-gray-800 p-6 rounded-xl shadow-lg">
-          <h2 className="text-lg font-semibold mb-4 text-blue-400">Administrator Profile</h2>
+        <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
+          <h2 className="text-lg font-semibold mb-4 text-blue-700">Administrator Profile</h2>
           
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Admin Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Admin Name</label>
               <input
                 type="text"
                 value={adminName}
                 onChange={(e) => setAdminName(e.target.value)}
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:border-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Email Address (Read-only)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email Address (Read-only)</label>
               <input
                 type="email"
                 value={adminEmail}
                 disabled
-                className="w-full bg-gray-900/50 border border-gray-800 rounded-lg px-4 py-2 text-gray-500 cursor-not-allowed"
+                className="w-full bg-gray-50/50 border border-gray-200 rounded-lg px-4 py-2 text-gray-500 cursor-not-allowed"
               />
             </div>
           </div>

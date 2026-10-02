@@ -22,17 +22,17 @@ function formatDate(timestamp: { toDate: () => Date } | null): string {
 export default function PostTable({ posts, onDelete }: PostTableProps) {
   if (posts.length === 0) {
     return (
-      <div className="text-center py-12 bg-nebula rounded-xl border border-white/5">
-        <p className="text-stardust">No posts found. Create your first post!</p>
+      <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
+        <p className="text-gray-500">No posts found. Create your first post!</p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto bg-nebula rounded-xl border border-white/5">
+    <div className="overflow-x-auto bg-white rounded-xl border border-gray-200">
       <table className="w-full">
         <thead>
-          <tr className="text-left text-stardust text-sm border-b border-white/10">
+          <tr className="text-left text-gray-500 text-sm border-b border-gray-200">
             <th className="p-4 font-medium">Title</th>
             <th className="p-4 font-medium">Category</th>
             <th className="p-4 font-medium">Status</th>
@@ -43,17 +43,17 @@ export default function PostTable({ posts, onDelete }: PostTableProps) {
         </thead>
         <tbody>
           {posts.map((post) => (
-            <tr key={post.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+            <tr key={post.id} className="border-b border-gray-200 hover:bg-white transition-colors">
               <td className="p-4">
                 <Link
                   href={`/dashboard/posts/${post.id}/edit`}
-                  className="text-white hover:text-gold transition-colors line-clamp-1"
+                  className="text-gray-900 hover:text-brand-dark transition-colors line-clamp-1"
                 >
                   {post.title}
                 </Link>
               </td>
               <td className="p-4">
-                <span className="text-stardust text-sm">
+                <span className="text-gray-500 text-sm">
                   {CATEGORY_LABELS[post.category]}
                 </span>
               </td>
@@ -61,29 +61,29 @@ export default function PostTable({ posts, onDelete }: PostTableProps) {
                 <span
                   className={`px-2 py-1 rounded text-xs font-medium ${
                     post.status === 'published'
-                      ? 'bg-gold/20 text-gold'
-                      : 'bg-stardust/20 text-stardust'
+                      ? 'bg-gold/20 text-brand-dark'
+                      : 'bg-stardust/20 text-gray-500'
                   }`}
                 >
                   {post.status === 'published' ? 'Published' : 'Draft'}
                 </span>
               </td>
-              <td className="p-4 text-stardust">{post.views || 0}</td>
-              <td className="p-4 text-stardust text-sm">
+              <td className="p-4 text-gray-500">{post.views || 0}</td>
+              <td className="p-4 text-gray-500 text-sm">
                 {formatDate(post.publishedAt)}
               </td>
               <td className="p-4">
                 <div className="flex items-center gap-2">
                   <Link
                     href={`/dashboard/posts/${post.id}/edit`}
-                    className="p-2 rounded hover:bg-white/10 text-stardust hover:text-gold transition-colors"
+                    className="p-2 rounded hover:bg-gray-100 text-gray-500 hover:text-brand-dark transition-colors"
                     title="Edit"
                   >
                     <Pencil className="w-4 h-4" />
                   </Link>
                   <button
                     onClick={() => onDelete(post)}
-                    className="p-2 rounded hover:bg-white/10 text-stardust hover:text-red-400 transition-colors"
+                    className="p-2 rounded hover:bg-gray-100 text-gray-500 hover:text-red-400 transition-colors"
                     title="Delete"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -92,7 +92,7 @@ export default function PostTable({ posts, onDelete }: PostTableProps) {
                     <Link
                       href={`/blog/${post.slug}`}
                       target="_blank"
-                      className="p-2 rounded hover:bg-white/10 text-stardust hover:text-nova transition-colors"
+                      className="p-2 rounded hover:bg-gray-100 text-gray-500 hover:text-blue-600 transition-colors"
                       title="View"
                     >
                       <ExternalLink className="w-4 h-4" />

@@ -36,12 +36,12 @@ export default function Sidebar({ user }: SidebarProps) {
   };
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-64 bg-nebula border-r border-white/5 flex flex-col z-50">
+    <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 flex flex-col z-50 shadow-sm">
       {/* Logo */}
-      <div className="p-6 border-b border-white/5">
+      <div className="p-6 border-b border-gray-200">
         <Link href="/dashboard" className="flex items-center gap-2">
-          <span className="text-display text-2xl text-gold">BB</span>
-          <span className="text-white font-medium">Dashboard</span>
+          <span className="text-display text-2xl text-brand">BB</span>
+          <span className="text-gray-900 font-semibold">Dashboard</span>
         </Link>
       </div>
 
@@ -57,8 +57,8 @@ export default function Sidebar({ user }: SidebarProps) {
               href={item.href}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                 isActive
-                  ? 'bg-gold/20 text-gold'
-                  : 'text-stardust hover:bg-white/5 hover:text-white'
+                  ? 'bg-brand/10 text-brand-dark'
+                  : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
               <Icon className="w-5 h-5" />
@@ -71,7 +71,7 @@ export default function Sidebar({ user }: SidebarProps) {
         <Link
           href="/"
           target="_blank"
-          className="flex items-center gap-3 px-4 py-3 rounded-lg text-stardust hover:bg-white/5 hover:text-white transition-colors"
+          className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
         >
           <ExternalLink className="w-5 h-5" />
           <span className="font-medium">View Site</span>
@@ -79,18 +79,18 @@ export default function Sidebar({ user }: SidebarProps) {
       </nav>
 
       {/* User Section */}
-      <div className="p-4 border-t border-white/5">
+      <div className="p-4 border-t border-gray-200">
         {user && (
           <div className="mb-4">
-            <p className="text-stardust text-xs uppercase tracking-wider mb-1">
+            <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">
               Signed in as
             </p>
-            <p className="text-white text-sm truncate">{user.email}</p>
+            <p className="text-gray-900 text-sm truncate">{user.email}</p>
           </div>
         )}
         <button
           onClick={handleSignOut}
-          className="flex items-center gap-3 px-4 py-3 w-full rounded-lg text-stardust hover:bg-red-500/20 hover:text-red-400 transition-colors"
+          className="flex items-center gap-3 px-4 py-3 w-full rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors"
         >
           <LogOut className="w-5 h-5" />
           <span className="font-medium">Sign Out</span>

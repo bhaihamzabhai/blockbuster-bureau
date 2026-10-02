@@ -47,12 +47,14 @@ export function middleware(request: NextRequest) {
 
   const cspHeader = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://www.googletagservices.com https://www.google-analytics.com",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://www.googletagservices.com https://www.google-analytics.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
-    "img-src 'self' data: https://firebasestorage.googleapis.com https://i.ytimg.com https://img.youtube.com https://www.google-analytics.com",
+    // img-src allows any https host on purpose: admins paste cover images
+    // from anywhere and movie posters come from image.tmdb.org.
+    "img-src 'self' data: https:",
     "frame-src 'self' https://www.youtube-nocookie.com https://www.youtube.com",
-    "connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://www.google-analytics.com https://region1.google-analytics.com",
+    "connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.google-analytics.com https://region1.google-analytics.com",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
