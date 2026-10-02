@@ -25,6 +25,8 @@ export interface Post {
   createdAt: Timestamp;
   updatedAt: Timestamp;
   views: number;
+  /** Star rating 0–5 (0 = unrated). Set from the dashboard post editor. */
+  rating?: number;
   seo: {
     metaTitle: string;
     metaDescription: string;

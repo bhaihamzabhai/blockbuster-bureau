@@ -196,6 +196,58 @@
 }
 
 
+/* ===== Light Prose (public article pages) ===== */
+.prose-light {
+  color: #374151;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+.prose-light h1,
+.prose-light h2,
+.prose-light h3,
+.prose-light h4 {
+  color: #111827;
+  font-weight: 800;
+  line-height: 1.3;
+  margin: 1.75rem 0 0.75rem;
+}
+.prose-light h1 { font-size: 1.875rem; }
+.prose-light h2 { font-size: 1.5rem; }
+.prose-light h3 { font-size: 1.25rem; }
+.prose-light h4 { font-size: 1.125rem; }
+.prose-light p { margin-bottom: 1.125rem; }
+.prose-light a {
+  color: #D67E00;
+  text-decoration: underline;
+}
+.prose-light a:hover { color: #F39200; }
+.prose-light blockquote {
+  border-left: 4px solid #F39200;
+  padding-left: 1rem;
+  color: #6b7280;
+  font-style: italic;
+  margin: 1.5rem 0;
+}
+.prose-light ul,
+.prose-light ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.125rem;
+}
+.prose-light li { margin-bottom: 0.5rem; }
+.prose-light img {
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+  max-width: 100%;
+  height: auto;
+}
+.prose-light iframe {
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+  max-width: 100%;
+}
+.prose-light strong { color: #111827; }
+
+
 /* ===== Scrollbar Styling ===== */
 ::-webkit-scrollbar {
   width: 8px;

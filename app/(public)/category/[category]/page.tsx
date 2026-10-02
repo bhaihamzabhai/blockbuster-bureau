@@ -63,24 +63,21 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const categoryLabel = CATEGORY_LABELS[category];
 
   return (
-    <div className="min-h-screen py-12 px-4">
+    <div className="bg-white text-gray-900 min-h-screen py-10 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Page Header */}
-        <div className="text-center mb-12">
-          <p className="text-stardust text-sm uppercase tracking-wider mb-2">
-            Category
-          </p>
-          <h1 className="text-display text-5xl md:text-6xl text-gold mb-4">
+        <div className="mb-8">
+          <h1 className="text-gray-900 font-extrabold text-2xl uppercase tracking-wide border-l-4 border-brand pl-3">
             {categoryLabel}
           </h1>
-          <p className="text-stardust text-lg max-w-2xl mx-auto">
+          <p className="text-gray-500 mt-2 text-[15px] max-w-2xl">
             Stay updated with the latest {categoryLabel.toLowerCase()} news and
             updates from Blockbuster Bureau.
           </p>
         </div>
 
         {/* Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((post, index) => (
             <div key={post.id}>
               <PostCard post={post} />
@@ -97,7 +94,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         {/* Empty state */}
         {posts.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-stardust text-lg">
+            <p className="text-gray-500">
               No posts found in {categoryLabel}. Check back soon!
             </p>
           </div>

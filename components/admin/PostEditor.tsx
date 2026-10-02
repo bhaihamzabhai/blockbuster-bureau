@@ -82,6 +82,7 @@ interface EditorFormState {
   author: string;
   status: 'draft' | 'published';
   featured: boolean;
+  rating: number;
   youtubeVideoId: string;
   seo: {
     metaTitle: string;
@@ -101,6 +102,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
     author: initialData?.author || '',
     status: initialData?.status || 'draft',
     featured: initialData?.featured || false,
+    rating: initialData?.rating || 0,
     youtubeVideoId: initialData?.youtubeVideoId || '',
     seo: {
       metaTitle: initialData?.seo?.metaTitle || '',
@@ -680,6 +682,29 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                   <Star className="w-4 h-4 text-gold" />
                   <span className="text-stardust text-sm">Featured post</span>
                 </label>
+                <div>
+                  <label className="block text-stardust text-sm mb-1">Star rating (for “Top Rated”)</label>
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => updateFormState({ rating: formState.rating === s ? 0 : s })}
+                        aria-label={`Rate ${s} star${s > 1 ? 's' : ''}`}
+                        className="p-0.5"
+                      >
+                        <Star
+                          className={`w-6 h-6 transition-colors ${
+                            s <= formState.rating ? 'text-gold fill-gold' : 'text-white/20 hover:text-white/40'
+                          }`}
+                        />
+                      </button>
+                    ))}
+                    {formState.rating > 0 && (
+                      <span className="text-stardust text-xs ml-2">{formState.rating}/5</span>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 

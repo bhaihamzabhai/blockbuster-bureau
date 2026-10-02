@@ -15,29 +15,39 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 interface BlogPageProps {
-  searchParams: { category?: string };
+  searchParams: { category?: string; q?: string };
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const category = searchParams.category as Category | undefined;
+  const q = (searchParams.q || '').trim().toLowerCase();
 
-  const posts = await getPosts({
+  let posts = await getPosts({
     status: 'published',
     category,
     limit: 50,
   });
 
+  if (q) {
+    posts = posts.filter((p) =>
+      [p.title, p.excerpt, p.body].some((f) =>
+        f?.toLowerCase().includes(q)
+      )
+    );
+  }
+
   return (
-    <div className="min-h-screen py-12 px-4">
+    <div className="bg-white text-gray-900 min-h-screen py-10 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Page Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-display text-5xl md:text-6xl text-gold mb-4">
-            Entertainment News
+        <div className="mb-8">
+          <h1 className="text-gray-900 font-extrabold text-2xl uppercase tracking-wide border-l-4 border-brand pl-3">
+            {q ? `Search: “${searchParams.q}”` : 'Entertainment News'}
           </h1>
-          <p className="text-stardust text-lg max-w-2xl mx-auto">
-            Stay updated with the latest Hollywood news, movie reviews, upcoming
-            releases, and exclusive entertainment coverage.
+          <p className="text-gray-500 mt-2 text-[15px]">
+            {q
+              ? `${posts.length} result${posts.length === 1 ? '' : 's'} found`
+              : 'Stay updated with the latest Hollywood news, movie reviews, upcoming releases, and exclusive entertainment coverage.'}
           </p>
         </div>
 
@@ -47,11 +57,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         </Suspense>
 
         {/* Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((post, index) => (
-            <div key={post.id}>
-              <PostCard post={post} />
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+          {posts.map((post) => (
+            <PostCard key={post.id} post={post} />
           ))}
         </div>
 
@@ -70,8 +78,8 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         {/* Empty state */}
         {posts.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-stardust text-lg">
-              No posts found in this category.
+            <p className="text-gray-500">
+              {q ? 'No articles matched your search.' : 'No posts found in this category.'}
             </p>
           </div>
         )}

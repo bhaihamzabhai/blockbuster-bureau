@@ -6,47 +6,49 @@ import Link from 'next/link';
 
 interface SiteLogoProps {
   size?: 'sm' | 'md' | 'lg';
+  theme?: 'light' | 'dark';
 }
 
 /**
- * Site logo. Uses /logo.png when it exists in /public,
- * otherwise falls back to a styled text logo.
+ * Site logo: orange "B" mark + wordmark.
+ * `theme="light"` renders dark text for light backgrounds (public site),
+ * `theme="dark"` renders light text (admin area).
  */
-export default function SiteLogo({ size = 'md' }: SiteLogoProps) {
+export default function SiteLogo({ size = 'md', theme = 'light' }: SiteLogoProps) {
   const [imgFailed, setImgFailed] = useState(false);
 
-  const dims =
-    size === 'sm'
-      ? { w: 32, h: 32, text: 'text-xl' }
-      : size === 'lg'
-        ? { w: 56, h: 56, text: 'text-4xl' }
-        : { w: 40, h: 40, text: 'text-2xl' };
+  const markH =
+    size === 'sm' ? 'h-10' : size === 'lg' ? 'h-16' : 'h-12';
+  const titleSize =
+    size === 'sm' ? 'text-xl' : size === 'lg' ? 'text-3xl' : 'text-2xl';
+
+  const titleColor = theme === 'light' ? 'text-gray-900' : 'text-white';
 
   return (
-    <Link href="/" className="flex items-center gap-3 group" aria-label="Blockbuster Bureau — Home">
+    <Link href="/" className="flex items-center gap-2.5 shrink-0" aria-label="Blockbuster Bureau — Home">
       {!imgFailed ? (
         <Image
           src="/logo.png"
           alt="Blockbuster Bureau logo"
-          width={dims.w}
-          height={dims.h}
-          className="rounded-lg object-contain transition-transform duration-300 group-hover:scale-105"
+          width={64}
+          height={64}
+          className={`${markH} w-auto object-contain`}
           onError={() => setImgFailed(true)}
           priority
         />
       ) : (
         <span
-          className={`font-display ${dims.text} text-gold leading-none tracking-wide`}
+          className={`${markH} aspect-square rounded-lg bg-brand text-white font-extrabold flex items-center justify-center text-2xl leading-none`}
         >
-          BB
+          B
         </span>
       )}
       <span className="flex flex-col leading-none">
-        <span className="font-display text-gold text-lg tracking-wide">
-          Blockbuster Bureau
+        <span className={`font-extrabold ${titleSize} ${titleColor} tracking-tight`}>
+          Blockbuster
         </span>
-        <span className="text-stardust text-[10px] tracking-[0.25em] uppercase">
-          The Bureau Never Closes
+        <span className="text-brand font-bold text-[11px] tracking-[0.35em] uppercase mt-0.5">
+          Bureau
         </span>
       </span>
     </Link>

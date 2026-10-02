@@ -7,12 +7,12 @@ export default function AdBanner({ className = '' }: AdBannerProps) {
     <div className={`py-8 px-4 ${className}`}>
       <div className="max-w-7xl mx-auto">
         {/* Advertisement label */}
-        <p className="text-stardust text-xs text-center mb-2 uppercase tracking-wider">
+        <p className="text-gray-400 text-xs text-center mb-2 uppercase tracking-wider">
           Advertisement
         </p>
 
         {/* Ad container */}
-        <div className="mx-auto max-w-[728px] h-[90px] md:h-[90px] bg-nebula/50 border border-dashed border-gold/30 rounded-lg flex items-center justify-center">
+        <div className="mx-auto max-w-[728px] h-[90px] md:h-[90px] bg-gray-50 border border-dashed border-gray-300 rounded-lg flex items-center justify-center">
           {/* 
             Google AdSense script goes here
             Replace this placeholder with:

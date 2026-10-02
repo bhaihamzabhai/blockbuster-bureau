@@ -1,93 +1,95 @@
 import Link from 'next/link';
-import { Youtube, Twitter } from 'lucide-react';
 import SiteLogo from './SiteLogo';
+import SocialIcons from './SocialIcons';
+import { CATEGORIES, CATEGORY_LABELS, Category } from '@/types';
+import { getSiteSettings } from '@/lib/siteSettings';
 
-export default function Footer() {
+/** Light footer with social icons (admin-configured links). */
+export default async function Footer() {
   const currentYear = new Date().getFullYear();
+  const settings = await getSiteSettings();
 
   return (
-    <footer className="glass-strong border-x-0 border-b-0 py-12 px-4 mt-16">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Logo & Tagline */}
+    <footer className="bg-gray-900 text-gray-300 mt-0">
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+          {/* Brand */}
           <div>
-            <SiteLogo size="md" />
-            <p className="text-stardust text-sm mt-4">
-              Your daily source for Hollywood news, trailers, and entertainment
-              updates.
+            <SiteLogo size="sm" theme="dark" />
+            <p className="text-gray-400 text-sm mt-4 leading-relaxed">
+              Your daily source for Hollywood news, upcoming movies, trailers
+              and entertainment updates.
             </p>
+            <SocialIcons settings={settings} className="mt-5" iconClassName="w-4 h-4" />
           </div>
 
-          {/* Navigation Links */}
+          {/* Quick Links */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/"
-                  className="text-stardust hover:text-gold transition-colors text-sm"
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/blog"
-                  className="text-stardust hover:text-gold transition-colors text-sm"
-                >
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="text-stardust hover:text-gold transition-colors text-sm"
-                >
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/privacy"
-                  className="text-stardust hover:text-gold transition-colors text-sm"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
+            <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-4">Quick Links</h4>
+            <ul className="space-y-2.5">
+              {[
+                { href: '/', label: 'Home' },
+                { href: '/blog', label: 'News' },
+                { href: '/about', label: 'About' },
+                { href: '/privacy', label: 'Privacy Policy' },
+              ].map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="text-gray-400 hover:text-brand text-sm transition-colors">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Social Links */}
+          {/* Categories */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Follow Us</h4>
-            <div className="flex gap-4">
+            <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-4">Categories</h4>
+            <ul className="space-y-2.5">
+              {(CATEGORIES as Category[]).map((cat) => (
+                <li key={cat}>
+                  <Link
+                    href={`/category/${cat}`}
+                    className="text-gray-400 hover:text-brand text-sm transition-colors"
+                  >
+                    {CATEGORY_LABELS[cat]}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Watch */}
+          <div>
+            <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-4">Watch</h4>
+            <p className="text-gray-400 text-sm leading-relaxed mb-4">
+              Facecam videos, reviews and Hollywood updates on our YouTube channel.
+            </p>
+            {settings.youtubeUrl ? (
               <a
-                href={process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_URL || '#'}
+                href={settings.youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded-full bg-void hover:bg-gold/20 transition-colors"
-                aria-label="YouTube"
+                className="inline-flex items-center gap-2 h-10 px-5 rounded-md bg-brand hover:bg-brand-dark text-white text-sm font-bold uppercase tracking-wide transition-colors"
               >
-                <Youtube className="w-5 h-5 text-gold" />
+                Visit Channel
               </a>
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-full bg-void hover:bg-gold/20 transition-colors"
-                aria-label="Twitter"
+            ) : (
+              <Link
+                href="/blog?category=trailers"
+                className="inline-flex items-center gap-2 h-10 px-5 rounded-md bg-brand hover:bg-brand-dark text-white text-sm font-bold uppercase tracking-wide transition-colors"
               >
-                <Twitter className="w-5 h-5 text-gold" />
-              </a>
-            </div>
+                Latest Trailers
+              </Link>
+            )}
           </div>
         </div>
+      </div>
 
-        {/* Copyright */}
-        <div className="mt-8 pt-8 border-t border-white/10 text-center">
-          <p className="text-stardust text-sm">
-            © {currentYear} Blockbuster Bureau. All rights reserved.
-          </p>
+      <div className="border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <p className="text-gray-500 text-xs">© {currentYear} Blockbuster Bureau. All rights reserved.</p>
+          <p className="text-gray-500 text-xs">The Bureau Never Closes</p>
         </div>
       </div>
     </footer>

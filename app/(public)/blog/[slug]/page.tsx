@@ -154,7 +154,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               priority
             />
           ) : (
-            <div className="w-full h-full bg-nebula" />
+            <div className="w-full h-full bg-gray-200" />
           )}
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-void via-void/60 to-transparent" />
@@ -164,7 +164,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <div className="max-w-4xl mx-auto">
               <Badge
                 label={CATEGORY_LABELS[post.category]}
-                variant="gold"
+                variant="brand"
                 href={`/category/${post.category}`}
               />
               <h1 className="text-display text-4xl md:text-6xl text-white mt-4">
@@ -177,7 +177,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {/* Content Section */}
         <div className="max-w-4xl mx-auto px-4 py-12">
           {/* Meta info */}
-          <div className="flex flex-wrap items-center gap-4 text-stardust text-sm mb-8 pb-8 border-b border-white/10">
+          <div className="flex flex-wrap items-center gap-4 text-gray-500 text-sm mb-8 pb-8 border-b border-gray-200">
             <span>By {post.author}</span>
             <span>•</span>
             <span>{formatDate(post.publishedAt)}</span>
@@ -205,7 +205,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Post Body - sanitized HTML rendered via dangerouslySetInnerHTML */}
           <div
-            className="prose-editor"
+            className="prose-light"
             dangerouslySetInnerHTML={{ __html: post.body }}
           />
 
@@ -216,7 +216,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Tags */}
           {post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-8 pt-8 border-t border-white/10">
+            <div className="flex flex-wrap gap-2 mt-8 pt-8 border-t border-gray-200">
               {post.tags.map((tag) => (
                 <Tag key={tag} label={tag} />
               ))}
@@ -226,8 +226,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         {/* Related Posts */}
         {relatedPosts.length > 0 && (
-          <section className="max-w-7xl mx-auto px-4 py-12 border-t border-white/10">
-            <h2 className="text-display text-3xl text-gold mb-8">
+          <section className="max-w-7xl mx-auto px-4 py-12 border-t border-gray-200">
+            <h2 className="text-gray-900 font-extrabold text-xl uppercase tracking-wide border-l-4 border-brand pl-3 mb-8">
               Related Posts
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

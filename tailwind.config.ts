@@ -15,6 +15,11 @@ const config: Config = {
         gold: '#F0C040',
         stardust: '#8892A4',
         nova: '#3D6BFF',
+        brand: {
+          DEFAULT: '#F39200',
+          dark: '#D67E00',
+          light: '#FFB84D',
+        },
       },
       fontFamily: {
         display: ['var(--font-display)', 'sans-serif'],

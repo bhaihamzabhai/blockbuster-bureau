@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { auth, db } from '@/lib/firebase';
 import { updateProfile } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { Youtube, Facebook, Music2, Plus, Trash2, ArrowUp, ArrowDown, Image as ImageIcon } from 'lucide-react';
+import type { HeroSlide } from '@/lib/siteSettings';
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(false);
@@ -19,6 +21,14 @@ export default function SettingsPage() {
   const [metaTitle, setMetaTitle] = useState('');
   const [metaKeywords, setMetaKeywords] = useState('');
   const [googleAnalyticsId, setGoogleAnalyticsId] = useState('');
+
+  // Social links (shown in header/footer, link to your channels)
+  const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [tiktokUrl, setTiktokUrl] = useState('');
+  const [facebookUrl, setFacebookUrl] = useState('');
+
+  // Hero slider slides (max 5)
+  const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([]);
 
   useEffect(() => {
     if (auth.currentUser) {
@@ -37,6 +47,10 @@ export default function SettingsPage() {
           if (data.metaTitle) setMetaTitle(data.metaTitle);
           if (data.metaKeywords) setMetaKeywords(data.metaKeywords);
           if (data.googleAnalyticsId) setGoogleAnalyticsId(data.googleAnalyticsId);
+          if (data.youtubeUrl) setYoutubeUrl(data.youtubeUrl);
+          if (data.tiktokUrl) setTiktokUrl(data.tiktokUrl);
+          if (data.facebookUrl) setFacebookUrl(data.facebookUrl);
+          if (Array.isArray(data.heroSlides)) setHeroSlides(data.heroSlides);
         }
       } catch (error) {
         console.error('Error fetching settings:', error);
@@ -46,8 +60,32 @@ export default function SettingsPage() {
     fetchSettings();
   }, []);
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // ---- Hero slides helpers ----
+  const addSlide = () => {
+    if (heroSlides.length >= 5) return;
+    setHeroSlides([
+      ...heroSlides,
+      { id: `slide-${Date.now()}`, image: '', title: '', subtitle: '', link: '' },
+    ]);
+  };
+
+  const updateSlide = (id: string, field: keyof HeroSlide, value: string) => {
+    setHeroSlides(heroSlides.map((s) => (s.id === id ? { ...s, [field]: value } : s)));
+  };
+
+  const removeSlide = (id: string) => {
+    setHeroSlides(heroSlides.filter((s) => s.id !== id));
+  };
+
+  const moveSlide = (index: number, dir: 1 | -1) => {
+    const next = [...heroSlides];
+    const j = index + dir;
+    if (j < 0 || j >= next.length) return;
+    [next[index], next[j]] = [next[j], next[index]];
+    setHeroSlides(next);
+  };
+
+  const handleSave = async (e: React.FormEvent) => {    e.preventDefault();
     setLoading(true);
     setMessage({ text: '', type: '' });
 
@@ -64,6 +102,10 @@ export default function SettingsPage() {
         metaTitle,
         metaKeywords,
         googleAnalyticsId,
+        youtubeUrl,
+        tiktokUrl,
+        facebookUrl,
+        heroSlides,
         updatedAt: new Date().toISOString(),
       }, { merge: true });
 
@@ -151,6 +193,140 @@ export default function SettingsPage() {
                 className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-green-500"
               />
             </div>
+          </div>
+        </div>
+
+        {/* Social Links Section */}
+        <div className="bg-[#111827] border border-gray-800 p-6 rounded-xl shadow-lg">
+          <h2 className="text-lg font-semibold mb-1 text-red-400">Social Links</h2>
+          <p className="text-sm text-gray-400 mb-4">
+            These links appear as icons in the website header and footer. Leave empty to hide an icon.
+          </p>
+          <div className="space-y-4">
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-1">
+                <Youtube className="w-4 h-4 text-red-500" /> YouTube Channel URL
+              </label>
+              <input
+                type="url"
+                value={youtubeUrl}
+                onChange={(e) => setYoutubeUrl(e.target.value)}
+                placeholder="https://youtube.com/@yourchannel"
+                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-red-500"
+              />
+            </div>
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-1">
+                <Music2 className="w-4 h-4 text-gray-300" /> TikTok Profile URL
+              </label>
+              <input
+                type="url"
+                value={tiktokUrl}
+                onChange={(e) => setTiktokUrl(e.target.value)}
+                placeholder="https://tiktok.com/@yourhandle"
+                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-red-500"
+              />
+            </div>
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-1">
+                <Facebook className="w-4 h-4 text-blue-500" /> Facebook Page URL
+              </label>
+              <input
+                type="url"
+                value={facebookUrl}
+                onChange={(e) => setFacebookUrl(e.target.value)}
+                placeholder="https://facebook.com/yourpage"
+                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-red-500"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Hero Slides Section */}
+        <div className="bg-[#111827] border border-gray-800 p-6 rounded-xl shadow-lg">
+          <div className="flex items-center justify-between mb-1">
+            <h2 className="text-lg font-semibold text-amber-400">Hero Slider</h2>
+            <button
+              type="button"
+              onClick={addSlide}
+              disabled={heroSlides.length >= 5}
+              className="flex items-center gap-1.5 text-sm bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-white font-medium px-3 py-1.5 rounded-lg transition-colors"
+            >
+              <Plus className="w-4 h-4" /> Add Slide
+            </button>
+          </div>
+          <p className="text-sm text-gray-400 mb-4">
+            Up to 5 slides for the homepage banner. If empty, the latest articles are shown instead.
+            Use the arrows to reorder.
+          </p>
+
+          {heroSlides.length === 0 && (
+            <p className="text-sm text-gray-500 italic py-2">No custom slides yet — click “Add Slide”.</p>
+          )}
+
+          <div className="space-y-4">
+            {heroSlides.map((slide, idx) => (
+              <div key={slide.id} className="bg-gray-900 border border-gray-700 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-semibold text-gray-300 flex items-center gap-2">
+                    <ImageIcon className="w-4 h-4 text-amber-400" /> Slide {idx + 1}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <button type="button" onClick={() => moveSlide(idx, -1)} disabled={idx === 0} className="p-1.5 text-gray-400 hover:text-white disabled:opacity-30" aria-label="Move up">
+                      <ArrowUp className="w-4 h-4" />
+                    </button>
+                    <button type="button" onClick={() => moveSlide(idx, 1)} disabled={idx === heroSlides.length - 1} className="p-1.5 text-gray-400 hover:text-white disabled:opacity-30" aria-label="Move down">
+                      <ArrowDown className="w-4 h-4" />
+                    </button>
+                    <button type="button" onClick={() => removeSlide(slide.id)} className="p-1.5 text-red-400 hover:text-red-300" aria-label="Delete slide">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-medium text-gray-400 mb-1">Image URL</label>
+                    <input
+                      type="url"
+                      value={slide.image}
+                      onChange={(e) => updateSlide(slide.id, 'image', e.target.value)}
+                      placeholder="https://example.com/banner.jpg"
+                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-400 mb-1">Title</label>
+                    <input
+                      type="text"
+                      value={slide.title}
+                      onChange={(e) => updateSlide(slide.id, 'title', e.target.value)}
+                      placeholder="Big headline"
+                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-400 mb-1">Link (where the slide goes)</label>
+                    <input
+                      type="text"
+                      value={slide.link}
+                      onChange={(e) => updateSlide(slide.id, 'link', e.target.value)}
+                      placeholder="/blog/your-article"
+                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-medium text-gray-400 mb-1">Subtitle</label>
+                    <input
+                      type="text"
+                      value={slide.subtitle}
+                      onChange={(e) => updateSlide(slide.id, 'subtitle', e.target.value)}
+                      placeholder="Short description under the title"
+                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 

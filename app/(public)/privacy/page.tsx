@@ -11,20 +11,20 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen py-16 px-4">
+    <div className="bg-white text-gray-900 min-h-screen py-14 px-4">
       <div className="max-w-3xl mx-auto">
-        <div className="glass rounded-2xl p-8 md:p-12">
-          <p className="text-stardust text-sm tracking-[0.25em] uppercase mb-3">
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-8 md:p-12">
+          <p className="text-gray-400 text-xs font-bold tracking-[0.25em] uppercase mb-3">
             Legal
           </p>
-          <h1 className="font-display text-4xl md:text-5xl text-gold mb-2">
+          <h1 className="text-gray-900 font-extrabold text-3xl md:text-4xl uppercase tracking-wide mb-2">
             Privacy Policy
           </h1>
-          <p className="text-stardust text-sm mb-8">
+          <p className="text-gray-500 text-sm mb-8">
             Last updated: October 2026
           </p>
 
-          <div className="prose-editor space-y-6">
+          <div className="prose-light space-y-6">
             <section>
               <h3>1. Information We Collect</h3>
               <p>

@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 interface BadgeProps {
   label: string;
-  variant?: 'gold' | 'nova' | 'muted';
+  variant?: 'gold' | 'nova' | 'muted' | 'brand';
   href?: string;
 }
 
@@ -10,6 +10,7 @@ const variantStyles = {
   gold: 'border-gold text-gold bg-gold/10',
   nova: 'border-nova text-nova bg-nova/10',
   muted: 'border-stardust text-stardust bg-stardust/10',
+  brand: 'border-brand text-brand bg-brand/10',
 };
 
 export default function Badge({ label, variant = 'gold', href }: BadgeProps) {

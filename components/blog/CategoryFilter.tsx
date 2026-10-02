@@ -23,8 +23,8 @@ export default function CategoryFilter() {
         onClick={() => handleCategoryClick(null)}
         className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
           !activeCategory
-            ? 'bg-gold text-void'
-            : 'bg-nebula text-white hover:bg-gold/20'
+            ? 'bg-brand text-white'
+            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
         }`}
       >
         All Posts
@@ -37,8 +37,8 @@ export default function CategoryFilter() {
           onClick={() => handleCategoryClick(category)}
           className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
             activeCategory === category
-              ? 'bg-gold text-void'
-              : 'bg-nebula text-white hover:bg-gold/20'
+              ? 'bg-brand text-white'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
           }`}
         >
           {CATEGORY_LABELS[category]}

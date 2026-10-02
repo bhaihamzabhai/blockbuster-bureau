@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 import { Bebas_Neue, Inter } from 'next/font/google';
 import './globals.css';
-import Header from '@/components/layout/Header';
+import SiteHeader from '@/components/layout/SiteHeader';
 import Footer from '@/components/layout/Footer';
 
 const bebasNeue = Bebas_Neue({
@@ -127,11 +127,11 @@ export default function RootLayout({
         {/* Starfield Background */}
         <div className="starfield" aria-hidden="true" />
 
-        {/* Glass Site Header */}
-        <Header />
+        {/* Site Header (top bar + nav) */}
+        <SiteHeader />
 
         {/* Main Content */}
-        <main className="relative z-10 pt-16">{children}</main>
+        <main className="relative z-10 bg-white text-gray-900">{children}</main>
         
         {/* Footer */}
         <Footer />

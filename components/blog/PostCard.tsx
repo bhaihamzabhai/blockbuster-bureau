@@ -48,7 +48,7 @@ export default function PostCard({ post, variant = 'default' }: PostCardProps) {
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               ) : (
-                <div className="w-full h-full bg-nebula" />
+                <div className="w-full h-full bg-gray-800" />
               )}
               {/* Gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-void via-void/60 to-transparent" />
@@ -86,7 +86,7 @@ export default function PostCard({ post, variant = 'default' }: PostCardProps) {
         transition={{ duration: 0.2 }}
         className="group"
       >
-        <Link href={`/blog/${post.slug}`} className="flex gap-4 p-3 rounded-lg hover:bg-nebula/50 transition-colors">
+        <Link href={`/blog/${post.slug}`} className="flex gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
           {/* Thumbnail */}
           <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden">
             {post.coverImage ? (
@@ -97,17 +97,17 @@ export default function PostCard({ post, variant = 'default' }: PostCardProps) {
                 className="object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-nebula" />
+              <div className="w-full h-full bg-gray-200" />
             )}
           </div>
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <Badge label={CATEGORY_LABELS[post.category]} variant="gold" />
-            <h4 className="text-white font-medium mt-1 line-clamp-2 group-hover:text-gold transition-colors">
+            <Badge label={CATEGORY_LABELS[post.category]} variant="brand" />
+            <h4 className="text-gray-900 font-medium mt-1 line-clamp-2 group-hover:text-brand transition-colors">
               {post.title}
             </h4>
-            <p className="text-stardust text-xs mt-1">
+            <p className="text-gray-500 text-xs mt-1">
               {formatDate(post.publishedAt)}
             </p>
           </div>
@@ -124,7 +124,7 @@ export default function PostCard({ post, variant = 'default' }: PostCardProps) {
       className="group"
     >
       <Link href={`/blog/${post.slug}`} className="block">
-        <div className="glass glass-hover glass-sheen rounded-xl overflow-hidden">
+        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
           {/* Cover Image */}
           <div className="relative h-48 overflow-hidden">
             {post.coverImage ? (
@@ -135,23 +135,23 @@ export default function PostCard({ post, variant = 'default' }: PostCardProps) {
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
             ) : (
-              <div className="w-full h-full bg-nebula" />
+              <div className="w-full h-full bg-gray-200" />
             )}
             {/* Category badge */}
             <div className="absolute top-3 left-3">
-              <Badge label={CATEGORY_LABELS[post.category]} variant="gold" />
+              <Badge label={CATEGORY_LABELS[post.category]} variant="brand" />
             </div>
           </div>
 
           {/* Content */}
           <div className="p-5">
-            <h3 className="text-display text-xl text-white line-clamp-2 group-hover:text-gold transition-colors">
+            <h3 className="text-xl font-bold text-gray-900 line-clamp-2 group-hover:text-brand transition-colors">
               {post.title}
             </h3>
-            <p className="text-stardust text-sm mt-2 line-clamp-2">
+            <p className="text-gray-500 text-sm mt-2 line-clamp-2">
               {post.excerpt}
             </p>
-            <div className="flex items-center gap-3 mt-4 text-stardust text-xs">
+            <div className="flex items-center gap-3 mt-4 text-gray-500 text-xs">
               <span>{formatDate(post.publishedAt)}</span>
               <span>•</span>
               <span>{getReadTime(post.body)}</span>
