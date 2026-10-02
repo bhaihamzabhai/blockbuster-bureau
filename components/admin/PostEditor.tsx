@@ -38,6 +38,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { Timestamp } from 'firebase/firestore';
 import { storage } from '@/lib/firebase';
 import { createPost, updatePost, generateSlug } from '@/lib/firestore';
+import { getCurrentUser } from '@/lib/auth';
 import { Post, Category, CATEGORIES, CATEGORY_LABELS } from '@/types';
 import YouTubeEmbed from '@/lib/tiptap/YouTubeExtension';
 import EditorToolbar from './EditorToolbar';
@@ -292,6 +293,32 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
       setSaveError(null);
       setLastSaved(new Date());
       setIsDirty(false);
+
+      // Instantly refresh the public pages so the article appears right away
+      // (otherwise ISR would take up to an hour). Non-fatal if it fails.
+      try {
+        const user = getCurrentUser();
+        if (user) {
+          const token = await user.getIdToken();
+          await fetch('/api/revalidate', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              paths: [
+                '/',
+                '/blog',
+                `/blog/${formState.slug}`,
+                `/category/${formState.category}`,
+              ],
+            }),
+          });
+        }
+      } catch {
+        /* ISR hourly refresh remains as backup */
+      }
     } catch (error) {
       console.error('Publish error:', error);
       setSaveStatus('error');
