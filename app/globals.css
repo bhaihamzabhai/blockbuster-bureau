@@ -247,6 +247,18 @@
 }
 .prose-light strong { color: #111827; }
 
+/* ===== Breaking news ticker ===== */
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-track {
+  animation: ticker-scroll 70s linear infinite;
+}
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
 
 /* ===== Scrollbar Styling ===== */
 ::-webkit-scrollbar {

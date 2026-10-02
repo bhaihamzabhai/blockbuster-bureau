@@ -42,5 +42,10 @@ auth = getAuth(app);
 db = getFirestore(app);
 storage = getStorage(app);
 
+/** True when real Firebase env vars are present (not the MISSING placeholder). */
+export const isFirebaseConfigured =
+  firebaseConfig.apiKey !== MISSING &&
+  firebaseConfig.projectId !== MISSING;
+
 export { app, auth, db, storage };
 export default app;

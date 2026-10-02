@@ -1,8 +1,12 @@
 import Header from './Header';
 import { getSiteSettings } from '@/lib/siteSettings';
+import { getPosts } from '@/lib/firestore';
 
-/** Server wrapper: loads social links etc. once, then renders the client header. */
+/** Server wrapper: loads settings + latest headlines once, then renders the client header. */
 export default async function SiteHeader() {
-  const settings = await getSiteSettings();
-  return <Header settings={settings} />;
+  const [settings, posts] = await Promise.all([
+    getSiteSettings(),
+    getPosts({ status: 'published', limit: 8 }),
+  ]);
+  return <Header settings={settings} tickerPosts={posts} />;
 }

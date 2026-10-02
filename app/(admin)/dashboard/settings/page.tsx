@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { auth, db } from '@/lib/firebase';
 import { updateProfile } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { Youtube, Facebook, Music2, Plus, Trash2, ArrowUp, ArrowDown, Image as ImageIcon } from 'lucide-react';
+import { Youtube, Facebook, Music2, Plus, Trash2, ArrowUp, ArrowDown, Image as ImageIcon, Film } from 'lucide-react';
 import type { HeroSlide } from '@/lib/siteSettings';
 
 export default function SettingsPage() {
@@ -24,8 +24,10 @@ export default function SettingsPage() {
 
   // Social links (shown in header/footer, link to your channels)
   const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [youtubeChannelId, setYoutubeChannelId] = useState('');
   const [tiktokUrl, setTiktokUrl] = useState('');
   const [facebookUrl, setFacebookUrl] = useState('');
+  const [tmdbApiKey, setTmdbApiKey] = useState('');
 
   // Hero slider slides (max 5)
   const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([]);
@@ -48,8 +50,10 @@ export default function SettingsPage() {
           if (data.metaKeywords) setMetaKeywords(data.metaKeywords);
           if (data.googleAnalyticsId) setGoogleAnalyticsId(data.googleAnalyticsId);
           if (data.youtubeUrl) setYoutubeUrl(data.youtubeUrl);
+          if (data.youtubeChannelId) setYoutubeChannelId(data.youtubeChannelId);
           if (data.tiktokUrl) setTiktokUrl(data.tiktokUrl);
           if (data.facebookUrl) setFacebookUrl(data.facebookUrl);
+          if (data.tmdbApiKey) setTmdbApiKey(data.tmdbApiKey);
           if (Array.isArray(data.heroSlides)) setHeroSlides(data.heroSlides);
         }
       } catch (error) {
@@ -103,8 +107,10 @@ export default function SettingsPage() {
         metaKeywords,
         googleAnalyticsId,
         youtubeUrl,
+        youtubeChannelId,
         tiktokUrl,
         facebookUrl,
+        tmdbApiKey,
         heroSlides,
         updatedAt: new Date().toISOString(),
       }, { merge: true });
@@ -217,6 +223,21 @@ export default function SettingsPage() {
             </div>
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-1">
+                <Youtube className="w-4 h-4 text-red-500" /> YouTube Channel ID
+              </label>
+              <input
+                type="text"
+                value={youtubeChannelId}
+                onChange={(e) => setYoutubeChannelId(e.target.value.trim())}
+                placeholder="UCxxxxxxxxxxxxxxxxxxxxxx"
+                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-red-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Powers the /videos page (auto-updates from your channel). Find it in YouTube Studio → Settings → Channel → Advanced settings.
+              </p>
+            </div>
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-1">
                 <Music2 className="w-4 h-4 text-gray-300" /> TikTok Profile URL
               </label>
               <input
@@ -238,6 +259,31 @@ export default function SettingsPage() {
                 placeholder="https://facebook.com/yourpage"
                 className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-red-500"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* API Keys Section */}
+        <div className="bg-[#111827] border border-gray-800 p-6 rounded-xl shadow-lg">
+          <h2 className="text-lg font-semibold mb-1 text-sky-400">API Keys</h2>
+          <p className="text-sm text-gray-400 mb-4">
+            Powers the auto-updating /releases page (upcoming movies + countdowns).
+          </p>
+          <div className="space-y-4">
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-1">
+                <Film className="w-4 h-4 text-sky-400" /> TMDB API Key
+              </label>
+              <input
+                type="text"
+                value={tmdbApiKey}
+                onChange={(e) => setTmdbApiKey(e.target.value.trim())}
+                placeholder="Paste your free TMDB API key"
+                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-sky-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Free at themoviedb.org → Settings → API. The releases page refreshes daily on its own.
+              </p>
             </div>
           </div>
         </div>

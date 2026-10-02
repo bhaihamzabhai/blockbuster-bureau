@@ -15,8 +15,18 @@ import {
   DocumentSnapshot,
   QueryConstraint,
 } from 'firebase/firestore';
-import { db } from './firebase';
+import { db, isFirebaseConfigured } from './firebase';
 import { Post, Category } from '@/types';
+
+/** Rejects after `ms` so a dead Firestore backend can't hang static generation. */
+function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`${label} timed out`)), ms)
+    ),
+  ]);
+}
 
 const POSTS_COLLECTION = 'posts';
 
@@ -33,6 +43,7 @@ interface GetPostsOptions {
 export async function getPosts(
   options: GetPostsOptions = {}
 ): Promise<Post[]> {
+  if (!isFirebaseConfigured) return [];
   try {
     const constraints: QueryConstraint[] = [];
 
@@ -55,7 +66,7 @@ export async function getPosts(
     }
 
     const q = query(collection(db, POSTS_COLLECTION), ...constraints);
-    const snapshot = await getDocs(q);
+    const snapshot = await withTimeout(getDocs(q), 10000, 'getPosts');
 
     return snapshot.docs.map((doc) => ({
       id: doc.id,
@@ -74,13 +85,14 @@ export async function getPosts(
  * Get a single post by slug
  */
 export async function getPostBySlug(slug: string): Promise<Post | null> {
+  if (!isFirebaseConfigured) return null;
   try {
     const q = query(
       collection(db, POSTS_COLLECTION),
       where('slug', '==', slug),
       where('status', '==', 'published')
     );
-    const snapshot = await getDocs(q);
+    const snapshot = await withTimeout(getDocs(q), 10000, 'getPostBySlug');
 
     if (snapshot.empty) {
       return null;
@@ -98,6 +110,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
  * Get featured posts for the trending section
  */
 export async function getFeaturedPosts(): Promise<Post[]> {
+  if (!isFirebaseConfigured) return [];
   try {
     const q = query(
       collection(db, POSTS_COLLECTION),
@@ -106,7 +119,7 @@ export async function getFeaturedPosts(): Promise<Post[]> {
       orderBy('createdAt', 'desc'),
       limit(5)
     );
-    const snapshot = await getDocs(q);
+    const snapshot = await withTimeout(getDocs(q), 10000, 'getFeaturedPosts');
 
     return snapshot.docs.map((doc) => ({
       id: doc.id,

@@ -5,14 +5,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, ChevronDown, Clapperboard } from 'lucide-react';
 import { CATEGORIES, CATEGORY_LABELS, Category } from '@/types';
-import type { SiteSettings } from '@/lib/siteSettings';
 
-interface MainNavProps {
-  settings: SiteSettings;
-}
+interface MainNavProps {}
 
 /** Orange navigation bar with dropdown for categories — like the reference design. */
-export default function MainNav({ settings }: MainNavProps) {
+export default function MainNav({}: MainNavProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
@@ -24,8 +21,6 @@ export default function MainNav({ settings }: MainNavProps) {
     `px-5 h-12 flex items-center text-[13px] font-bold uppercase tracking-wider transition-colors ${
       isActive(href) ? 'bg-gray-900 text-white' : 'text-white hover:bg-black/15'
     }`;
-
-  const videosUrl = settings.youtubeUrl || '/blog?category=trailers';
 
   return (
     <nav className="bg-brand sticky top-0 z-50 shadow-md">
@@ -63,10 +58,13 @@ export default function MainNav({ settings }: MainNavProps) {
           </div>
 
           <Link href="/blog" className={linkCls('/blog')}>News</Link>
-          <a href={videosUrl} target={videosUrl.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" className="px-5 h-12 flex items-center text-[13px] font-bold uppercase tracking-wider text-white hover:bg-black/15 transition-colors gap-1.5">
-            <Clapperboard className="w-4 h-4" />
-            Videos
-          </a>
+          <Link href="/videos" className={linkCls('/videos')}>
+            <span className="flex items-center gap-1.5">
+              <Clapperboard className="w-4 h-4" />
+              Videos
+            </span>
+          </Link>
+          <Link href="/releases" className={linkCls('/releases')}>Releases</Link>
           <Link href="/about" className={linkCls('/about')}>About</Link>
         </div>
 
@@ -89,6 +87,8 @@ export default function MainNav({ settings }: MainNavProps) {
           {[
             { href: '/', label: 'Home' },
             { href: '/blog', label: 'News' },
+            { href: '/videos', label: 'Videos' },
+            { href: '/releases', label: 'Releases' },
             { href: '/about', label: 'About' },
           ].map((l) => (
             <Link
