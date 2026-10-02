@@ -15,10 +15,11 @@ const AD_SIZES: Record<string, { width: number; height: number; label: string }>
 };
 
 const AD_SLOTS: Record<string, string> = {
-  leaderboard: '1234567890',
-  rectangle: '0987654321',
-  skyscraper: '1122334455',
-  'in-article': '5566778899',
+  leaderboard:
+    process.env.NEXT_PUBLIC_ADSENSE_SLOT_LEADERBOARD || '1234567890',
+  rectangle: process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECTANGLE || '0987654321',
+  skyscraper: process.env.NEXT_PUBLIC_ADSENSE_SLOT_SKYSCRAPER || '1122334455',
+  'in-article': process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE || '5566778899',
 };
 
 export default function AdUnit({ slot, className = '' }: AdUnitProps) {

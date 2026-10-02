@@ -33,6 +33,14 @@ export async function generateMetadata({
   return {
     title: label,
     description: `Latest ${label.toLowerCase()} news and updates from Blockbuster Bureau.`,
+    openGraph: {
+      title: `${label} | Blockbuster Bureau`,
+      description: `Latest ${label.toLowerCase()} news and updates from Blockbuster Bureau.`,
+      type: 'website',
+    },
+    alternates: {
+      canonical: `/category/${category}`,
+    },
   };
 }
 

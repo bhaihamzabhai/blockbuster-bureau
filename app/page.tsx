@@ -3,6 +3,7 @@ import { getPosts, getFeaturedPosts } from '@/lib/firestore';
 import Hero from '@/components/home/Hero';
 import TrendingGrid from '@/components/home/TrendingGrid';
 import RecentPosts from '@/components/home/RecentPosts';
+import FilmStrip from '@/components/ui/FilmStrip';
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -16,6 +17,7 @@ export default async function HomePage() {
   return (
     <>
       <Hero />
+      <FilmStrip label="Now Showing" />
       <div className="py-8 px-4">
         <div className="max-w-7xl mx-auto">
           <p className="text-stardust text-xs text-center mb-2 uppercase tracking-wider">
@@ -27,6 +29,7 @@ export default async function HomePage() {
         </div>
       </div>
       <TrendingGrid posts={featuredPosts} />
+      <FilmStrip />
       <RecentPosts posts={recentPosts} />
     </>
   );

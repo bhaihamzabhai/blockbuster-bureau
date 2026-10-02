@@ -61,6 +61,7 @@ export default function Hero() {
 
       {/* Content */}
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+        <div className="glass rounded-3xl px-6 py-10 md:px-12 md:py-14">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -103,6 +104,7 @@ export default function Hero() {
             Watch on YouTube
           </Button>
         </motion.div>
+        </div>
       </div>
 
       {/* Scroll indicator */}

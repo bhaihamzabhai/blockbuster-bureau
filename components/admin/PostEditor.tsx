@@ -48,6 +48,24 @@ import EmbedModal from './modals/EmbedModal';
 
 const lowlight = createLowlight(common);
 
+/**
+ * Convert a raw Firebase/network error into a message the user can act on.
+ */
+function getFriendlyErrorMessage(error: unknown): string {
+  const code = (error as { code?: string })?.code || '';
+  if (code === 'permission-denied') {
+    return 'Permission denied. Your account is missing admin access: run the admin-claim script for your user, sign out and sign back in, and make sure firestore.rules is deployed.';
+  }
+  if (code === 'unavailable' || code === 'failed-precondition') {
+    return 'Could not reach Firestore. Check your internet connection and Firebase project status.';
+  }
+  if (code === 'unauthenticated') {
+    return 'You are not signed in. Please sign in again and retry.';
+  }
+  const message = (error as Error)?.message;
+  return message ? `Save failed: ${message}` : 'An unexpected error occurred while saving.';
+}
+
 interface PostEditorProps {
   initialData?: Post | null;
   postId?: string;
@@ -92,6 +110,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
 
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [isDirty, setIsDirty] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [tagInput, setTagInput] = useState('');
@@ -214,6 +233,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
     if (!editor) return;
     setIsSaving(true);
     setSaveStatus('saving');
+    setSaveError(null);
 
     try {
       const data = {
@@ -234,11 +254,13 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
       }
 
       setSaveStatus('saved');
+      setSaveError(null);
       setLastSaved(new Date());
       setIsDirty(false);
     } catch (error) {
       console.error('Save error:', error);
       setSaveStatus('error');
+      setSaveError(getFriendlyErrorMessage(error));
     } finally {
       setIsSaving(false);
     }
@@ -248,6 +270,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
     if (!editor) return;
     setIsSaving(true);
     setSaveStatus('saving');
+    setSaveError(null);
 
     try {
       const data = {
@@ -264,11 +287,13 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
       }
 
       setSaveStatus('saved');
+      setSaveError(null);
       setLastSaved(new Date());
       setIsDirty(false);
     } catch (error) {
       console.error('Publish error:', error);
       setSaveStatus('error');
+      setSaveError(getFriendlyErrorMessage(error));
     } finally {
       setIsSaving(false);
     }
@@ -486,6 +511,11 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                 </span>
                 {isDirty && <span className="w-2 h-2 bg-yellow-400 rounded-full" />}
               </div>
+              {saveStatus === 'error' && saveError && (
+                <p className="mb-4 text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2">
+                  {saveError}
+                </p>
+              )}
               <div className="flex gap-2">
                 <button
                   onClick={handleSaveDraft}

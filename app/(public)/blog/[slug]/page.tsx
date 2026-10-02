@@ -80,14 +80,18 @@ function formatDate(timestamp: { toDate: () => Date } | null): string {
 }
 
 function generateJsonLd(post: Post, slug: string) {
+  const plainText = post.body.replace(/<[^>]*>/g, ' ');
+  const wordCount = plainText.split(/\s+/).filter(Boolean).length;
+
   return {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'NewsArticle',
     headline: post.title,
     description: post.excerpt || post.seo.metaDescription,
-    image: post.coverImage ? [post.coverImage] : [],
+    image: post.coverImage ? [post.coverImage] : [`${SITE_URL}/og-cover.jpg`],
     datePublished: post.publishedAt?.toDate?.().toISOString(),
     dateModified: post.updatedAt?.toDate?.().toISOString(),
+    wordCount,
     author: {
       '@type': 'Person',
       name: post.author || 'Blockbuster Bureau',

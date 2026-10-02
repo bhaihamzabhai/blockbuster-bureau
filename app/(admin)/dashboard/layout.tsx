@@ -16,8 +16,8 @@ export default function DashboardLayout({
   // DEBUG: Print current logged-in user email in browser console (F12)
   console.log('Current Logged-in User:', user?.email);
 
-  // TEMPORARY: Force allow to test if dashboard renders at all
-  const isAllowed = true; 
+  // Only real admins (verified via the Firebase custom claim) may use the dashboard.
+  const isAllowed = isAdmin;
 
   useEffect(() => {
     if (loading) return;
@@ -29,7 +29,7 @@ export default function DashboardLayout({
   }, [loading, user, isAllowed, router]);
 
   // Loading state
-  if (loading || !user) {
+  if (loading || !user || !isAllowed) {
     return (
       <div className="min-h-screen bg-void flex items-center justify-center">
         <div className="text-center">

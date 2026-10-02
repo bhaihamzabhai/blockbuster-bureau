@@ -1,12 +1,14 @@
 ﻿import { MetadataRoute } from 'next';
 import { getPosts } from '@/lib/firestore';
 
-const SITE_URL = 'https://www.blockbusterbureau.com';
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://www.blockbusterbureau.com';
 
 const STATIC_PAGES = [
   '',
   '/blog',
   '/about',
+  '/privacy',
   '/category/upcoming-movies',
   '/category/actor-news',
   '/category/release-dates',

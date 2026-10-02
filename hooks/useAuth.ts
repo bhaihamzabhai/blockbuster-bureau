@@ -20,8 +20,15 @@ export function useAuth(): UseAuthReturn {
       setUser(user);
 
       if (user) {
-        // TEMPORARY: Force true to bypass and test dashboard access
-        setIsAdmin(true);
+        // Check the real admin custom claim from the ID token instead of
+        // assuming every signed-in user is an admin. The token must be
+        // refreshed (sign out/in) after the claim is granted for it to appear.
+        try {
+          const tokenResult = await user.getIdTokenResult();
+          setIsAdmin(tokenResult.claims.admin === true);
+        } catch {
+          setIsAdmin(false);
+        }
       } else {
         setIsAdmin(false);
       }

@@ -12,7 +12,7 @@ export default function GlowCard({ children, className = '' }: GlowCardProps) {
     <motion.div
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.3 }}
-      className={`bg-nebula rounded-xl border border-white/5 hover:border-gold/30 shadow-glow hover:shadow-glow-lg transition-shadow ${className}`}
+      className={`glass glass-hover glass-sheen rounded-xl ${className}`}
     >
       {children}
     </motion.div>

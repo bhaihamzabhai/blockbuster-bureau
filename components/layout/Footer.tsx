@@ -1,21 +1,17 @@
 import Link from 'next/link';
 import { Youtube, Twitter } from 'lucide-react';
+import SiteLogo from './SiteLogo';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-nebula border-t border-white/5 py-12 px-4">
+    <footer className="glass-strong border-x-0 border-b-0 py-12 px-4 mt-16">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Logo & Tagline */}
           <div>
-            <h3 className="text-display text-2xl text-gold mb-2">
-              Blockbuster Bureau
-            </h3>
-            <p className="text-stardust text-sm">
-              The Bureau Never Closes
-            </p>
+            <SiteLogo size="md" />
             <p className="text-stardust text-sm mt-4">
               Your daily source for Hollywood news, trailers, and entertainment
               updates.
@@ -48,6 +44,14 @@ export default function Footer() {
                   className="text-stardust hover:text-gold transition-colors text-sm"
                 >
                   About
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/privacy"
+                  className="text-stardust hover:text-gold transition-colors text-sm"
+                >
+                  Privacy Policy
                 </Link>
               </li>
             </ul>

@@ -124,7 +124,7 @@ export default function PostCard({ post, variant = 'default' }: PostCardProps) {
       className="group"
     >
       <Link href={`/blog/${post.slug}`} className="block">
-        <div className="bg-nebula rounded-xl overflow-hidden border border-white/5 hover:border-gold/30 transition-all">
+        <div className="glass glass-hover glass-sheen rounded-xl overflow-hidden">
           {/* Cover Image */}
           <div className="relative h-48 overflow-hidden">
             {post.coverImage ? (
