@@ -10,8 +10,12 @@ import ViewCounter from '@/components/blog/ViewCounter';
 import AdUnit from '@/components/ads/AdUnit';
 import YouTubeEmbed from '@/components/youtube/YouTubeEmbed';
 import ChannelBanner from '@/components/youtube/ChannelBanner';
+import ReadingProgress from '@/components/article/ReadingProgress';
+import ShareButtons from '@/components/article/ShareButtons';
+import { List } from 'lucide-react';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://blockbusterbureau.com';
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://www.blockbusterbureau.com';
 
 interface BlogPostPageProps {
   params: { slug: string };
@@ -38,12 +42,13 @@ export async function generateMetadata({
       type: 'article',
       publishedTime: post.publishedAt?.toDate().toISOString(),
       authors: [post.author],
-      images: post.coverImage ? [post.coverImage] : [],
+      images: post.coverImage ? [post.coverImage] : [`${SITE_URL}/og-cover.jpg`],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.seo.metaTitle || post.title,
       description: post.seo.metaDescription || post.excerpt,
+      images: post.coverImage ? [post.coverImage] : [`${SITE_URL}/og-cover.jpg`],
     },
     alternates: {
       canonical: `${SITE_URL}/blog/${post.slug}`,
@@ -113,6 +118,65 @@ function generateJsonLd(post: Post, slug: string) {
   };
 }
 
+function generateBreadcrumbJsonLd(post: Post, slug: string) {  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: SITE_URL,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Blog',
+        item: `${SITE_URL}/blog`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: CATEGORY_LABELS[post.category] || post.category,
+        item: `${SITE_URL}/category/${post.category}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 4,
+        name: post.title,
+        item: `${SITE_URL}/blog/${slug}`,
+      },
+    ],
+  };
+}
+
+/**
+ * Extracts plain <h2> headings from the article HTML, injects anchor ids,
+ * and returns both the processed HTML and the heading list for a TOC.
+ * Only matches bare <h2> tags (no attributes) to stay safe.
+ */
+function processHeadings(html: string): {
+  html: string;
+  headings: { id: string; text: string }[];
+} {
+  const headings: { id: string; text: string }[] = [];
+  let n = 0;
+  const out = html.replace(/<h2>([\s\S]*?)<\/h2>/gi, (m, inner: string) => {
+    const text = String(inner).replace(/<[^>]*>/g, '').trim();
+    if (!text) return m;
+    const slug =
+      text
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 50) || `heading-${n}`;
+    const id = `toc-${n++}-${slug}`;
+    headings.push({ id, text });
+    return `<h2 id="${id}" class="scroll-mt-28">${inner}</h2>`;
+  });
+  return { html: out, headings };
+}
+
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const post = await getPostBySlug(params.slug);
 
@@ -131,9 +195,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }).then((posts) => posts.filter((p) => p.id !== post.id).slice(0, 3));
 
   const jsonLd = generateJsonLd(post, params.slug);
+  const breadcrumbLd = generateBreadcrumbJsonLd(post, params.slug);
+  const { html: bodyHtml, headings } = processHeadings(post.body);
 
   return (
     <>
+      {/* Reading progress bar */}
+      <ReadingProgress />
+
       {/* Client-side view counter */}
       <ViewCounter postId={post.id} />
 
@@ -141,6 +210,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       <article className="min-h-screen">
         {/* Hero Section with Cover Image */}
@@ -203,11 +276,40 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <AdUnit slot="in-article" />
           </div>
 
+          {/* Table of contents (auto-built from h2 headings) */}
+          {headings.length >= 2 && (
+            <nav
+              aria-label="Table of contents"
+              className="mb-10 rounded-xl border border-gray-200 bg-gray-50 p-5 sm:p-6"
+            >
+              <p className="flex items-center gap-2 text-gray-900 font-extrabold text-sm uppercase tracking-widest mb-3">
+                <List className="w-4 h-4 text-brand" /> In this article
+              </p>
+              <ul className="space-y-2">
+                {headings.map((h) => (
+                  <li key={h.id}>
+                    <a
+                      href={`#${h.id}`}
+                      className="text-sm text-gray-600 hover:text-brand transition-colors leading-snug block"
+                    >
+                      {h.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+
           {/* Post Body - sanitized HTML rendered via dangerouslySetInnerHTML */}
           <div
             className="prose-light"
-            dangerouslySetInnerHTML={{ __html: post.body }}
+            dangerouslySetInnerHTML={{ __html: bodyHtml }}
           />
+
+          {/* Share buttons */}
+          <div className="mt-10 pt-8 border-t border-gray-200 flex justify-center">
+            <ShareButtons title={post.title} />
+          </div>
 
           {/* Ad placement after content */}
           <div className="my-8 flex justify-center">
@@ -227,7 +329,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {/* Related Posts */}
         {relatedPosts.length > 0 && (
           <section className="max-w-7xl mx-auto px-4 py-12 border-t border-gray-200">
-            <h2 className="text-gray-900 font-extrabold text-xl uppercase tracking-wide border-l-4 border-brand pl-3 mb-8">
+            <h2 className="section-heading mb-8">
               Related Posts
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

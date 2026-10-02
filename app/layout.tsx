@@ -98,6 +98,10 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     alternates: {
       canonical: SITE_URL,
+      languages: {
+        'en-US': SITE_URL,
+        'x-default': SITE_URL,
+      },
       types: {
         'application/rss+xml': '/feed.xml',
       },
@@ -117,11 +121,56 @@ export default async function RootLayout({
   const settings = await getSiteSettings();
   const gaId = settings.googleAnalyticsId || 'G-EPZPH44NVR';
 
+  // Organization + WebSite structured data (sitelinks search box eligible).
+  const orgJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': `${SITE_URL}/#organization`,
+        name: 'Blockbuster Bureau',
+        url: SITE_URL,
+        logo: {
+          '@type': 'ImageObject',
+          url: `${SITE_URL}/logo.png`,
+        },
+        sameAs: [
+          settings.youtubeUrl,
+          settings.facebookUrl,
+          settings.tiktokUrl,
+        ].filter(Boolean),
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${SITE_URL}/#website`,
+        url: SITE_URL,
+        name: 'Blockbuster Bureau',
+        description: settings.siteDescription || DEFAULT_DESCRIPTION,
+        inLanguage: 'en-US',
+        publisher: { '@id': `${SITE_URL}/#organization` },
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: {
+            '@type': 'EntryPoint',
+            urlTemplate: `${SITE_URL}/blog?q={search_term_string}`,
+          },
+          'query-input': 'required name=search_term_string',
+        },
+      },
+    ],
+  };
+
   return (
-    <html lang="en" className="dark">
+    <html lang="en-US" className="dark">
       <body
         className={`${bebasNeue.variable} ${inter.variable} bg-void text-white min-h-screen font-body`}
       >
+        {/* Structured data: Organization + WebSite */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
+
         {/* Google AdSense (loaded only when a client ID is configured) */}
         {adsenseClientId && (
           <Script

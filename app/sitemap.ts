@@ -7,6 +7,8 @@ const SITE_URL =
 const STATIC_PAGES = [
   '',
   '/blog',
+  '/videos',
+  '/releases',
   '/about',
   '/privacy',
   '/category/upcoming-movies',
@@ -21,12 +23,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Get all published posts
   const posts = await getPosts({ status: 'published' });
 
-  // Create sitemap entries for posts
+  // Create sitemap entries for posts (with cover images for image search)
   const postEntries = posts.map((post) => ({
     url: `${SITE_URL}/blog/${post.slug}`,
     lastModified: post.updatedAt?.toDate?.() || new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
+    images: post.coverImage ? [post.coverImage] : undefined,
   }));
 
   // Create sitemap entries for static pages
