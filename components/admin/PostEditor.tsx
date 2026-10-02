@@ -131,6 +131,24 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
   // Track the Firestore document id — after the first save of a brand-new
   // post, all subsequent saves/publishes must UPDATE it, not create duplicates.
   const [currentPostId, setCurrentPostId] = useState<string | undefined>(postId);
+  // HTML source view (for pasting raw HTML bodies)
+  const [htmlView, setHtmlView] = useState(false);
+  const [rawHtml, setRawHtml] = useState('');
+
+  /** Switch between Visual and HTML source view. */
+  const toggleHtmlView = () => {
+    if (!editor) return;
+    if (!htmlView) {
+      // Entering HTML view: dump current content as HTML.
+      setRawHtml(editor.getHTML());
+      setHtmlView(true);
+    } else {
+      // Leaving HTML view: parse the raw HTML back into the editor.
+      editor.commands.setContent(rawHtml);
+      setHtmlView(false);
+      setIsDirty(true);
+    }
+  };
 
   // Initialize Tiptap editor
   const editor = useEditor({
@@ -185,7 +203,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
     onUpdate: ({ editor }) => {
       setFormState((prev) => ({
         ...prev,
-        body: editor.getHTML(),
+        body: htmlView ? rawHtml : editor.getHTML(),
       }));
       setIsDirty(true);
     },
@@ -241,7 +259,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
     try {
       const data = {
         ...formState,
-        body: editor.getHTML(),
+        body: htmlView ? rawHtml : editor.getHTML(),
         status: 'draft' as const,
       };
 
@@ -278,7 +296,8 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
     try {
       const data = {
         ...formState,
-        body: editor.getHTML(),
+        // If the HTML source view is open, save its content directly.
+        body: htmlView ? rawHtml : editor.getHTML(),
         status: 'published' as const,
         publishedAt: Timestamp.now(),
       };
@@ -506,20 +525,56 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
             </div>
 
             {/* Toolbar */}
-            <EditorToolbar
-              editor={editor}
-              onLinkClick={() => setLinkModalOpen(true)}
-              onImageClick={() => setImageModalOpen(true)}
-              onYouTubeClick={() => setYoutubeModalOpen(true)}
-              onEmbedClick={() => setEmbedModalOpen(true)}
-            />
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <EditorToolbar
+                editor={editor}
+                onLinkClick={() => setLinkModalOpen(true)}
+                onImageClick={() => setImageModalOpen(true)}
+                onYouTubeClick={() => setYoutubeModalOpen(true)}
+                onEmbedClick={() => setEmbedModalOpen(true)}
+              />
+              {/* Visual / HTML toggle — paste raw HTML bodies in HTML view */}
+              <div className="flex rounded-md border border-gray-200 overflow-hidden shrink-0">
+                <button
+                  type="button"
+                  onClick={() => htmlView && toggleHtmlView()}
+                  className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition-colors ${
+                    !htmlView ? 'bg-gray-900 text-white' : 'bg-white text-gray-500 hover:text-gray-900'
+                  }`}
+                >
+                  Visual
+                </button>
+                <button
+                  type="button"
+                  onClick={() => !htmlView && toggleHtmlView()}
+                  className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition-colors ${
+                    htmlView ? 'bg-gray-900 text-white' : 'bg-white text-gray-500 hover:text-gray-900'
+                  }`}
+                >
+                  HTML
+                </button>
+              </div>
+            </div>
 
             {/* Editor Canvas */}
             <div className="bg-white/30 border border-gray-200 rounded-b-lg border-t-0">
-              <EditorContent
-                editor={editor}
-                className="prose-editor min-h-[500px] p-6 focus:outline-none"
-              />
+              {htmlView ? (
+                <textarea
+                  value={rawHtml}
+                  onChange={(e) => {
+                    setRawHtml(e.target.value);
+                    setIsDirty(true);
+                  }}
+                  spellCheck={false}
+                  placeholder="<p>Paste raw HTML here…</p>"
+                  className="w-full min-h-[500px] p-6 font-mono text-sm text-gray-900 bg-white focus:outline-none resize-y"
+                />
+              ) : (
+                <EditorContent
+                  editor={editor}
+                  className="prose-editor min-h-[500px] p-6 focus:outline-none"
+                />
+              )}
               <div className="flex items-center justify-between px-6 py-3 border-t border-gray-200">
                 <span className="text-gray-500/50 text-sm">
                   {getWordCount()} words | {getReadTime()} min read
