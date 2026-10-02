@@ -43,7 +43,7 @@ export default function ArticleCard({ post }: { post: Post }) {
   const rating = typeof post.rating === 'number' ? post.rating : 0;
 
   return (
-    <Link href={`/blog/${post.slug}`} className="group block">
+    <Link href={`/blog/${post.slug}`} className="group block card-glow rounded-lg">
       <div className="relative aspect-video rounded-lg overflow-hidden bg-gray-100 shadow-sm group-hover:shadow-md transition-shadow">
         {post.coverImage ? (
           <Image

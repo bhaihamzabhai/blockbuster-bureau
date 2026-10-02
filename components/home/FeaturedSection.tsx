@@ -48,7 +48,7 @@ export default function FeaturedSection({ posts }: { posts: Post[] }) {
   return (
     <section className="bg-white">
       <div className="max-w-7xl mx-auto px-4 py-10">
-        <h2 className="text-gray-900 font-extrabold text-xl uppercase tracking-wide border-l-4 border-brand pl-3">
+        <h2 className="section-heading">
           Featured Articles
         </h2>
 

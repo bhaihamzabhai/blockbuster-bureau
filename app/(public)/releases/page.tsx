@@ -20,7 +20,7 @@ export default async function ReleasesPage() {
   return (
     <div className="bg-white text-gray-900 min-h-screen py-10 px-4">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-gray-900 font-extrabold text-2xl uppercase tracking-wide border-l-4 border-brand pl-3">
+        <h1 className="section-heading">
           Movie Release Dates
         </h1>
         <p className="text-gray-500 mt-2 text-[15px] mb-8">

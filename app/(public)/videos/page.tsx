@@ -23,7 +23,7 @@ export default async function VideosPage() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center gap-4 sm:justify-between">
           <div>
-            <h1 className="text-gray-900 font-extrabold text-2xl uppercase tracking-wide border-l-4 border-brand pl-3">
+            <h1 className="section-heading">
               Latest Videos
             </h1>
             <p className="text-gray-500 mt-2 text-[15px]">

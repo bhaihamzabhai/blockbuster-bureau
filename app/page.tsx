@@ -1,10 +1,11 @@
 import Link from 'next/link';
-import { Youtube, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import AdUnit from '@/components/ads/AdUnit';
 import HeroSlider from '@/components/home/HeroSlider';
 import FeaturedSection from '@/components/home/FeaturedSection';
 import Newsletter from '@/components/home/Newsletter';
 import HomeReleases from '@/components/home/HomeReleases';
+import YouTubeShowcase from '@/components/home/YouTubeShowcase';
 import { getPosts } from '@/lib/firestore';
 import { getSiteSettings, type HeroSlide } from '@/lib/siteSettings';
 import { CATEGORIES, CATEGORY_LABELS, type Category } from '@/types';
@@ -59,7 +60,7 @@ export default async function HomePage() {
       {/* Browse by category */}
       <section className="bg-gray-50 border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-4 py-10">
-          <h2 className="text-gray-900 font-extrabold text-xl uppercase tracking-wide border-l-4 border-brand pl-3">
+          <h2 className="section-heading">
             Browse by Category
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mt-6">
@@ -82,32 +83,8 @@ export default async function HomePage() {
       {/* Coming Soon — upcoming releases strip */}
       <HomeReleases />
 
-      {/* YouTube CTA */}
-      {settings.youtubeUrl && (
-        <section className="bg-white">
-          <div className="max-w-7xl mx-auto px-4 py-10">
-            <div className="rounded-xl bg-gray-900 px-6 py-8 sm:px-10 flex flex-col sm:flex-row items-center gap-6">
-              <div className="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center shrink-0">
-                <Youtube className="w-7 h-7 text-white" />
-              </div>
-              <div className="flex-1 text-center sm:text-left">
-                <h3 className="text-white font-extrabold text-xl">Watch on YouTube</h3>
-                <p className="text-gray-400 text-sm mt-1">
-                  Facecam videos, reviews and Hollywood updates — subscribe for daily content.
-                </p>
-              </div>
-              <a
-                href={settings.youtubeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="h-11 px-7 rounded-md bg-red-600 hover:bg-red-700 text-white text-sm font-bold uppercase tracking-wide flex items-center transition-colors shrink-0"
-              >
-                Subscribe
-              </a>
-            </div>
-          </div>
-        </section>
-      )}
+      {/* YouTube showcase — dark cinema section with latest videos */}
+      <YouTubeShowcase youtubeUrl={settings.youtubeUrl} />
 
       {/* Newsletter signup */}
       <Newsletter />

@@ -27,7 +27,7 @@ export default function HomeReleases() {
     <section className="bg-white">
       <div className="max-w-7xl mx-auto px-4 py-10">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-gray-900 font-extrabold text-xl uppercase tracking-wide border-l-4 border-brand pl-3">
+          <h2 className="section-heading">
             Coming Soon
           </h2>
           <Link

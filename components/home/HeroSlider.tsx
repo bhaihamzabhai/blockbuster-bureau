@@ -61,7 +61,7 @@ export default function HeroSlider({ slides, latestPosts, settings }: HeroSlider
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 rounded-xl overflow-hidden shadow-lg">
             {/* Slider */}
             <div
-              className="lg:col-span-2 relative aspect-[16/10] sm:aspect-[16/8] bg-gray-900 overflow-hidden group"
+              className="lg:col-span-2 relative aspect-[16/10] sm:aspect-[16/8] bg-gray-900 overflow-hidden group film-grain"
               onMouseEnter={() => setPaused(true)}
               onMouseLeave={() => setPaused(false)}
             >
