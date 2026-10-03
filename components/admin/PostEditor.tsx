@@ -43,6 +43,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { Post, Category, CATEGORIES, CATEGORY_LABELS } from '@/types';
 import YouTubeEmbed from '@/lib/tiptap/YouTubeExtension';
 import EditorToolbar from './EditorToolbar';
+import SeoScore from './SeoScore';
 import LinkModal from './modals/LinkModal';
 import ImageModal from './modals/ImageModal';
 import YouTubeModal from './modals/YouTubeModal';
@@ -706,6 +707,22 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                 {cacheStatus === 'refreshing' ? 'Refreshing cache…' : 'Refresh site cache'}
               </button>
             </div>
+
+            {/* SEO Score meter (live, Yoast-style) */}
+            <SeoScore
+              input={{
+                title: formState.title,
+                slug: formState.slug,
+                excerpt: formState.excerpt,
+                bodyHtml: htmlView ? rawHtml : editor?.getHTML() || formState.body,
+                coverImage: formState.coverImage,
+                category: formState.category,
+                tags: formState.tags,
+                youtubeVideoId: formState.youtubeVideoId,
+                metaTitle: formState.seo.metaTitle,
+                metaDescription: formState.seo.metaDescription,
+              }}
+            />
 
             {/* Cover Image */}
             <div className="bg-white rounded-xl border border-gray-200 p-4">
