@@ -106,14 +106,15 @@
 
 
 /* ===== Prose Editor Styles ===== */
-/* Headings match the public article page (.prose-light): dark and readable.
-   The editor must preview what readers will actually see — pale gold on
-   white was washed out and unreadable while editing. */
+/* Editor theme: Bebas Neue + brand orange headings (site theme), black body
+   text. The editor surface is light (bg-white/30), so ALL text must be dark
+   and readable — never white. */
 .prose-editor h1,
 .prose-editor h2,
 .prose-editor h3,
 .prose-editor h4 {
-  color: #111827;
+  font-family: var(--font-display), sans-serif;
+  color: #F39200;
   font-weight: 800;
   line-height: 1.3;
   margin: 1.75rem 0 0.75rem;
@@ -125,7 +126,7 @@
 
 .prose-editor p {
   font-family: var(--font-body);
-  color: rgba(255, 255, 255, 0.9);
+  color: #111827;
   line-height: 1.75;
   margin-bottom: 1rem;
 }
@@ -141,9 +142,9 @@
 }
 
 .prose-editor blockquote {
-  border-left: 4px solid var(--color-gold);
+  border-left: 4px solid #F39200;
   padding-left: 1rem;
-  color: var(--color-stardust);
+  color: #4b5563;
   font-style: italic;
   margin: 1.5rem 0;
 }
@@ -341,7 +342,7 @@
 }
 
 .prose-editor hr {
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(0, 0, 0, 0.15);
   margin: 1.5rem 0;
 }
 
@@ -387,13 +388,13 @@
   color: var(--color-gold);
   padding: 0.75rem;
   text-align: left;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.2);
   font-weight: 600;
 }
 
 .prose-editor .ProseMirror td {
   padding: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .prose-editor .ProseMirror .selectedCell:after {
