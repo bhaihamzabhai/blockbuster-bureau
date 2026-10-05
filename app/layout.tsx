@@ -5,6 +5,8 @@ import { Bebas_Neue, Inter } from 'next/font/google';
 import './globals.css';
 import SiteHeader from '@/components/layout/SiteHeader';
 import Footer from '@/components/layout/Footer';
+import RegisterSW from '@/components/pwa/RegisterSW';
+import InstallPrompt from '@/components/pwa/InstallPrompt';
 import { getSiteSettings } from '@/lib/siteSettings';
 
 const bebasNeue = Bebas_Neue({
@@ -55,6 +57,16 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     metadataBase: new URL(SITE_URL),
+    manifest: '/manifest.webmanifest',
+    themeColor: '#F39200',
+    appleWebApp: {
+      capable: true,
+      title: 'Blockbuster Bureau',
+      statusBarStyle: 'black-translucent',
+    },
+    icons: {
+      apple: '/icons/apple-touch-icon.png',
+    },
     title: {
       template: '%s | Blockbuster Bureau',
       default: title,
@@ -207,6 +219,8 @@ export default async function RootLayout({
         {/* Footer */}
         <Footer />
         <SpeedInsights />
+        <RegisterSW />
+        <InstallPrompt />
       </body>
     </html>
   );
