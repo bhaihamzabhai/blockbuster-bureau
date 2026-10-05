@@ -63,13 +63,13 @@ export default function TopTen({ posts }: { posts: Post[] }) {
                 <span className="top10-number" aria-hidden="true">
                   {i + 1}
                 </span>
-                <span className="relative block w-36 h-52 -ml-7 rounded-lg overflow-hidden bg-nebula shadow-lg ring-1 ring-white/10 group-hover:ring-[#f39200]/60 transition">
+                <span className="relative block w-60 aspect-video -ml-7 rounded-lg overflow-hidden bg-nebula shadow-lg ring-1 ring-white/10 group-hover:ring-[#f39200]/60 transition">
                   {post.coverImage ? (
                     <Image
                       src={post.coverImage}
                       alt=""
                       fill
-                      sizes="144px"
+                      sizes="240px"
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
@@ -80,7 +80,7 @@ export default function TopTen({ posts }: { posts: Post[] }) {
                   <span className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 </span>
               </span>
-              <span className="block w-36 mt-2.5 text-white text-[13px] font-semibold leading-snug line-clamp-2 group-hover:text-[#f39200] transition-colors">
+              <span className="block w-60 mt-2.5 text-white text-[13px] font-semibold leading-snug line-clamp-2 group-hover:text-[#f39200] transition-colors">
                 {post.title}
               </span>
             </Link>
