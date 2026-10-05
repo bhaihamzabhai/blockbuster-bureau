@@ -549,3 +549,89 @@ body {
 .glass-sheen:hover::before {
   left: 125%;
 }
+/* ===== Luxury Pack (2026-10-05) ===== */
+
+/* Cinematic Ken Burns slow zoom for hero slides */
+@keyframes kenburns {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.12); }
+}
+.kenburns {
+  animation: kenburns 7s ease-out forwards;
+}
+
+/* Scroll reveal (paired with <Reveal/>) */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Netflix-style giant outlined rank numbers */
+.top10-number {
+  font-family: var(--font-display), sans-serif;
+  font-size: 8.5rem;
+  line-height: 0.78;
+  color: transparent;
+  -webkit-text-stroke: 3px rgba(243, 146, 0, 0.9);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+/* Hide scrollbars on horizontal carousels */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Magazine drop cap on article body */
+.prose-light > p:first-child::first-letter {
+  font-family: var(--font-display), sans-serif;
+  font-size: 3.4em;
+  line-height: 0.85;
+  float: left;
+  padding-right: 0.12em;
+  padding-top: 0.06em;
+  color: #F39200;
+}
+
+/* Magazine pull quotes */
+.prose-light blockquote {
+  border-left: none;
+  position: relative;
+  font-size: 1.35rem;
+  line-height: 1.5;
+  color: #111827;
+  font-style: italic;
+  text-align: center;
+  margin: 2.5rem auto;
+  max-width: 92%;
+  padding: 0 1rem;
+}
+.prose-light blockquote::before {
+  content: '\201C';
+  font-family: var(--font-display), sans-serif;
+  font-size: 4rem;
+  line-height: 1;
+  color: #F39200;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kenburns,
+  .ticker-track,
+  .reveal {
+    animation: none;
+    transition: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

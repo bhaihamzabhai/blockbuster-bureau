@@ -312,6 +312,22 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <ShareButtons title={post.title} />
           </div>
 
+          {/* Author byline card */}
+          <div className="mt-8 rounded-xl border border-gray-200 bg-gray-50 p-5 sm:p-6 flex items-center gap-4">
+            <div className="w-14 h-14 rounded-full bg-brand text-white flex items-center justify-center font-display text-2xl shrink-0">
+              {(post.author || 'B').charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <p className="text-gray-900 font-bold">
+                {post.author || 'Blockbuster Bureau'}
+              </p>
+              <p className="text-gray-500 text-sm mt-0.5">
+                Hollywood news, trailers &amp; reviews — fresh takes on the
+                movies everyone is talking about.
+              </p>
+            </div>
+          </div>
+
           {/* Ad placement after content */}
           <div className="my-8 flex justify-center">
             <AdUnit slot="leaderboard" />
@@ -333,9 +349,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <h2 className="section-heading mb-8">
               Related Posts
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="flex gap-6 overflow-x-auto snap-x pb-4 no-scrollbar">
               {relatedPosts.map((relatedPost) => (
-                <PostCard key={relatedPost.id} post={relatedPost} />
+                <div
+                  key={relatedPost.id}
+                  className="snap-start shrink-0 w-[280px] sm:w-[320px]"
+                >
+                  <PostCard post={relatedPost} />
+                </div>
               ))}
             </div>
           </section>

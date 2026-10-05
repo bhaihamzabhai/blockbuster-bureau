@@ -57,7 +57,7 @@ export default function HeroSlider({ slides, latestPosts, settings }: HeroSlider
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 rounded-xl overflow-hidden shadow-lg">
             {/* Slider */}
             <div
-              className="lg:col-span-2 relative aspect-[16/10] sm:aspect-[16/8] bg-gray-900 overflow-hidden group film-grain"
+              className="lg:col-span-2 relative aspect-[16/10] sm:aspect-[16/8] lg:aspect-[16/7] bg-gray-900 overflow-hidden group film-grain"
               onMouseEnter={() => setPaused(true)}
               onMouseLeave={() => setPaused(false)}
             >
@@ -72,28 +72,32 @@ export default function HeroSlider({ slides, latestPosts, settings }: HeroSlider
                 >
                   {slide.image ? (
                     <Image
+                      key={i === index ? `active-${slide.id}` : slide.id}
                       src={slide.image}
                       alt={slide.title}
                       fill
-                      className="object-cover"
+                      sizes="(max-width: 1024px) 100vw, 66vw"
+                      className={`object-cover ${i === index ? 'kenburns' : ''}`}
                       priority={i === 0}
                     />
                   ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black" />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
-                    <span className="inline-block bg-brand text-white text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm mb-3">
-                      Featured
-                    </span>
-                    <h2 className="text-white font-extrabold text-2xl sm:text-4xl leading-tight mb-2 line-clamp-2">
-                      {slide.title}
-                    </h2>
-                    {slide.subtitle && (
-                      <p className="text-gray-300 text-sm sm:text-base line-clamp-2 max-w-2xl">
-                        {slide.subtitle}
-                      </p>
-                    )}
+                    <div className="glass rounded-xl p-5 sm:p-6 max-w-2xl">
+                      <span className="inline-block bg-brand text-white text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm mb-3">
+                        Featured
+                      </span>
+                      <h2 className="font-display text-white text-3xl sm:text-5xl leading-[1.05] tracking-wide mb-2 line-clamp-2">
+                        {slide.title}
+                      </h2>
+                      {slide.subtitle && (
+                        <p className="text-gray-300 text-sm sm:text-base line-clamp-2">
+                          {slide.subtitle}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </Link>
               ))}
@@ -142,7 +146,7 @@ export default function HeroSlider({ slides, latestPosts, settings }: HeroSlider
                   <Link key={post.id} href={`/blog/${post.slug}`} className="flex gap-3 py-3 group first:pt-0 last:pb-0">
                     <div className="relative w-20 h-14 shrink-0 rounded overflow-hidden bg-gray-800">
                       {post.coverImage ? (
-                        <Image src={post.coverImage} alt={post.title} fill className="object-cover" />
+                        <Image src={post.coverImage} alt={post.title} fill sizes="80px" className="object-cover" />
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-brand/40 to-gray-800" />
                       )}

@@ -40,6 +40,7 @@ export default function PostCard({ post, variant = 'default' }: PostCardProps) {
                   src={post.coverImage}
                   alt={post.title}
                   fill
+                  sizes="(max-width: 1024px) 100vw, 60vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               ) : (
@@ -89,6 +90,7 @@ export default function PostCard({ post, variant = 'default' }: PostCardProps) {
                 src={post.coverImage}
                 alt={post.title}
                 fill
+                sizes="80px"
                 className="object-cover"
               />
             ) : (
@@ -127,6 +129,7 @@ export default function PostCard({ post, variant = 'default' }: PostCardProps) {
                 src={post.coverImage}
                 alt={post.title}
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
             ) : (

@@ -3,6 +3,8 @@ import { ArrowRight } from 'lucide-react';
 import AdUnit from '@/components/ads/AdUnit';
 import HeroSlider from '@/components/home/HeroSlider';
 import FeaturedSection from '@/components/home/FeaturedSection';
+import TopTen from '@/components/home/TopTen';
+import Reveal from '@/components/ui/Reveal';
 import Newsletter from '@/components/home/Newsletter';
 import HomeReleases from '@/components/home/HomeReleases';
 import YouTubeShowcase from '@/components/home/YouTubeShowcase';
@@ -55,9 +57,15 @@ export default async function HomePage() {
         </div>
       </div>
 
-      <FeaturedSection posts={posts} />
+      <Reveal>
+        <FeaturedSection posts={posts} />
+      </Reveal>
+
+      {/* Netflix-style Top 10 trending */}
+      <TopTen posts={posts} />
 
       {/* Browse by category */}
+      <Reveal>
       <section className="bg-gray-50 border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-4 py-10">
           <h2 className="section-heading">
@@ -79,15 +87,22 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      </Reveal>
 
       {/* Coming Soon — upcoming releases strip */}
-      <HomeReleases />
+      <Reveal>
+        <HomeReleases />
+      </Reveal>
 
       {/* YouTube showcase — dark cinema section with latest videos */}
-      <YouTubeShowcase youtubeUrl={settings.youtubeUrl} />
+      <Reveal>
+        <YouTubeShowcase youtubeUrl={settings.youtubeUrl} />
+      </Reveal>
 
       {/* Newsletter signup */}
-      <Newsletter />
+      <Reveal>
+        <Newsletter />
+      </Reveal>
     </div>
   );
 }
