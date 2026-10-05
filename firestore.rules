@@ -37,6 +37,20 @@ service cloud.firestore {
                                   && request.auth.token.admin == true;
     }
 
+    // Push notification subscriptions: anyone may subscribe (create only);
+    // only admins can read or manage the list.
+    match /pushSubscriptions/{doc} {
+      allow create: if request.resource.data.keys().hasOnly(['endpoint', 'keys', 'createdAt', 'userAgent'])
+                    && request.resource.data.endpoint is string
+                    && request.resource.data.endpoint.size() > 0
+                    && request.resource.data.endpoint.size() < 500
+                    && request.resource.data.keys is map
+                    && request.resource.data.keys.p256dh is string
+                    && request.resource.data.keys.auth is string;
+      allow read, update, delete: if request.auth != null
+                                  && request.auth.token.admin == true;
+    }
+
     // Deny all other access by default
     match /{document=**} {
       allow read, write: if false;

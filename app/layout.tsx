@@ -7,6 +7,7 @@ import SiteHeader from '@/components/layout/SiteHeader';
 import Footer from '@/components/layout/Footer';
 import RegisterSW from '@/components/pwa/RegisterSW';
 import InstallPrompt from '@/components/pwa/InstallPrompt';
+import PushPrompt from '@/components/pwa/PushPrompt';
 import { getSiteSettings } from '@/lib/siteSettings';
 
 const bebasNeue = Bebas_Neue({
@@ -221,6 +222,7 @@ export default async function RootLayout({
         <SpeedInsights />
         <RegisterSW />
         <InstallPrompt />
+        <PushPrompt />
       </body>
     </html>
   );

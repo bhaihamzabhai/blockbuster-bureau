@@ -45,6 +45,7 @@ import YouTubeEmbed from '@/lib/tiptap/YouTubeExtension';
 import EditorToolbar from './EditorToolbar';
 import SeoScore from './SeoScore';
 import QualityCheck from './QualityCheck';
+import CoverDiscoverBadge from './CoverDiscoverBadge';
 import LinkModal from './modals/LinkModal';
 import ImageModal from './modals/ImageModal';
 import YouTubeModal from './modals/YouTubeModal';
@@ -809,6 +810,12 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                     }}
                   />
                 </div>
+              )}
+              {formState.coverImage && (
+                <CoverDiscoverBadge
+                  url={formState.coverImage}
+                  onUpgrade={(newUrl) => updateFormState({ coverImage: newUrl })}
+                />
               )}
             </div>
 

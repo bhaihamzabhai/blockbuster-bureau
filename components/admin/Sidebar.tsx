@@ -11,6 +11,7 @@ import {
   ExternalLink,
   LogOut,
   Mail,
+  Bell,
 } from 'lucide-react';
 import { signOut } from '@/lib/auth';
 import { User } from 'firebase/auth';
@@ -24,6 +25,7 @@ const navItems = [
   { href: '/dashboard/posts', label: 'Posts', icon: FileText },
   { href: '/dashboard/posts/new', label: 'New Post', icon: PlusCircle },
   { href: '/dashboard/newsletter', label: 'Newsletter', icon: Mail },
+  { href: '/dashboard/push', label: 'Push Alerts', icon: Bell },
   { href: '/dashboard/settings', label: 'Settings', icon: Settings },
 ];
 
