@@ -1,14 +1,26 @@
+'use client';
+
+import { useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Post } from '@/types';
 
 /** Netflix-style Top 10: giant outlined rank numbers + portrait posters, snap-scroll row. */
 export default function TopTen({ posts }: { posts: Post[] }) {
+  const trackRef = useRef<HTMLDivElement>(null);
+
   const top = [...posts]
     .sort((a, b) => (b.views || 0) - (a.views || 0))
     .slice(0, 10);
 
   if (top.length === 0) return null;
+
+  const scroll = (dir: 1 | -1) =>
+    trackRef.current?.scrollBy({ left: dir * 480, behavior: 'smooth' });
+
+  const arrowCls =
+    'absolute top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-black/60 hover:bg-brand text-white items-center justify-center opacity-0 group-hover:opacity-100 transition hidden md:flex backdrop-blur-sm';
 
   return (
     <section className="bg-void film-grain py-12">
@@ -20,7 +32,26 @@ export default function TopTen({ posts }: { posts: Post[] }) {
           The most-viewed stories on Blockbuster Bureau right now
         </p>
 
-        <div className="mt-7 flex gap-6 overflow-x-auto pb-4 snap-x no-scrollbar">
+        <div className="relative group mt-7">
+          <button
+            onClick={() => scroll(-1)}
+            aria-label="Scroll left"
+            className={`${arrowCls} left-0`}
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <button
+            onClick={() => scroll(1)}
+            aria-label="Scroll right"
+            className={`${arrowCls} right-0`}
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+
+          <div
+            ref={trackRef}
+            className="flex gap-6 overflow-x-auto pb-4 snap-x no-scrollbar"
+          >
           {top.map((post, i) => (
             <Link
               key={post.id}
@@ -54,6 +85,7 @@ export default function TopTen({ posts }: { posts: Post[] }) {
               </span>
             </Link>
           ))}
+          </div>
         </div>
       </div>
     </section>
