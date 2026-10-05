@@ -36,7 +36,7 @@ const POSTS_COLLECTION = 'posts';
 interface GetPostsOptions {
   category?: Category;
   limit?: number;
-  status?: 'draft' | 'published';
+  status?: 'draft' | 'published' | 'scheduled';
   startAfter?: DocumentSnapshot;
 }
 

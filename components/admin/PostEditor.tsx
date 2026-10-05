@@ -34,6 +34,8 @@ import {
   Eye,
   Loader2,
   RefreshCw,
+  Clock,
+  CalendarClock,
 } from 'lucide-react';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { Timestamp } from 'firebase/firestore';
@@ -46,12 +48,38 @@ import EditorToolbar from './EditorToolbar';
 import SeoScore from './SeoScore';
 import QualityCheck from './QualityCheck';
 import CoverDiscoverBadge from './CoverDiscoverBadge';
+import RelatedSuggester from './RelatedSuggester';
+import SocialPreview from './SocialPreview';
 import LinkModal from './modals/LinkModal';
 import ImageModal from './modals/ImageModal';
 import YouTubeModal from './modals/YouTubeModal';
 import EmbedModal from './modals/EmbedModal';
 
 const lowlight = createLowlight(common);
+
+/**
+ * Format a Firestore Timestamp as a `datetime-local` input value (local time).
+ */
+function toDateTimeLocal(ts?: { toDate: () => Date } | null): string {
+  if (!ts) return '';
+  const d = ts.toDate();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(
+    d.getHours()
+  )}:${pad(d.getMinutes())}`;
+}
+
+/** Human-friendly "Oct 7, 2026, 9:00 AM" for the scheduled badge. */
+function formatScheduled(ts?: { toDate: () => Date } | null): string {
+  if (!ts) return '';
+  return ts.toDate().toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
 
 /**
  * Convert a raw Firebase/network error into a message the user can act on.
@@ -85,7 +113,7 @@ interface EditorFormState {
   category: Category;
   tags: string[];
   author: string;
-  status: 'draft' | 'published';
+  status: 'draft' | 'published' | 'scheduled';
   featured: boolean;
   rating: number;
   youtubeVideoId: string;
@@ -127,6 +155,11 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
   const [coverImageUploading, setCoverImageUploading] = useState(false);
   const [coverImageProgress, setCoverImageProgress] = useState(0);
   const [coverImageError, setCoverImageError] = useState<string | null>(null);  const [seoOpen, setSeoOpen] = useState(false);
+  // Schedule-publish: datetime-local value; initialized from the post's
+  // scheduledAt when editing an already-scheduled post.
+  const [scheduleInput, setScheduleInput] = useState(() =>
+    toDateTimeLocal(initialData?.scheduledAt)
+  );
 
   // Modal states
   const [linkModalOpen, setLinkModalOpen] = useState(false);
@@ -266,11 +299,16 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
     try {
       // Never lose tags the user typed but didn't confirm with Enter.
       const tags = flushTagInput(formState.tags);
+      // Editing a scheduled post keeps it scheduled (auto-save must not
+      // silently unschedule it). Saving a live post as draft still
+      // unpublishes it — that behavior is intentional.
+      const keepScheduled = formState.status === 'scheduled' && scheduleInput;
       const data = {
         ...formState,
         tags,
         body: htmlView ? rawHtml : editor.getHTML(),
-        status: 'draft' as const,
+        status: (keepScheduled ? 'scheduled' : 'draft') as 'draft' | 'scheduled',
+        scheduledAt: keepScheduled ? Timestamp.fromDate(new Date(scheduleInput)) : null,
       };
 
       if (currentPostId) {
@@ -284,6 +322,9 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
         }
       }
 
+      if (data.status !== formState.status) {
+        setFormState((prev) => ({ ...prev, status: data.status }));
+      }
       setSaveStatus('saved');
       setSaveError(null);
       setLastSaved(new Date());
@@ -295,6 +336,116 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  /**
+   * Save the post as scheduled: it stays a draft in Firestore with
+   * status='scheduled' + scheduledAt, and the cron (or the dashboard sweep)
+   * publishes it automatically when the time arrives. Never publishes now.
+   */
+  const handleSchedule = async () => {
+    if (!editor) return;
+    if (!scheduleInput) {
+      setSaveError('Pick a date and time first, then click Schedule.');
+      return;
+    }
+    const when = new Date(scheduleInput);
+    if (isNaN(when.getTime()) || when.getTime() <= Date.now()) {
+      setSaveError('Schedule a time in the future.');
+      return;
+    }
+    setIsSaving(true);
+    setSaveStatus('saving');
+    setSaveError(null);
+
+    try {
+      const tags = flushTagInput(formState.tags);
+      const data = {
+        ...formState,
+        tags,
+        body: htmlView ? rawHtml : editor.getHTML(),
+        status: 'scheduled' as const,
+        scheduledAt: Timestamp.fromDate(when),
+      };
+
+      if (currentPostId) {
+        await updatePost(currentPostId, data);
+      } else {
+        const newId = await createPost(data);
+        if (newId) {
+          setCurrentPostId(newId);
+          window.history.replaceState({}, '', `/dashboard/posts/${newId}/edit`);
+        }
+      }
+
+      setFormState((prev) => ({ ...prev, status: 'scheduled' }));
+      setSaveStatus('saved');
+      setSaveError(null);
+      setLastSaved(new Date());
+      setIsDirty(false);
+    } catch (error) {
+      console.error('Schedule error:', error);
+      setSaveStatus('error');
+      setSaveError(getFriendlyErrorMessage(error));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  /** Cancel a schedule: back to an ordinary draft. */
+  const handleCancelSchedule = async () => {
+    if (!editor) return;
+    setIsSaving(true);
+    setSaveStatus('saving');
+    setSaveError(null);
+
+    try {
+      const tags = flushTagInput(formState.tags);
+      const data = {
+        ...formState,
+        tags,
+        body: htmlView ? rawHtml : editor.getHTML(),
+        status: 'draft' as const,
+        scheduledAt: null,
+      };
+
+      if (currentPostId) {
+        await updatePost(currentPostId, data);
+      } else {
+        const newId = await createPost(data);
+        if (newId) {
+          setCurrentPostId(newId);
+          window.history.replaceState({}, '', `/dashboard/posts/${newId}/edit`);
+        }
+      }
+
+      setFormState((prev) => ({ ...prev, status: 'draft' }));
+      setScheduleInput('');
+      setSaveStatus('saved');
+      setSaveError(null);
+      setLastSaved(new Date());
+      setIsDirty(false);
+    } catch (error) {
+      console.error('Cancel-schedule error:', error);
+      setSaveStatus('error');
+      setSaveError(getFriendlyErrorMessage(error));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  /** Append a "Related:" link snippet to the end of the article body. */
+  const handleInsertRelated = (html: string) => {
+    if (!editor && !htmlView) return;
+    const current = htmlView ? rawHtml : editor?.getHTML() || formState.body;
+    const updated = `${current}${html}`;
+    if (htmlView) {
+      setRawHtml(updated);
+    } else {
+      editor?.commands.setContent(updated);
+    }
+    setFormState((prev) => ({ ...prev, body: updated }));
+    setIsDirty(true);
   };
 
   /**
@@ -354,6 +505,8 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
         body: htmlView ? rawHtml : editor.getHTML(),
         status: 'published' as const,
         publishedAt: Timestamp.now(),
+        // Publishing now cancels any pending schedule.
+        scheduledAt: null,
       };
 
       if (currentPostId) {
@@ -366,6 +519,9 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
       setSaveError(null);
       setLastSaved(new Date());
       setIsDirty(false);
+      // Keep the UI (schedule badge etc.) in sync with what was saved.
+      setFormState((prev) => ({ ...prev, status: 'published' }));
+      setScheduleInput('');
 
       // Instantly refresh the public pages so the article appears right away.
       // The result is shown in the UI — if it fails the user can retry with
@@ -710,6 +866,72 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
               </button>
             </div>
 
+            {/* Schedule publish */}
+            <div className="bg-white rounded-xl border border-gray-200 p-4">
+              <h3 className="text-gray-900 font-medium mb-3 flex items-center gap-2">
+                <CalendarClock className="w-4 h-4 text-brand-dark" />
+                Schedule Publish
+              </h3>
+              {formState.status === 'scheduled' ? (
+                <div className="space-y-3">
+                  <p className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-100 text-amber-800 text-sm font-medium">
+                    <Clock className="w-4 h-4" />
+                    Scheduled for {formatScheduled(scheduleInput ? { toDate: () => new Date(scheduleInput) } : initialData?.scheduledAt)}
+                  </p>
+                  <p className="text-gray-500 text-xs">
+                    Goes live automatically at the chosen time. Pick a new time to reschedule.
+                  </p>
+                  <input
+                    type="datetime-local"
+                    value={scheduleInput}
+                    onChange={(e) => {
+                      setScheduleInput(e.target.value);
+                      setIsDirty(true);
+                    }}
+                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:border-brand"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleSchedule}
+                      disabled={isSaving}
+                      className="flex-1 px-4 py-2 bg-amber-500 text-white text-sm font-medium rounded-lg hover:bg-amber-600 transition-colors disabled:opacity-50"
+                    >
+                      Reschedule
+                    </button>
+                    <button
+                      onClick={handleCancelSchedule}
+                      disabled={isSaving}
+                      className="flex-1 px-4 py-2 bg-gray-50 border border-gray-200 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
+                    >
+                      Cancel schedule
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <input
+                    type="datetime-local"
+                    value={scheduleInput}
+                    onChange={(e) => {
+                      setScheduleInput(e.target.value);
+                      setIsDirty(true);
+                    }}
+                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:border-brand"
+                  />
+                  <button
+                    onClick={handleSchedule}
+                    disabled={isSaving}
+                    className="w-full px-4 py-2 bg-amber-500 text-white text-sm font-medium rounded-lg hover:bg-amber-600 transition-colors disabled:opacity-50"
+                  >
+                    Schedule
+                  </button>
+                  <p className="text-gray-500 text-xs">
+                    Saves as a scheduled draft — it publishes itself at the chosen time. No manual publish needed.
+                  </p>
+                </div>
+              )}
+            </div>
+
             {/* SEO Score meter (live, Yoast-style) */}
             <SeoScore
               input={{
@@ -732,6 +954,25 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
               input={{
                 bodyHtml: htmlView ? rawHtml : editor?.getHTML() || formState.body,
               }}
+            />
+
+            {/* Related link suggester — 1-2 internal links, one click */}
+            <RelatedSuggester
+              currentPostId={currentPostId}
+              category={formState.category}
+              tags={formState.tags}
+              bodyHtml={htmlView ? rawHtml : editor?.getHTML() || formState.body}
+              onInsert={handleInsertRelated}
+            />
+
+            {/* Social preview — Google / X card / homepage card, live */}
+            <SocialPreview
+              title={formState.title}
+              slug={formState.slug}
+              excerpt={formState.excerpt}
+              coverImage={formState.coverImage}
+              metaTitle={formState.seo.metaTitle}
+              metaDescription={formState.seo.metaDescription}
             />
 
             {/* Cover Image */}

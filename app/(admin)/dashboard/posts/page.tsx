@@ -1,22 +1,27 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
-import { getPosts, deletePost } from '@/lib/firestore';
+import { Timestamp } from 'firebase/firestore';
+import { getPosts, deletePost, updatePost } from '@/lib/firestore';
+import { getCurrentUser } from '@/lib/auth';
 import { Post, Category, CATEGORIES, CATEGORY_LABELS } from '@/types';
 import PostTable from '@/components/admin/PostTable';
 import DeleteConfirmModal from '@/components/admin/DeleteConfirmModal';
-import { PlusCircle, Search } from 'lucide-react';
+import { PlusCircle, Search, X, Clock } from 'lucide-react';
 
 export default function PostsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'draft'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'draft' | 'scheduled'>('all');
   const [categoryFilter, setCategoryFilter] = useState<Category | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [postToDelete, setPostToDelete] = useState<Post | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  // Quiet count of posts the backup sweep auto-published on this load.
+  const [sweptCount, setSweptCount] = useState(0);
+  const sweepDone = useRef(false);
 
   const fetchPosts = useCallback(async () => {
     try {
@@ -35,6 +40,66 @@ export default function PostsPage() {
   useEffect(() => {
     fetchPosts();
   }, [fetchPosts]);
+
+  /**
+   * Backup sweep for scheduled posts: if the Vercel cron is unavailable
+   * (e.g. Hobby-plan limits), any scheduled post whose time has arrived is
+   * published quietly the next time the admin opens the posts list.
+   */
+  useEffect(() => {
+    if (loading || sweepDone.current || posts.length === 0) return;
+    sweepDone.current = true;
+
+    (async () => {
+      const now = Date.now();
+      const due = posts.filter(
+        (p) =>
+          p.status === 'scheduled' &&
+          p.scheduledAt?.toDate &&
+          p.scheduledAt.toDate().getTime() <= now
+      );
+      if (due.length === 0) return;
+
+      let published = 0;
+      for (const p of due) {
+        try {
+          await updatePost(p.id, {
+            status: 'published',
+            publishedAt: Timestamp.now(),
+            scheduledAt: null,
+          });
+          published++;
+        } catch (error) {
+          console.error('Scheduled auto-publish failed for', p.slug, error);
+        }
+      }
+
+      if (published > 0) {
+        // Refresh the public pages quietly, best effort.
+        try {
+          const token = await getCurrentUser()?.getIdToken();
+          if (token) {
+            const paths = ['/', '/blog'];
+            for (const p of due.slice(0, 3)) {
+              paths.push(`/blog/${p.slug}`, `/category/${p.category}`);
+            }
+            await fetch('/api/revalidate', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ paths: paths.slice(0, 10) }),
+            });
+          }
+        } catch (error) {
+          console.error('Sweep cache refresh failed:', error);
+        }
+        setSweptCount(published);
+        fetchPosts();
+      }
+    })();
+  }, [loading, posts, fetchPosts]);
 
   const handleDeleteClick = (post: Post) => {
     setPostToDelete(post);
@@ -83,6 +148,23 @@ export default function PostsPage() {
 
   return (
     <div>
+      {/* Quiet notice when the backup sweep auto-published scheduled posts */}
+      {sweptCount > 0 && (
+        <div className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm text-emerald-800">
+          <span className="flex items-center gap-2">
+            <Clock className="w-4 h-4" />
+            {sweptCount} scheduled {sweptCount === 1 ? 'post' : 'posts'} auto-published.
+          </span>
+          <button
+            onClick={() => setSweptCount(0)}
+            className="p-1 rounded hover:bg-emerald-100 transition-colors"
+            title="Dismiss"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
@@ -117,12 +199,13 @@ export default function PostsPage() {
         {/* Status Filter */}
         <select
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as 'all' | 'published' | 'draft')}
+          onChange={(e) => setStatusFilter(e.target.value as 'all' | 'published' | 'draft' | 'scheduled')}
           className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:border-brand"
         >
           <option value="all">All Status</option>
           <option value="published">Published</option>
           <option value="draft">Drafts</option>
+          <option value="scheduled">Scheduled</option>
         </select>
 
         {/* Category Filter */}

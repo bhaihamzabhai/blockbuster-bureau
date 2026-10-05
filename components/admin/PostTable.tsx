@@ -19,6 +19,17 @@ function formatDate(timestamp: { toDate: () => Date } | null): string {
   });
 }
 
+function formatDateTime(timestamp: { toDate: () => Date } | null | undefined): string {
+  if (!timestamp) return '';
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp as unknown as string);
+  return date.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
 export default function PostTable({ posts, onDelete }: PostTableProps) {
   if (posts.length === 0) {
     return (
@@ -58,15 +69,21 @@ export default function PostTable({ posts, onDelete }: PostTableProps) {
                 </span>
               </td>
               <td className="p-4">
-                <span
-                  className={`px-2 py-1 rounded text-xs font-medium ${
-                    post.status === 'published'
-                      ? 'bg-gold/20 text-brand-dark'
-                      : 'bg-stardust/20 text-gray-500'
-                  }`}
-                >
-                  {post.status === 'published' ? 'Published' : 'Draft'}
-                </span>
+                {post.status === 'scheduled' ? (
+                  <span className="px-2 py-1 rounded text-xs font-medium bg-amber-100 text-amber-800">
+                    Scheduled{post.scheduledAt ? ` · ${formatDateTime(post.scheduledAt)}` : ''}
+                  </span>
+                ) : (
+                  <span
+                    className={`px-2 py-1 rounded text-xs font-medium ${
+                      post.status === 'published'
+                        ? 'bg-gold/20 text-brand-dark'
+                        : 'bg-stardust/20 text-gray-500'
+                    }`}
+                  >
+                    {post.status === 'published' ? 'Published' : 'Draft'}
+                  </span>
+                )}
               </td>
               <td className="p-4 text-gray-500">{post.views || 0}</td>
               <td className="p-4 text-gray-500 text-sm">

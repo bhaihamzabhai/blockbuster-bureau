@@ -18,7 +18,9 @@ export interface Post {
   category: Category;
   tags: string[];
   author: string;
-  status: 'draft' | 'published';
+  status: 'draft' | 'published' | 'scheduled';
+  /** When set (with status 'scheduled'), the post auto-publishes at this time. */
+  scheduledAt?: Timestamp | null;
   featured: boolean;
   youtubeVideoId?: string;
   publishedAt: Timestamp | null;
