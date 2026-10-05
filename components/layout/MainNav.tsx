@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ChevronDown, Clapperboard } from 'lucide-react';
+import { Menu, X, ChevronDown, Clapperboard, Bookmark } from 'lucide-react';
 import { CATEGORIES, CATEGORY_LABELS, Category } from '@/types';
 
 interface MainNavProps {}
@@ -65,6 +65,12 @@ export default function MainNav({}: MainNavProps) {
             </span>
           </Link>
           <Link href="/releases" className={linkCls('/releases')}>Releases</Link>
+          <Link href="/my-list" className={linkCls('/my-list')}>
+            <span className="flex items-center gap-1.5">
+              <Bookmark className="w-4 h-4" />
+              My List
+            </span>
+          </Link>
           <Link href="/about" className={linkCls('/about')}>About</Link>
         </div>
 
@@ -89,6 +95,7 @@ export default function MainNav({}: MainNavProps) {
             { href: '/blog', label: 'News' },
             { href: '/videos', label: 'Videos' },
             { href: '/releases', label: 'Releases' },
+            { href: '/my-list', label: 'My List' },
             { href: '/about', label: 'About' },
           ].map((l) => (
             <Link

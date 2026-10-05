@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Bebas_Neue, Inter } from 'next/font/google';
 import './globals.css';
 import SiteHeader from '@/components/layout/SiteHeader';
@@ -205,6 +206,7 @@ export default async function RootLayout({
         
         {/* Footer */}
         <Footer />
+        <SpeedInsights />
       </body>
     </html>
   );

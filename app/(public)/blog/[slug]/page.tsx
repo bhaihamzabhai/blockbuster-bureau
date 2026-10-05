@@ -6,6 +6,7 @@ import { CATEGORY_LABELS, Post } from '@/types';
 import Badge from '@/components/ui/Badge';
 import Tag from '@/components/ui/Tag';
 import PostCard from '@/components/blog/PostCard';
+import BookmarkButton from '@/components/blog/BookmarkButton';
 import ViewCounter from '@/components/blog/ViewCounter';
 import AdUnit from '@/components/ads/AdUnit';
 import YouTubeEmbed from '@/components/youtube/YouTubeEmbed';
@@ -307,9 +308,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             dangerouslySetInnerHTML={{ __html: bodyHtml }}
           />
 
-          {/* Share buttons */}
-          <div className="mt-10 pt-8 border-t border-gray-200 flex justify-center">
+          {/* Share buttons + Save */}
+          <div className="mt-10 pt-8 border-t border-gray-200 flex items-center justify-center gap-3 flex-wrap">
             <ShareButtons title={post.title} />
+            <BookmarkButton
+              post={{
+                id: post.id,
+                slug: params.slug,
+                title: post.title,
+                coverImage: post.coverImage || '',
+              }}
+            />
           </div>
 
           {/* Author byline card */}
