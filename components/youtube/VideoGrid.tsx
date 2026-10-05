@@ -21,6 +21,7 @@ function formatDate(iso: string) {
 interface VideoGridProps {
   initialVideos: YTVideo[];
   initialConfigured: boolean;
+  excludeIds?: string[];
 }
 
 /**
@@ -29,7 +30,7 @@ interface VideoGridProps {
  * generated page built before the channel ID / API key was saved gets
  * replaced with fresh data (and Shorts stay filtered out).
  */
-export default function VideoGrid({ initialVideos, initialConfigured }: VideoGridProps) {
+export default function VideoGrid({ initialVideos, initialConfigured, excludeIds = [] }: VideoGridProps) {
   const [videos, setVideos] = useState<YTVideo[]>(initialVideos);
   const [configured, setConfigured] = useState(initialConfigured);
   const [checking, setChecking] = useState(initialVideos.length === 0);
@@ -68,10 +69,12 @@ export default function VideoGrid({ initialVideos, initialConfigured }: VideoGri
     );
   }
 
+  const visible = videos.filter((v) => !excludeIds.includes(v.id));
+
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {videos.map((v) => (
+        {visible.map((v) => (
           <button
             key={v.id}
             onClick={() => setActive(v)}

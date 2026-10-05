@@ -250,8 +250,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
 
         {/* Content Section */}
-        <div className="max-w-4xl mx-auto px-4 py-12">
-          {/* Meta info */}
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-10">
+            <div className="min-w-0 max-w-3xl">
+        {/* Meta info */}
           <div className="flex flex-wrap items-center gap-4 text-gray-500 text-sm mb-8 pb-8 border-b border-gray-200">
             <span>By {post.author}</span>
             <span>•</span>
@@ -350,6 +352,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               ))}
             </div>
           )}
+            </div>
+            {/* Sticky sidebar — AdSense-ready (placeholder until client ID set) */}
+            <aside className="hidden lg:block">
+              <div className="sticky top-24">
+                <p className="text-gray-400 text-[11px] text-center uppercase tracking-widest mb-2">
+                  Advertisement
+                </p>
+                <AdUnit slot="rectangle" />
+              </div>
+            </aside>
+          </div>
         </div>
 
         {/* Related Posts */}

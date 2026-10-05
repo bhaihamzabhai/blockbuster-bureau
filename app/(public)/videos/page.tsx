@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { Youtube } from 'lucide-react';
 import VideoGrid from '@/components/youtube/VideoGrid';
+import FeaturedVideo from '@/components/youtube/FeaturedVideo';
 import { getSiteSettings } from '@/lib/siteSettings';
 import { getChannelVideos } from '@/lib/youtube';
 
@@ -43,7 +44,15 @@ export default async function VideosPage() {
           )}
         </div>
 
-        <VideoGrid initialVideos={videos} initialConfigured={configured} />
+        {/* Featured video hero */}
+        <FeaturedVideo initialVideos={videos} />
+
+        <h2 className="section-heading mb-6">More Videos</h2>
+        <VideoGrid
+          initialVideos={videos}
+          initialConfigured={configured}
+          excludeIds={videos[0] ? [videos[0].id] : []}
+        />
       </div>
     </div>
   );
