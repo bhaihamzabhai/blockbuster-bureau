@@ -5,6 +5,9 @@ import Image from 'next/image';
 import { CalendarDays, Clock, Film, Loader2 } from 'lucide-react';
 import type { UpcomingMovie } from '@/lib/tmdb';
 import { daysUntil } from '@/lib/tmdb';
+import Countdown from './Countdown';
+import RemindButton from './RemindButton';
+import ReminderChecker from './ReminderChecker';
 
 function formatDate(iso: string) {
   return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', {
@@ -63,7 +66,9 @@ export default function ReleasesGrid({ initialMovies, initialConfigured }: Relea
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+    <>
+      <ReminderChecker />
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
       {movies.map((m) => {
         const days = daysUntil(m.releaseDate);
         return (
@@ -100,10 +105,19 @@ export default function ReleasesGrid({ initialMovies, initialConfigured }: Relea
                 {m.title}
               </h3>
               {m.releaseDate ? (
-                <p className="flex items-center gap-1.5 text-gray-500 text-xs mt-1.5">
-                  <CalendarDays className="w-3.5 h-3.5" />
-                  {formatDate(m.releaseDate)}
-                </p>
+                <>
+                  <p className="flex items-center gap-1.5 text-gray-500 text-xs mt-1.5">
+                    <CalendarDays className="w-3.5 h-3.5" />
+                    {formatDate(m.releaseDate)}
+                  </p>
+                  <Countdown releaseDate={m.releaseDate} />
+                  <RemindButton
+                    id={m.id}
+                    title={m.title}
+                    releaseDate={m.releaseDate}
+                    poster={m.poster}
+                  />
+                </>
               ) : (
                 <p className="flex items-center gap-1.5 text-gray-400 text-xs mt-1.5">
                   <Clock className="w-3.5 h-3.5" /> Date TBA
@@ -113,6 +127,7 @@ export default function ReleasesGrid({ initialMovies, initialConfigured }: Relea
           </div>
         );
       })}
-    </div>
+      </div>
+    </>
   );
 }
