@@ -44,6 +44,7 @@ import { Post, Category, CATEGORIES, CATEGORY_LABELS } from '@/types';
 import YouTubeEmbed from '@/lib/tiptap/YouTubeExtension';
 import EditorToolbar from './EditorToolbar';
 import SeoScore from './SeoScore';
+import QualityCheck from './QualityCheck';
 import LinkModal from './modals/LinkModal';
 import ImageModal from './modals/ImageModal';
 import YouTubeModal from './modals/YouTubeModal';
@@ -721,6 +722,14 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                 youtubeVideoId: formState.youtubeVideoId,
                 metaTitle: formState.seo.metaTitle,
                 metaDescription: formState.seo.metaDescription,
+              }}
+            />
+
+            {/* Quality Check (2-minute test: auto + manual checklist) */}
+            <QualityCheck
+              key={currentPostId || 'new'}
+              input={{
+                bodyHtml: htmlView ? rawHtml : editor?.getHTML() || formState.body,
               }}
             />
 
