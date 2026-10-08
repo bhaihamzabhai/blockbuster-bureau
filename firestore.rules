@@ -51,6 +51,22 @@ service cloud.firestore {
                                   && request.auth.token.admin == true;
     }
 
+    // Contact form messages: anyone may send (create only);
+    // only admins can read or manage them.
+    match /contactMessages/{doc} {
+      allow create: if request.resource.data.keys().hasOnly(['name', 'email', 'subject', 'message', 'createdAt'])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() > 0
+                    && request.resource.data.name.size() < 100
+                    && request.resource.data.email is string
+                    && request.resource.data.email.size() < 256
+                    && request.resource.data.message is string
+                    && request.resource.data.message.size() > 0
+                    && request.resource.data.message.size() < 5000;
+      allow read, update, delete: if request.auth != null
+                                  && request.auth.token.admin == true;
+    }
+
     // Deny all other access by default
     match /{document=**} {
       allow read, write: if false;

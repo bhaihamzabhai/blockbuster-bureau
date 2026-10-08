@@ -29,6 +29,9 @@ export interface Post {
   views: number;
   /** Star rating 0–5 (0 = unrated). Set from the dashboard post editor. */
   rating?: number;
+  /** Optional FAQ pairs (set in the dashboard editor). Rendered as an
+   *  accordion on the article page + FAQPage JSON-LD for rich results. */
+  faqs?: { question: string; answer: string }[];
   seo: {
     metaTitle: string;
     metaDescription: string;

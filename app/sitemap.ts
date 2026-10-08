@@ -10,6 +10,7 @@ const STATIC_PAGES = [
   '/videos',
   '/releases',
   '/about',
+  '/contact',
   '/privacy',
   '/category/upcoming-movies',
   '/category/actor-news',

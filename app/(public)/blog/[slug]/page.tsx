@@ -120,6 +120,39 @@ function generateJsonLd(post: Post, slug: string) {
   };
 }
 
+/** FAQPage schema — only when the post has FAQ pairs (set in the editor). */
+function generateFaqJsonLd(post: Post) {
+  const faqs = (post.faqs || []).filter((f) => f.question?.trim() && f.answer?.trim());
+  if (faqs.length === 0) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.question.trim(),
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: f.answer.trim(),
+      },
+    })),
+  };
+}
+
+/** VideoObject schema — when the post has a hero YouTube video. */
+function generateVideoJsonLd(post: Post, slug: string) {
+  if (!post.youtubeVideoId) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: post.title,
+    description: post.excerpt || post.seo?.metaDescription || post.title,
+    thumbnailUrl: `https://img.youtube.com/vi/${post.youtubeVideoId}/maxresdefault.jpg`,
+    uploadDate: post.publishedAt?.toDate?.().toISOString(),
+    embedUrl: `https://www.youtube.com/embed/${post.youtubeVideoId}`,
+    contentUrl: `https://www.youtube.com/watch?v=${post.youtubeVideoId}`,
+  };
+}
+
 function generateBreadcrumbJsonLd(post: Post, slug: string) {  return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -198,6 +231,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const jsonLd = generateJsonLd(post, params.slug);
   const breadcrumbLd = generateBreadcrumbJsonLd(post, params.slug);
+  const faqLd = generateFaqJsonLd(post);
+  const videoLd = generateVideoJsonLd(post, params.slug);
+  const faqs = (post.faqs || []).filter((f) => f.question?.trim() && f.answer?.trim());
   const { html: bodyHtml, headings } = processHeadings(post.body);
 
   return (
@@ -217,6 +253,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
+      {faqLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+        />
+      )}
+      {videoLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(videoLd) }}
+        />
+      )}
       <article className="min-h-screen">
         {/* Hero Section with Cover Image */}
         <div className="relative h-[50vh] md:h-[60vh]">
@@ -309,6 +357,33 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             className="prose-light"
             dangerouslySetInnerHTML={{ __html: bodyHtml }}
           />
+
+          {/* FAQ accordion (from editor) — also emitted as FAQPage JSON-LD */}
+          {faqs.length > 0 && (
+            <section className="mt-10">
+              <h2 className="text-gray-900 font-extrabold text-xl uppercase tracking-wide border-l-4 border-brand pl-3 mb-5">
+                Frequently Asked Questions
+              </h2>
+              <div className="space-y-3">
+                {faqs.map((faq, i) => (
+                  <details
+                    key={i}
+                    className="group bg-gray-50 border border-gray-200 rounded-xl open:bg-white open:shadow-sm transition"
+                  >
+                    <summary className="cursor-pointer list-none flex items-center justify-between gap-4 px-5 py-4 font-semibold text-gray-900 [&::-webkit-details-marker]:hidden">
+                      {faq.question}
+                      <span className="text-brand text-xl leading-none shrink-0 group-open:rotate-45 transition-transform">
+                        +
+                      </span>
+                    </summary>
+                    <p className="px-5 pb-5 text-gray-600 text-sm leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  </details>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* Share buttons + Save */}
           <div className="mt-10 pt-8 border-t border-gray-200 flex items-center justify-center gap-3 flex-wrap">

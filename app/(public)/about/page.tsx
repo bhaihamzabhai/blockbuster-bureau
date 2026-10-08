@@ -103,6 +103,43 @@ export default async function AboutPage() {
         </div>
       </section>
 
+      {/* Editorial Standards Section (E-E-A-T: who we are, how we work) */}
+      <section className="py-14 px-4 bg-gray-50 border-y border-gray-100">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-gray-900 font-extrabold text-xl uppercase tracking-wide border-l-4 border-brand pl-3">
+            How We Work
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            <div className="bg-white border border-gray-200 rounded-xl p-6">
+              <h3 className="font-bold text-gray-900 mb-2">Original takes</h3>
+              <p className="text-gray-500 text-sm leading-relaxed">
+                Every article is written in our own voice with our own analysis —
+                we don&apos;t copy-paste press releases. Our &ldquo;my take&rdquo;
+                sections tell you what we actually think.
+              </p>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-xl p-6">
+              <h3 className="font-bold text-gray-900 mb-2">Facts checked</h3>
+              <p className="text-gray-500 text-sm leading-relaxed">
+                Box office numbers, release dates, and casting news are verified
+                against primary sources (studios, trades) before publishing.
+              </p>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-xl p-6">
+              <h3 className="font-bold text-gray-900 mb-2">Corrections</h3>
+              <p className="text-gray-500 text-sm leading-relaxed">
+                We fix verified errors promptly and transparently. Spotted a
+                mistake?{' '}
+                <a href="/contact" className="text-brand font-semibold hover:underline">
+                  Tell us here
+                </a>
+                .
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Contact Section */}
       <section className="py-14 px-4 bg-gray-50 border-t border-gray-100">
         <div className="max-w-4xl mx-auto text-center">

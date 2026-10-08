@@ -36,6 +36,8 @@ import {
   RefreshCw,
   Clock,
   CalendarClock,
+  HelpCircle,
+  Plus,
 } from 'lucide-react';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { Timestamp } from 'firebase/firestore';
@@ -117,6 +119,7 @@ interface EditorFormState {
   featured: boolean;
   rating: number;
   youtubeVideoId: string;
+  faqs: { question: string; answer: string }[];
   seo: {
     metaTitle: string;
     metaDescription: string;
@@ -137,6 +140,7 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
     featured: initialData?.featured || false,
     rating: initialData?.rating || 0,
     youtubeVideoId: initialData?.youtubeVideoId || '',
+    faqs: initialData?.faqs || [],
     seo: {
       metaTitle: initialData?.seo?.metaTitle || '',
       metaDescription: initialData?.seo?.metaDescription || '',
@@ -1186,6 +1190,60 @@ export default function PostEditor({ initialData, postId }: PostEditorProps) {
                   className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand"
                 />
               )}
+            </div>
+
+            {/* FAQ (Optional) — renders as accordion + FAQPage schema for rich results */}
+            <div className="bg-white rounded-xl border border-gray-200 p-4">
+              <h3 className="text-gray-900 font-medium mb-1 flex items-center gap-2">
+                <HelpCircle className="w-4 h-4 text-brand-dark" />
+                FAQ (Optional)
+              </h3>
+              <p className="text-gray-500/50 text-xs mb-3">
+                Q&A pairs shown at the end of the article — boosts Google rich results
+              </p>
+              <div className="space-y-3">
+                {formState.faqs.map((faq, i) => (
+                  <div key={i} className="border border-gray-200 rounded-lg p-3 space-y-2">
+                    <div className="flex items-start gap-2">
+                      <input
+                        type="text"
+                        value={faq.question}
+                        onChange={(e) => {
+                          const faqs = [...formState.faqs];
+                          faqs[i] = { ...faqs[i], question: e.target.value };
+                          updateFormState({ faqs });
+                        }}
+                        placeholder="Question"
+                        className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-brand"
+                      />
+                      <button
+                        onClick={() => updateFormState({ faqs: formState.faqs.filter((_, j) => j !== i) })}
+                        className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                        title="Remove"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <textarea
+                      value={faq.answer}
+                      onChange={(e) => {
+                        const faqs = [...formState.faqs];
+                        faqs[i] = { ...faqs[i], answer: e.target.value };
+                        updateFormState({ faqs });
+                      }}
+                      placeholder="Answer"
+                      rows={2}
+                      className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-brand resize-y"
+                    />
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={() => updateFormState({ faqs: [...formState.faqs, { question: '', answer: '' }] })}
+                className="mt-3 inline-flex items-center gap-1.5 text-sm text-brand-dark font-medium hover:text-brand transition-colors"
+              >
+                <Plus className="w-4 h-4" /> Add question
+              </button>
             </div>
 
             {/* SEO Settings */}
