@@ -1,5 +1,7 @@
 'use client';
 
+import AdminGuard from '@/components/admin/AdminGuard';
+
 import { useEffect, useState } from 'react';
 import {
   collection,
@@ -21,7 +23,7 @@ interface ContactMessage {
   createdAt: any;
 }
 
-export default function MessagesAdminPage() {
+function MessagesAdminPageInner() {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -125,5 +127,13 @@ export default function MessagesAdminPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function MessagesAdminPage() {
+  return (
+    <AdminGuard>
+      <MessagesAdminPageInner />
+    </AdminGuard>
   );
 }

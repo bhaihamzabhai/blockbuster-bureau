@@ -1,5 +1,7 @@
 'use client';
 
+import AdminGuard from '@/components/admin/AdminGuard';
+
 import { useEffect, useState } from 'react';
 import {
   collection,
@@ -19,7 +21,7 @@ interface Subscriber {
   source?: string;
 }
 
-export default function NewsletterAdminPage() {
+function NewsletterAdminPageInner() {
   const [subs, setSubs] = useState<Subscriber[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -123,5 +125,13 @@ export default function NewsletterAdminPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function NewsletterAdminPage() {
+  return (
+    <AdminGuard>
+      <NewsletterAdminPageInner />
+    </AdminGuard>
   );
 }

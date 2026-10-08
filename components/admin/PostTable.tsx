@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Post, CATEGORY_LABELS } from '@/types';
 import { Pencil, Trash2, ExternalLink } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 interface PostTableProps {
   posts: Post[];
@@ -31,6 +32,8 @@ function formatDateTime(timestamp: { toDate: () => Date } | null | undefined): s
 }
 
 export default function PostTable({ posts, onDelete }: PostTableProps) {
+  // Editors may manage post content but only admins can delete posts.
+  const { isAdmin } = useAuth();
   if (posts.length === 0) {
     return (
       <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
@@ -98,13 +101,15 @@ export default function PostTable({ posts, onDelete }: PostTableProps) {
                   >
                     <Pencil className="w-4 h-4" />
                   </Link>
-                  <button
-                    onClick={() => onDelete(post)}
-                    className="p-2 rounded hover:bg-gray-100 text-gray-500 hover:text-red-400 transition-colors"
-                    title="Delete"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  {isAdmin && (
+                    <button
+                      onClick={() => onDelete(post)}
+                      className="p-2 rounded hover:bg-gray-100 text-gray-500 hover:text-red-400 transition-colors"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
                   {post.status === 'published' && (
                     <Link
                       href={`/blog/${post.slug}`}

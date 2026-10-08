@@ -10,11 +10,12 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, loading, isAdmin } = useAuth();
+  const { user, loading, isAdmin, isEditor } = useAuth();
   const router = useRouter();
 
-  // Only real admins (verified via the Firebase custom claim) may use the dashboard.
-  const isAllowed = isAdmin;
+  // Admins and editors (verified via Firebase custom claims) may use the dashboard.
+  // Editors see a limited sidebar (posts only); admin-only pages guard themselves.
+  const isAllowed = isAdmin || isEditor;
 
   useEffect(() => {
     if (loading) return;
@@ -39,7 +40,7 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Sidebar user={user} />
+      <Sidebar user={user} isEditor={isEditor && !isAdmin} />
       <main className="ml-64 p-8">{children}</main>
     </div>
   );

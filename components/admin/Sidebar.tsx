@@ -13,25 +13,30 @@ import {
   Mail,
   Bell,
   MessageSquare,
+  Users,
 } from 'lucide-react';
 import { signOut } from '@/lib/auth';
 import { User } from 'firebase/auth';
 
 interface SidebarProps {
   user: User | null;
+  isEditor?: boolean;
 }
 
-const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/dashboard/posts', label: 'Posts', icon: FileText },
-  { href: '/dashboard/posts/new', label: 'New Post', icon: PlusCircle },
-  { href: '/dashboard/newsletter', label: 'Newsletter', icon: Mail },
-  { href: '/dashboard/messages', label: 'Messages', icon: MessageSquare },
-  { href: '/dashboard/push', label: 'Push Alerts', icon: Bell },
-  { href: '/dashboard/settings', label: 'Settings', icon: Settings },
+const allNavItems = [
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, adminOnly: false },
+  { href: '/dashboard/posts', label: 'Posts', icon: FileText, adminOnly: false },
+  { href: '/dashboard/posts/new', label: 'New Post', icon: PlusCircle, adminOnly: false },
+  { href: '/dashboard/newsletter', label: 'Newsletter', icon: Mail, adminOnly: true },
+  { href: '/dashboard/messages', label: 'Messages', icon: MessageSquare, adminOnly: true },
+  { href: '/dashboard/push', label: 'Push Alerts', icon: Bell, adminOnly: true },
+  { href: '/dashboard/settings', label: 'Settings', icon: Settings, adminOnly: true },
+  { href: '/dashboard/team', label: 'Team', icon: Users, adminOnly: true },
 ];
 
-export default function Sidebar({ user }: SidebarProps) {
+export default function Sidebar({ user, isEditor = false }: SidebarProps) {
+  // Editors only see content sections; admin-only sections are hidden.
+  const navItems = allNavItems.filter((item) => !isEditor || !item.adminOnly);
   const pathname = usePathname();
 
   const handleSignOut = async () => {

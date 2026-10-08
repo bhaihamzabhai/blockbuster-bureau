@@ -1,5 +1,7 @@
 'use client';
 
+import AdminGuard from '@/components/admin/AdminGuard';
+
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -16,7 +18,7 @@ interface Result {
 }
 
 /** Admin: compose + broadcast a push notification to all subscribers. */
-export default function PushAdminPage() {
+function PushAdminPageInner() {
   const [count, setCount] = useState<number | null>(null);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -139,5 +141,13 @@ export default function PushAdminPage() {
         too many pushes make people unsubscribe.
       </p>
     </div>
+  );
+}
+
+export default function PushAdminPage() {
+  return (
+    <AdminGuard>
+      <PushAdminPageInner />
+    </AdminGuard>
   );
 }

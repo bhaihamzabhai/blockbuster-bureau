@@ -1,5 +1,7 @@
 'use client';
 
+import AdminGuard from '@/components/admin/AdminGuard';
+
 import { useState, useEffect } from 'react';
 import { auth, db } from '@/lib/firebase';
 import { updateProfile } from 'firebase/auth';
@@ -7,7 +9,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { Youtube, Facebook, Music2, Plus, Trash2, ArrowUp, ArrowDown, Image as ImageIcon, Film } from 'lucide-react';
 import type { HeroSlide } from '@/lib/siteSettings';
 
-export default function SettingsPage() {
+function SettingsPageInner() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
 
@@ -445,5 +447,13 @@ export default function SettingsPage() {
         </button>
       </form>
     </div>
+  );
+}
+
+export default function SettingsPage() {
+  return (
+    <AdminGuard>
+      <SettingsPageInner />
+    </AdminGuard>
   );
 }
