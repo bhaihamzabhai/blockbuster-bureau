@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { getPostBySlug, getPosts } from '@/lib/firestore';
@@ -303,7 +304,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <div className="min-w-0 max-w-3xl">
         {/* Meta info */}
           <div className="flex flex-wrap items-center gap-4 text-gray-500 text-sm mb-8 pb-8 border-b border-gray-200">
-            <span>By {post.author}</span>
+            <span>By <Link href="/author/hamza-ali" className="text-brand font-semibold hover:underline">{post.author}</Link></span>
             <span>•</span>
             <span>{formatDate(post.publishedAt)}</span>
             <span>•</span>
@@ -405,7 +406,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
             <div>
               <p className="text-gray-900 font-bold">
-                {post.author || 'Blockbuster Bureau'}
+                <Link href="/author/hamza-ali" className="hover:text-brand hover:underline transition-colors">
+                  {post.author || 'Blockbuster Bureau'}
+                </Link>
               </p>
               <p className="text-gray-500 text-sm mt-0.5">
                 Hollywood news, trailers &amp; reviews — fresh takes on the
